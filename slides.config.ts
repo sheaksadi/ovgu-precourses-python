@@ -97,7 +97,7 @@ export const slides: SlideEntry[] = [
     title: 'Probier’s selbst',
     subtitle: 'Online-Compiler öffnen und den Code ausführen',
     duration: 5,
-    teleprompter: 'Jetzt selbst ausprobieren. Die Vorführung zeigt den Weg: suchen, Online-Compiler öffnen, Code einfügen, Run. Wer mag, scannt den Code. Aufgabe: True zu False ändern und nochmal Run drücken – was steht jetzt da? Enter zeigt die Vorführung nochmal.',
+    teleprompter: 'Jetzt selbst ausprobieren. Die Vorführung zeigt den Weg: suchen, Online-Compiler öffnen, Code einfügen, Run. Wer mag, scannt den Code. Aufgabe: den Text im print ändern, zum Beispiel in den eigenen Namen, und nochmal Run drücken. Enter zeigt die Vorführung nochmal.',
   },
   {
     id: 'PRE-0010',

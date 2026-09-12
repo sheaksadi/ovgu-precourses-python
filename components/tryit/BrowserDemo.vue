@@ -3,7 +3,7 @@
  * "Try it yourself" demo browser. Auto-imported as `<TryitBrowserDemo />`.
  *
  * Plays once when the slide lands, like a short screen recording: type a
- * search, open the first result, paste the lesson's Python, press Run, read the
+ * search, open the first result, paste one line of Python, press Run, read the
  * output. The browser and the editor are drawn from scratch and brand-free, so
  * the steps read clearly without copying any real site; only the real compiler's
  * address is shown (`utils/tryit.ts`).
@@ -11,7 +11,7 @@
  * Replay with the button or Enter. Switching the language replays it in that
  * language. Reduced motion shows the finished state straight away.
  *
- * Text lives in `tryit.*` in `locales/`; the code is the lesson's `door.python`.
+ * Text and the one-line program live in `tryit.*` in `locales/`.
  */
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch, type Ref } from 'vue'
 import { useI18n } from '~/composables/useI18n'
@@ -35,7 +35,7 @@ const pressed = ref<Target | null>(null)
 const pointer = ref({ x: 0, y: 0, visible: false })
 const finished = ref(false)
 
-const code = computed(() => t('door.python'))
+const code = computed(() => t('tryit.code'))
 const visibleCode = computed(() => code.value.split('\n').slice(0, lines.value).join('\n'))
 const onSite = computed(() => scene.value === 'loading' || scene.value === 'site')
 

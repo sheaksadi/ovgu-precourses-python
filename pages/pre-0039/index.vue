@@ -1,7 +1,7 @@
 <script setup lang="ts">
 /**
  * PRE-0039 — try it yourself. A short demo shows the way (search, open an online
- * compiler, paste the lesson's code, Run); the QR code and the link open the same
+ * compiler, paste a one-line print, Run); the QR code and the link open the same
  * compiler. Text lives in `tryit.*` in `locales/`; the compiler in `utils/tryit.ts`.
  */
 import { computed } from 'vue'
