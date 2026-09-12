@@ -14,15 +14,14 @@ const steps = computed(() => tm<string[]>('intro.steps'))
 <template>
   <div class="intro relative w-full h-full overflow-hidden">
     <section class="intro-copy">
-      <p class="intro-eyebrow anim-fade-in-up">{{ t('intro.eyebrow') }}</p>
-      <h2 class="intro-title anim-fade-in-up anim-delay-1">{{ t('intro.title') }}</h2>
+      <p class="intro-eyebrow">{{ t('intro.eyebrow') }}</p>
+      <h2 class="intro-title">{{ t('intro.title') }}</h2>
 
       <ol class="intro-steps">
         <li
           v-for="(step, index) in steps"
           :key="index"
-          class="intro-step anim-fade-in-up"
-          :class="`anim-delay-${index + 2}`"
+          class="intro-step"
         >
           <span class="intro-num">{{ index + 1 }}</span>
           <span>{{ step }}</span>
@@ -30,7 +29,7 @@ const steps = computed(() => tm<string[]>('intro.steps'))
       </ol>
     </section>
 
-    <section class="intro-reel anim-pop-in anim-delay-3">
+    <section class="intro-reel">
       <IntroSpinner />
     </section>
   </div>

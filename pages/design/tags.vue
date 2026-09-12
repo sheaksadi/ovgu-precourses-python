@@ -1,6 +1,6 @@
 <template>
   <div class="w-full h-full flex flex-col px-8 py-10 md:px-24 md:py-16">
-    <header class="mb-8 shrink-0 anim-fade-in-up">
+    <header class="mb-8 shrink-0">
       <h2 class="text-3xl md:text-5xl font-black tracking-tight" style="color: var(--text);">
         Tags, Pills & Labels
       </h2>
@@ -10,7 +10,7 @@
       </p>
     </header>
 
-    <div class="flex-grow flex flex-col gap-8 overflow-auto anim-fade-in-up anim-delay-2">
+    <div class="flex-grow flex flex-col gap-8 overflow-auto">
       <!-- Filled tags -->
       <div>
         <p class="text-[10px] font-bold uppercase tracking-widest mb-4" style="color: var(--text-muted);">Filled — strong presence, use sparingly</p>

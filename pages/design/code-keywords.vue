@@ -25,7 +25,7 @@ print(average([90, 72, 88]))`
 
 <template>
   <div class="w-full h-full flex flex-col px-8 py-10 md:px-24 md:py-16" @click.self="link.clear()">
-    <header class="mb-8 shrink-0 anim-fade-in-up">
+    <header class="mb-8 shrink-0">
       <h2 class="text-3xl md:text-5xl font-black tracking-tight" style="color: var(--text);">
         Code &amp; Keyword Links
       </h2>
@@ -35,12 +35,12 @@ print(average([90, 72, 88]))`
       </p>
     </header>
 
-    <div class="grid md:grid-cols-2 gap-6 items-start anim-fade-in-up anim-delay-1">
-      <CodePanel :code="pseudo" variant="pseudo" reveal />
-      <CodePanel :code="python" variant="python" reveal />
+    <div class="grid md:grid-cols-2 gap-6 items-start">
+      <CodePanel :code="pseudo" variant="pseudo" />
+      <CodePanel :code="python" variant="python" />
     </div>
 
-    <div class="mt-6 grid md:grid-cols-3 gap-4 items-start anim-fade-in-up anim-delay-3">
+    <div class="mt-6 grid md:grid-cols-3 gap-4 items-start">
       <div class="rounded-xl p-4" style="background: var(--bg-off);">
         <p class="text-[10px] font-bold uppercase tracking-widest mb-1" style="color: var(--lavender);">Concept links</p>
         <p class="text-[11px] leading-relaxed" style="color: var(--text-dim);">
@@ -67,7 +67,7 @@ print(average([90, 72, 88]))`
       </div>
     </div>
 
-    <div class="mt-auto pt-6 anim-fade-in-up anim-delay-4">
+    <div class="mt-auto pt-6">
       <p class="text-[10px] font-bold uppercase tracking-widest mb-3" style="color: var(--text-muted);">Focus example — line 5</p>
       <CodePanel :code="python" :focus="[5]" :linkable="false" :chrome="false" />
     </div>

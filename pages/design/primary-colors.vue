@@ -1,6 +1,6 @@
 <template>
   <div class="w-full h-full flex flex-col px-8 py-10 md:px-24 md:py-16">
-    <header class="mb-10 shrink-0 anim-fade-in-up">
+    <header class="mb-10 shrink-0">
       <h2 class="text-3xl md:text-5xl font-black tracking-tight" style="color: var(--text);">
         Primary Colors
       </h2>
@@ -10,7 +10,7 @@
       </p>
     </header>
 
-    <div class="flex-grow grid grid-cols-1 md:grid-cols-3 gap-6 anim-fade-in-up anim-delay-2">
+    <div class="flex-grow grid grid-cols-1 md:grid-cols-3 gap-6">
       <!-- Coral -->
       <div class="rounded-2xl overflow-hidden flex flex-col" style="border: 2px solid var(--border);">
         <div class="h-36 flex items-end p-5" style="background: var(--coral);">

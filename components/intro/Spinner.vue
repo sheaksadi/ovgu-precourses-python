@@ -234,7 +234,7 @@ onBeforeUnmount(() => {
 <template>
   <div class="spinner">
     <div class="spinner-momo" aria-hidden="true">
-      <span :key="phase" class="spinner-bubble">{{ bubble }}</span>
+      <span :key="phase" class="spinner-bubble" :class="{ 'is-first': phase === 'idle' }">{{ bubble }}</span>
       <ArtSprite name="cat-peek" color="coral" accent="sun" :size="96" class="w-full h-full" />
     </div>
 
@@ -310,6 +310,10 @@ onBeforeUnmount(() => {
   white-space: nowrap;
   transform-origin: 85% 120%;
   animation: bubble-pop 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+/* The first bubble waits for the slide to land; later ones answer the click at once. */
+.spinner-bubble.is-first {
+  animation-delay: 0.45s;
 }
 .spinner-bubble::after {
   content: '';

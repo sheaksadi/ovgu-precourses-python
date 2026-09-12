@@ -8,7 +8,7 @@ defineProps<{
 
 <template>
   <div class="w-full h-full flex flex-col px-8 py-10 md:px-24 md:py-16">
-    <header v-if="title" class="mb-8 md:mb-14 shrink-0 anim-fade-in-up">
+    <header v-if="title" class="mb-8 md:mb-14 shrink-0">
       <h2 class="text-3xl md:text-5xl font-black tracking-tight" style="color: var(--text);">
         {{ title }}
       </h2>
@@ -19,11 +19,11 @@ defineProps<{
     </header>
 
     <div class="flex-grow flex flex-col md:flex-row gap-8 md:gap-16 overflow-y-auto md:overflow-hidden">
-      <div class="w-full md:w-1/2 md:overflow-auto content-area md:pr-4 anim-slide-left anim-delay-2">
+      <div class="w-full md:w-1/2 md:overflow-auto content-area md:pr-4">
         <slot name="left" />
       </div>
       <div class="h-px w-full md:h-auto md:w-[3px] rounded-full shrink-0" style="background: var(--border);"></div>
-      <div class="w-full md:w-1/2 md:overflow-auto content-area md:pl-4 anim-slide-right anim-delay-3">
+      <div class="w-full md:w-1/2 md:overflow-auto content-area md:pl-4">
         <slot name="right" />
       </div>
     </div>

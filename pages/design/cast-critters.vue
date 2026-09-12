@@ -23,7 +23,7 @@ const poses = [
 
 <template>
   <div class="w-full h-full flex flex-col px-8 py-10 md:px-24 md:py-16">
-    <header class="mb-8 shrink-0 anim-fade-in-up">
+    <header class="mb-8 shrink-0">
       <h2 class="text-3xl md:text-5xl font-black tracking-tight" style="color: var(--text);">
         Cast: Critters
       </h2>
@@ -33,12 +33,11 @@ const poses = [
       </p>
     </header>
 
-    <div class="grid grid-cols-3 md:grid-cols-6 gap-4 anim-fade-in-up anim-delay-1">
+    <div class="grid grid-cols-3 md:grid-cols-6 gap-4">
       <div
         v-for="(member, index) in cast"
         :key="member.name"
-        class="rounded-2xl p-4 flex flex-col items-center gap-3 anim-pop-in"
-        :class="`anim-delay-${index + 1}`"
+        class="rounded-2xl p-4 flex flex-col items-center gap-3"
         style="background: var(--bg-off);"
       >
         <ArtSprite :name="member.name" :color="member.color" :accent="member.accent" :size="76" :label="member.label" />
@@ -50,7 +49,7 @@ const poses = [
       </div>
     </div>
 
-    <div class="mt-8 flex-grow grid md:grid-cols-3 gap-5 items-start content-start anim-fade-in-up anim-delay-3">
+    <div class="mt-8 flex-grow grid md:grid-cols-3 gap-5 items-start content-start">
       <div class="rounded-2xl p-5" style="background: var(--bg-off);">
         <p class="text-[10px] font-bold uppercase tracking-widest mb-4" style="color: var(--text-muted);">One sprite, eight tints</p>
         <div class="flex flex-wrap items-end gap-3">
@@ -108,7 +107,7 @@ const poses = [
       </div>
     </div>
 
-    <div class="pt-6 flex gap-4 anim-fade-in anim-delay-5">
+    <div class="pt-6 flex gap-4">
       <div class="w-1.5 h-10 rounded-full shrink-0" style="background: var(--coral);"></div>
       <p class="text-xs md:text-sm leading-relaxed" style="color: var(--text-dim);">
         <code style="color: var(--text);">&lt;ArtSprite name="cat" color="coral" accent="rose" :size="76" /&gt;</code> —

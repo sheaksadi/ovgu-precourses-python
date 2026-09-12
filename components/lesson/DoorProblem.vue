@@ -219,7 +219,6 @@ const litWord = (part: 'momo' | 'key' | 'house' | 'door') => lit(`word:${words.v
   background: var(--text);
   border-color: var(--text);
   color: var(--bg);
-  animation: step-pop 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 /* The step this stage adds slides in beside the ones already reached. */
@@ -472,14 +471,8 @@ const litWord = (part: 'momo' | 'key' | 'house' | 'door') => lit(`word:${words.v
 .stage-1 .cond-a {
   opacity: 0;
 }
-.stage-1 .lane-yes {
-  animation: rise 0.5s cubic-bezier(0.22, 1, 0.36, 1) 0.1s both;
-}
 .stage-1 .key-question {
   animation: pop 0.4s cubic-bezier(0.22, 1, 0.36, 1) 0.55s both;
-}
-.stage-1 .prompt {
-  animation: rise 0.5s cubic-bezier(0.22, 1, 0.36, 1) 0.3s both;
 }
 
 /* ─── Stage 2: play out both cases ───────────────────────────────────── */
@@ -680,10 +673,6 @@ const litWord = (part: 'momo' | 'key' | 'house' | 'door') => lit(`word:${words.v
 @keyframes pop {
   from { opacity: 0; transform: scale(0.6); }
   to { opacity: 1; transform: scale(1); }
-}
-@keyframes step-pop {
-  from { transform: scale(0.7); }
-  to { transform: scale(1); }
 }
 @keyframes step-in {
   from { opacity: 0; transform: translateX(-1.4vw); }

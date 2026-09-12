@@ -26,7 +26,7 @@ const paint = (name: string) => tint[name] ?? { color: 'coral', accent: 'sun' }
 
 <template>
   <div class="w-full h-full flex flex-col px-8 py-10 md:px-24 md:py-16">
-    <header class="mb-6 shrink-0 anim-fade-in-up">
+    <header class="mb-6 shrink-0">
       <h2 class="text-3xl md:text-5xl font-black tracking-tight" style="color: var(--text);">
         Props &amp; Places
       </h2>
@@ -37,7 +37,7 @@ const paint = (name: string) => tint[name] ?? { color: 'coral', accent: 'sun' }
     </header>
 
     <p class="text-[10px] font-bold uppercase tracking-widest mb-3" style="color: var(--text-muted);">Props</p>
-    <div class="grid grid-cols-4 md:grid-cols-8 gap-4 anim-fade-in-up anim-delay-1">
+    <div class="grid grid-cols-4 md:grid-cols-8 gap-4">
       <div
         v-for="name in props"
         :key="name"
@@ -51,7 +51,7 @@ const paint = (name: string) => tint[name] ?? { color: 'coral', accent: 'sun' }
     </div>
 
     <p class="text-[10px] font-bold uppercase tracking-widest mt-7 mb-3" style="color: var(--text-muted);">Places</p>
-    <div class="grid grid-cols-3 md:grid-cols-6 gap-4 anim-fade-in-up anim-delay-2">
+    <div class="grid grid-cols-3 md:grid-cols-6 gap-4">
       <div
         v-for="name in places"
         :key="name"
@@ -64,7 +64,7 @@ const paint = (name: string) => tint[name] ?? { color: 'coral', accent: 'sun' }
       </div>
     </div>
 
-    <div class="mt-auto pt-7 grid md:grid-cols-3 gap-4 items-start anim-fade-in-up anim-delay-3">
+    <div class="mt-auto pt-7 grid md:grid-cols-3 gap-4 items-start">
       <div class="rounded-2xl p-4 flex items-center gap-4" style="background: var(--bg-off);">
         <div class="flex items-center gap-1">
           <ArtSprite name="lever" state="off" color="sky" accent="coral" :size="52" />

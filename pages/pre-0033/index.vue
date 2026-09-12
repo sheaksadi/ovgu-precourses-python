@@ -1,7 +1,7 @@
 <script setup lang="ts">
 /**
  * PRE-0033 — course title. The audience scans the code in the bottom-right
- * quarter to open the interactive deck on their own device.
+ * quarter to follow the slides on their own device, in German or English.
  */
 import { ref } from 'vue'
 import { useI18n } from '~/composables/useI18n'
@@ -18,7 +18,7 @@ const shortUrl = (value: string) => value.replace(/^https?:\/\//, '')
 
     <!-- Top left: what this is -->
     <header class="absolute top-[8vh] left-[6vw]">
-      <div class="flex items-center gap-1.5 mb-[3.2vh] anim-fade-in">
+      <div class="flex items-center gap-1.5 mb-[3.2vh]">
         <span class="h-[0.55vh] w-[2.4vw] rounded-full" style="background: var(--coral);"></span>
         <span class="h-[0.55vh] w-[2.4vw] rounded-full" style="background: var(--sun);"></span>
         <span class="h-[0.55vh] w-[2.4vw] rounded-full" style="background: var(--mint);"></span>
@@ -26,21 +26,21 @@ const shortUrl = (value: string) => value.replace(/^https?:\/\//, '')
         <span class="h-[0.55vh] w-[2.4vw] rounded-full" style="background: var(--lavender);"></span>
       </div>
 
-      <p class="eyebrow anim-fade-in-up">
+      <p class="eyebrow">
         {{ t('title.university') }} <span class="mx-2" style="color: var(--border);">/</span> {{ t('title.semester') }}
       </p>
 
-      <h1 class="title anim-fade-in-up anim-delay-1">
+      <h1 class="title">
         {{ t('title.line1') }}<br>{{ t('title.line2') }}
       </h1>
 
-      <p class="subtitle anim-fade-in-up anim-delay-2">
+      <p class="subtitle">
         {{ t('title.subtitleBefore') }} <span class="subtitle-mark">{{ t('title.subtitleMark') }}</span> {{ t('title.subtitleAfter') }}
       </p>
     </header>
 
     <!-- Bottom left: who is teaching -->
-    <footer class="absolute bottom-[8vh] left-[6vw] flex flex-col gap-[2.6vh] anim-fade-in-up anim-delay-4">
+    <footer class="absolute bottom-[8vh] left-[6vw] flex flex-col gap-[2.6vh]">
       <div class="person">
         <span class="role">{{ t('title.instructor') }}</span>
         <span class="name name-lead">Karim</span>
@@ -52,7 +52,7 @@ const shortUrl = (value: string) => value.replace(/^https?:\/\//, '')
     </footer>
 
     <!-- Bottom right quarter: the way in -->
-    <aside class="qr-dock absolute anim-pop-in anim-delay-3">
+    <aside class="qr-dock absolute">
       <div class="qr-peek" aria-hidden="true">
         <span class="qr-bubble">{{ t('title.momoHi') }}</span>
         <ArtSprite name="cat-peek" color="coral" accent="sun" :size="96" class="w-full h-full" />
@@ -218,7 +218,7 @@ const shortUrl = (value: string) => value.replace(/^https?:\/\//, '')
   color: var(--text);
   white-space: nowrap;
   transform-origin: 85% 120%;
-  animation: pop-in 0.4s cubic-bezier(0.22, 1, 0.36, 1) 0.9s both;
+  animation: pop-in 0.4s cubic-bezier(0.22, 1, 0.36, 1) 0.5s both;
 }
 .qr-bubble::after {
   content: '';

@@ -61,11 +61,7 @@ body {
   font-family: 'JetBrains Mono', monospace;
 }
 
-/* ─── Animations ─────────────────────────────────────────────────────── */
-@keyframes fade-in-up {
-  from { opacity: 0; transform: translateY(20px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
+/* ─── Keyframes shared by components ─────────────────────────────────── */
 @keyframes fade-in {
   from { opacity: 0; }
   to   { opacity: 1; }
@@ -74,43 +70,13 @@ body {
   from { opacity: 0; transform: scale(0.9); }
   to   { opacity: 1; transform: scale(1); }
 }
-@keyframes slide-in-left {
-  from { opacity: 0; transform: translateX(-24px); }
-  to   { opacity: 1; transform: translateX(0); }
-}
-@keyframes slide-in-right {
-  from { opacity: 0; transform: translateX(24px); }
-  to   { opacity: 1; transform: translateX(0); }
-}
-
-.anim-fade-in-up {
-  animation: fade-in-up 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
-}
-.anim-fade-in {
-  animation: fade-in 0.4s ease both;
-}
-.anim-pop-in {
-  animation: pop-in 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
-}
-.anim-slide-left {
-  animation: slide-in-left 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
-}
-.anim-slide-right {
-  animation: slide-in-right 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
-}
-
-.anim-delay-1 { animation-delay: 0.08s; }
-.anim-delay-2 { animation-delay: 0.16s; }
-.anim-delay-3 { animation-delay: 0.24s; }
-.anim-delay-4 { animation-delay: 0.32s; }
-.anim-delay-5 { animation-delay: 0.40s; }
-.anim-delay-6 { animation-delay: 0.48s; }
 
 /* ─── Motion policy ──────────────────────────────────────────────────────
  *
- * The deck has five entry animations and nothing else. Emphasis, transforms
- * and code morphs are owned by components (`components/code/`), where they can
- * be driven by state instead of looping forever on their own.
+ * One entrance per slide, owned by the page transition in `app.vue`: a soft
+ * rise, nothing staggered. Everything else moves only because state changed
+ * (lesson stages, the question reel, a speech bubble) and lives in the
+ * component that owns that state. Nothing loops on its own.
  *
  * ─────────────────────────────────────────────────────────────────────── */
 

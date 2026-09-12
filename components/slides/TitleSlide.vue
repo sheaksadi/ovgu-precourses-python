@@ -20,19 +20,19 @@ defineProps<{
       <!-- Optional accent pill above title -->
       <div
         v-if="accent"
-        class="w-16 h-2 rounded-full mb-4 anim-fade-in"
+        class="w-16 h-2 rounded-full mb-4"
         :style="{ background: `var(--${accent})` }"
       ></div>
 
-      <h1 class="text-5xl md:text-9xl font-black tracking-tight leading-none anim-fade-in-up" style="color: var(--text);">
+      <h1 class="text-5xl md:text-9xl font-black tracking-tight leading-none" style="color: var(--text);">
         {{ title }}
       </h1>
 
-      <p v-if="subtitle" class="text-lg md:text-2xl font-medium mt-2 anim-fade-in-up anim-delay-2" style="color: var(--text-dim);">
+      <p v-if="subtitle" class="text-lg md:text-2xl font-medium mt-2" style="color: var(--text-dim);">
         {{ subtitle }}
       </p>
 
-      <div class="mt-8 anim-fade-in-up anim-delay-3">
+      <div class="mt-8">
         <slot />
       </div>
     </div>

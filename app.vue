@@ -37,11 +37,14 @@ const layoutName = computed<LayoutKey | false>(() => {
   return slide.layout as LayoutKey
 })
 
-/** Per-slide page transition, named in `slides.config.ts`. */
-const pageTransition = computed(() => {
-  const name = routeSlide.value?.transition
-  return name ? { name: `slide-${name}`, mode: 'out-in' as const } : undefined
-})
+/**
+ * The one slide entrance: every slide rises in softly, and leaving is instant.
+ * `transition: 'none'` in `slides.config.ts` turns it off, so the stages of one
+ * scene (the Momo lesson) cut into each other invisibly.
+ */
+const pageTransition = computed(() =>
+  routeSlide.value?.transition === 'none' ? false : { name: 'slide-rise', mode: 'out-in' as const }
+)
 
 const navDebounce = ref(0)
 const debounced = () => {
@@ -221,53 +224,13 @@ onUnmounted(() => {
 </template>
 
 <style>
-/* Default page transition. */
-.page-enter-active,
-.page-leave-active {
-  transition: all 0.4s ease-out;
+/* The one slide entrance. Only enter is styled, so the old slide leaves at once. */
+.slide-rise-enter-active {
+  transition: opacity 0.4s ease, transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
 }
-.page-enter-from {
+.slide-rise-enter-from {
   opacity: 0;
-  transform: translateX(20px);
-}
-.page-leave-to {
-  opacity: 0;
-  transform: translateX(-20px);
-}
-
-/* `transition: 'fade'` in slides.config.ts */
-.slide-fade-enter-active,
-.slide-fade-leave-active {
-  transition: opacity 0.35s ease;
-}
-.slide-fade-enter-from,
-.slide-fade-leave-to {
-  opacity: 0;
-}
-
-/* `transition: 'slide'` in slides.config.ts */
-.slide-slide-enter-active,
-.slide-slide-leave-active {
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-}
-.slide-slide-enter-from {
-  opacity: 0;
-  transform: translateX(40px);
-}
-.slide-slide-leave-to {
-  opacity: 0;
-  transform: translateX(-40px);
-}
-
-/* `transition: 'zoom'` in slides.config.ts */
-.slide-zoom-enter-active,
-.slide-zoom-leave-active {
-  transition: all 0.35s ease;
-}
-.slide-zoom-enter-from,
-.slide-zoom-leave-to {
-  opacity: 0;
-  transform: scale(0.96);
+  transform: translateY(10px);
 }
 
 /* Respect a viewer who asked for less motion. */

@@ -1,6 +1,6 @@
 <template>
   <div class="w-full h-full flex flex-col px-8 py-10 md:px-24 md:py-16">
-    <header class="mb-8 shrink-0 anim-fade-in-up">
+    <header class="mb-8 shrink-0">
       <h2 class="text-3xl md:text-5xl font-black tracking-tight" style="color: var(--text);">
         Code Blocks
       </h2>
@@ -10,7 +10,7 @@
       </p>
     </header>
 
-    <div class="flex-grow flex flex-col gap-6 overflow-auto anim-fade-in-up anim-delay-2">
+    <div class="flex-grow flex flex-col gap-6 overflow-auto">
       <!-- Code block example -->
       <div class="rounded-2xl overflow-hidden flex flex-col" style="background: var(--code-bg); border: 2px solid var(--code-border);">
         <div class="px-5 py-3 text-[11px] font-bold uppercase tracking-widest flex justify-between items-center" style="border-bottom: 1px solid var(--code-border);">

@@ -18,7 +18,7 @@ const copyCode = () => {
 
 <template>
   <div class="w-full h-full flex flex-col px-8 py-10 md:px-24 md:py-16">
-    <header class="mb-6 shrink-0 flex justify-between items-center anim-fade-in-up">
+    <header class="mb-6 shrink-0 flex justify-between items-center">
       <div>
         <h2 class="text-3xl md:text-5xl font-black tracking-tight" style="color: var(--text);">
           {{ title }}
@@ -40,7 +40,7 @@ const copyCode = () => {
       </button>
     </header>
 
-    <div class="flex-grow overflow-hidden rounded-2xl flex flex-col anim-pop-in anim-delay-2" style="background: var(--code-bg); border: 2px solid var(--code-border);">
+    <div class="flex-grow overflow-hidden rounded-2xl flex flex-col" style="background: var(--code-bg); border: 2px solid var(--code-border);">
       <!-- Top bar -->
       <div class="px-5 py-3 text-[11px] font-bold uppercase tracking-widest flex justify-between items-center" style="color: var(--text-muted); border-bottom: 1px solid var(--code-border);">
         <div class="flex gap-2">

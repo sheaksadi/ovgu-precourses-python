@@ -5,6 +5,10 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   css: ['~/assets/css/main.css'],
   app: {
+    // A slide that switches layout (the bare title slide into a chrome slide)
+    // mounts without the page transition, so the layout gets the same entrance.
+    // Stages of one scene share a layout and stay an invisible cut.
+    layoutTransition: { name: 'slide-rise', mode: 'out-in' },
     head: {
       link: [
         {

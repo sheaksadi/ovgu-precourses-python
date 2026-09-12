@@ -1,6 +1,6 @@
 <template>
   <div class="w-full h-full flex flex-col px-8 py-10 md:px-24 md:py-16">
-    <header class="mb-8 shrink-0 anim-fade-in-up">
+    <header class="mb-8 shrink-0">
       <h2 class="text-3xl md:text-5xl font-black tracking-tight" style="color: var(--text);">
         Page Chrome & Navigation
       </h2>
@@ -10,7 +10,7 @@
       </p>
     </header>
 
-    <div class="flex-grow flex flex-col gap-6 overflow-auto anim-fade-in-up anim-delay-2">
+    <div class="flex-grow flex flex-col gap-6 overflow-auto">
       <!-- Mini slide mockup -->
       <div class="rounded-2xl overflow-hidden relative" style="border: 2px solid var(--border); height: 280px;">
         <!-- Mock deck title -->

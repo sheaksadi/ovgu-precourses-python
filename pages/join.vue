@@ -39,7 +39,7 @@ const open = (code: Locale) => {
 
 <template>
   <main class="follow">
-    <div class="follow-card anim-pop-in">
+    <div class="follow-card">
       <div class="follow-momo" aria-hidden="true">
         <ArtSprite name="cat-peek" color="coral" accent="sun" :size="96" class="w-full h-full" />
       </div>

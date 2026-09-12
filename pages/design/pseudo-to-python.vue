@@ -38,7 +38,7 @@ const stages: MorphStage[] = [
 
 <template>
   <div class="w-full h-full flex flex-col px-8 py-10 md:px-24 md:py-16">
-    <header class="mb-6 shrink-0 anim-fade-in-up">
+    <header class="mb-6 shrink-0">
       <h2 class="text-3xl md:text-5xl font-black tracking-tight" style="color: var(--text);">
         Pseudo → Python
       </h2>
@@ -48,11 +48,11 @@ const stages: MorphStage[] = [
       </p>
     </header>
 
-    <div class="flex-grow flex flex-col justify-center anim-fade-in-up anim-delay-1">
+    <div class="flex-grow flex flex-col justify-center">
       <CodeMorph :stages="stages" />
     </div>
 
-    <div class="mt-6 flex gap-4 anim-fade-in anim-delay-3" style="border-top: 2px solid var(--border); padding-top: 1.5rem;">
+    <div class="mt-6 flex gap-4" style="border-top: 2px solid var(--border); padding-top: 1.5rem;">
       <div class="w-1.5 h-12 rounded-full shrink-0" style="background: var(--lavender);"></div>
       <p class="text-xs md:text-sm leading-relaxed" style="color: var(--text-dim);">
         <strong style="color: var(--text);">Why it reads:</strong> the tokens carry keys, not positions. A word that means the

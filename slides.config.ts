@@ -15,7 +15,10 @@ export interface SlideEntry {
    */
   interactive?: SlideInteractive
   teleprompter?: string
-  /** Page transition: `fade`, `slide` or `zoom`. */
+  /**
+   * Every slide rises in softly. `none` skips that, for the stages of one scene
+   * that must cut into each other invisibly.
+   */
   transition?: SlideTransition
   /** Planned minutes on this slide, used by the presenter view's pacing. */
   duration?: number
@@ -26,7 +29,7 @@ export interface SlideEntry {
   route?: string
 }
 
-export type SlideTransition = 'fade' | 'slide' | 'zoom'
+export type SlideTransition = 'none'
 
 export type SlideLayoutName = 'slide' | 'slide-bare' | 'slide-section' | 'slide-interactive'
 
@@ -53,7 +56,6 @@ export const slides: SlideEntry[] = [
     title: 'Python Pre-Course',
     subtitle: 'for AI & Machine Learning Engineering — OVGU, Winter Semester 2026/27',
     layout: 'slide-bare',
-    transition: 'fade',
     teleprompter: 'Welcome to the Python pre-course. Scan the code in the corner to open the slides on your own device: you can follow along, move at your own pace, and the sync button brings you back to where we are.',
   },
   {
@@ -61,7 +63,6 @@ export const slides: SlideEntry[] = [
     title: 'Vorstellungsrunde',
     subtitle: 'Name sagen, Frage drehen, antworten',
     duration: 10,
-    transition: 'fade',
     teleprompter: 'Reihum: Name sagen, dann Enter drücken oder auf das Rad tippen und die Frage beantworten. Keine Frage kommt doppelt, bis alle einmal dran waren. Ton an und aus unten rechts. Selbst anfangen hilft: Momo zuerst.',
   },
   {
@@ -74,18 +75,21 @@ export const slides: SlideEntry[] = [
     id: 'PRE-0035',
     title: 'Kommt Momo ins Haus? – Lösen',
     parent: 'PRE-0034',
+    transition: 'none',
     teleprompter: 'Gleiche Situation, ein Unterschied. Beide Katzen laufen los. Mit Schlüssel geht die Tür auf und Momo ist drin. Ohne Schlüssel bleibt die Tür zu und Momo schläft davor. Eine Frage, zwei Wege.',
   },
   {
     id: 'PRE-0036',
     title: 'Kommt Momo ins Haus? – Aufschreiben',
     parent: 'PRE-0034',
+    transition: 'none',
     teleprompter: 'Jetzt schreiben wir genau das auf. if steht vor der Frage, else vor dem anderen Weg. Alles andere ist ganz normales Deutsch. Fahr mit der Maus über ein Wort im Code, dann leuchtet es im Bild auf.',
   },
   {
     id: 'PRE-0037',
     title: 'Kommt Momo ins Haus? – Python',
     parent: 'PRE-0034',
+    transition: 'none',
     teleprompter: 'Und jetzt als echtes Python. Oben unser Plan, unten derselbe Plan, den der Computer ausführen kann. if und else bleiben gleich, die Frage wird zu einer Variablen hat_schluessel, und was Momo tut, wird zu print. Ändere True zu False und frag: Was steht jetzt da?',
   },
   {
@@ -93,7 +97,6 @@ export const slides: SlideEntry[] = [
     title: 'Design System',
     subtitle: 'Python for Beginners — Style Guide',
     layout: 'slide-bare',
-    transition: 'fade',
     route: '/design/system',
     teleprompter: 'This is our design system and style guide. Every visual decision for the Python pre-courses deck is documented here.',
   },
@@ -142,7 +145,6 @@ export const slides: SlideEntry[] = [
     title: 'Code Blocks',
     route: '/design/code-blocks',
     teleprompter: 'The only dark element in the system. Catppuccin-inspired dark surface with pastel window dots matching our palette.',
-    transition: 'fade',
   },
   {
     id: 'PRE-0018',
@@ -156,7 +158,6 @@ export const slides: SlideEntry[] = [
     title: 'Title Cards & Layouts',
     route: '/design/layouts',
     teleprompter: 'Three layout types: slide-bare for titles and drama, slide for all teaching content, slide-section for chapter breaks.',
-    transition: 'slide',
   },
   {
     id: 'PRE-0020',
@@ -170,7 +171,6 @@ export const slides: SlideEntry[] = [
     title: 'Animation & Motion',
     route: '/design/animation',
     teleprompter: 'Fast, subtle, purposeful animations. 80ms stagger between elements. All motion respects prefers-reduced-motion.',
-    transition: 'fade',
   },
   {
     id: 'PRE-0028',
@@ -191,7 +191,6 @@ export const slides: SlideEntry[] = [
     title: 'Cast: Critters',
     route: '/design/cast-critters',
     teleprompter: 'Six animals carry every example in this course. Flat SVG, two-pixel outlines, tinted from the palette, so colour itself becomes data: three coral cats and one mint cat is a list with one odd element.',
-    transition: 'fade',
   },
   {
     id: 'PRE-0031',

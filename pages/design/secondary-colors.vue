@@ -1,6 +1,6 @@
 <template>
   <div class="w-full h-full flex flex-col px-8 py-10 md:px-24 md:py-16">
-    <header class="mb-10 shrink-0 anim-fade-in-up">
+    <header class="mb-10 shrink-0">
       <h2 class="text-3xl md:text-5xl font-black tracking-tight" style="color: var(--text);">
         Secondary & Accent Colors
       </h2>
@@ -10,7 +10,7 @@
       </p>
     </header>
 
-    <div class="flex-grow grid grid-cols-2 md:grid-cols-5 gap-4 anim-fade-in-up anim-delay-2">
+    <div class="flex-grow grid grid-cols-2 md:grid-cols-5 gap-4">
       <!-- Rose -->
       <div class="rounded-2xl overflow-hidden flex flex-col" style="border: 2px solid var(--border);">
         <div class="h-28 flex items-end p-4" style="background: var(--rose);">

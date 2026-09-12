@@ -6,16 +6,20 @@
  *   t('follow.startsAt', { label: '2.1' })  // with {placeholders}
  *   tm<string[]>('intro.questions')         // anything else: arrays, objects
  *
- * The language is a per-device choice, like the view mode. It comes from
- * `?lang=de|en` on first load, then from the `deck-lang` cookie, so the server
- * renders the right words and the page never flashes the other language. The
- * `l` key toggles it on a screen; touch devices get a small pill.
+ * The language is a per-device choice, like the view mode, kept in the
+ * `deck-lang` cookie so the server renders the right words and the page never
+ * flashes the other language. Three ways to set it:
+ *
+ *   - a link: `?lang=en`, `?lang=de`, or just `?en` / `?de`, on any page and on
+ *     every navigation (`plugins/i18n-link.ts`),
+ *   - the `l` key on a screen,
+ *   - the DE | EN pill on touch devices, or the buttons on `/join`.
  *
  * A missing key falls back to German, then to the key itself, so a gap shows
  * up on the slide instead of breaking it.
  */
 import { computed } from 'vue'
-import { useCookie, useRoute, useState } from '#app'
+import { useCookie, useState } from '#app'
 import de from '~/locales/de'
 import en from '~/locales/en'
 
@@ -26,7 +30,14 @@ export const DEFAULT_LOCALE: Locale = 'de'
 
 const MESSAGES: Record<Locale, unknown> = { de, en }
 
-const isLocale = (value: unknown): value is Locale => value === 'de' || value === 'en'
+export const isLocale = (value: unknown): value is Locale => value === 'de' || value === 'en'
+
+/** The language a link asks for: `?lang=en`, or a bare `?en`. */
+export function localeFromQuery(query: Record<string, unknown>): Locale | undefined {
+  const raw = Array.isArray(query.lang) ? query.lang[0] : query.lang
+  if (isLocale(raw)) return raw
+  return LOCALES.find(code => code in query)
+}
 
 function lookup(tree: unknown, path: string): unknown {
   return path.split('.').reduce<unknown>(
@@ -36,18 +47,13 @@ function lookup(tree: unknown, path: string): unknown {
 }
 
 export function useI18n() {
-  const route = useRoute()
   const cookie = useCookie<Locale | undefined>('deck-lang', {
     maxAge: 60 * 60 * 24 * 365,
     sameSite: 'lax',
     path: '/',
   })
 
-  const locale = useState<Locale>('deck-locale', () => {
-    const raw = Array.isArray(route.query.lang) ? route.query.lang[0] : route.query.lang
-    if (isLocale(raw)) return raw
-    return isLocale(cookie.value) ? cookie.value : DEFAULT_LOCALE
-  })
+  const locale = useState<Locale>('deck-locale', () => (isLocale(cookie.value) ? cookie.value : DEFAULT_LOCALE))
 
   const setLocale = (next: Locale) => {
     locale.value = next

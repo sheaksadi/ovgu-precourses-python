@@ -84,21 +84,30 @@ slides.counter.json    # Next available slide ID (currently 33)
 
 ## Animation System
 
-The deck has **five entry animations and two code components**. That is the whole
-inventory. Emphasis and transforms are not CSS classes any more: they belong to
-components, where they are driven by state instead of looping forever.
+Motion comes in three kinds, and a slide uses as little of it as it can.
 
-### Entry animations
+### 1. One slide entrance
 
-| Class | Duration | Use for |
-| --- | --- | --- |
-| `anim-fade-in-up` | 500ms | Default. Headers, content blocks, cards |
-| `anim-fade-in` | 400ms | Captions, footnotes, supporting text |
-| `anim-pop-in` | 400ms | Tags, badges, code panels |
-| `anim-slide-left` | 500ms | Left column of a split slide |
-| `anim-slide-right` | 500ms | Right column of a split slide |
+Every slide rises in once when it appears: opacity and a 10px lift, 400ms,
+`cubic-bezier(0.22, 1, 0.36, 1)`. The page transition in `app.vue` owns it, so
+pages never animate their own elements in: no staggered headers, cards or lists.
+Leaving is instant.
 
-Cascade them with `anim-delay-1` … `anim-delay-6` (80ms apart).
+Set `transition: 'none'` on a slide in `slides.config.ts` to skip the entrance.
+Use it only for the stages of one scene, which have to cut into each other
+invisibly (the Momo lesson, PRE-0035 to PRE-0037).
+
+### 2. State changes
+
+Motion that answers a click or a "next": the lesson's stages, the step that was
+just reached, the question reel. It lives in the component that owns the state,
+runs once and stops. The two code components below are the reference.
+
+### 3. One accent
+
+At most one small pop after the slide lands, usually Momo's speech bubble
+(`pop-in`, delayed about 450–500ms so it arrives after the entrance). It changes
+again only when the state behind it changes.
 
 ### `<CodePanel>` — one code sample
 
@@ -152,23 +161,21 @@ Add a synonym by editing `WORD_CONCEPTS` or `OPERATOR_CONCEPTS` in
 ## Animation Rules
 
 ### Timing
-- Entry animations: 400–500ms
+- Slide entrance: 400ms, once per slide
+- Accent pop: 400ms, 450–500ms after the slide appears
 - Token move inside a morph: 550ms; the new syntax lands 250ms behind it
 - Colour and surface crossfades: 300–500ms
-- Stagger delay: 80ms between siblings, 60ms between code lines
-- Maximum: 6 elements animating at once
+- No staggered entrances
 - Nothing loops. An animation runs because state changed, and then it stops
 
 ### Easing
 - Entry and movement: `cubic-bezier(0.22, 1, 0.36, 1)` — quick start, gentle settle
 - Colour, opacity and dimming: `ease`
 
-### Hierarchy
-1. Header (`anim-fade-in-up`)
-2. Accent bar and lede (delay 80ms)
-3. Code panels (delay 160ms)
-4. Explanatory cards (delay 240ms)
-5. Footnote (`anim-fade-in`, delay 320ms)
+### Order on screen
+1. The slide rises in as one piece
+2. One accent, if any
+3. Nothing else until the presenter clicks
 
 ### Properties
 - **GPU-accelerated**: transform, opacity (FAST)

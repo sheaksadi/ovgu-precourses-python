@@ -15,7 +15,7 @@ const loop = `for house in street:
 
 <template>
   <div class="w-full h-full flex flex-col px-8 py-10 md:px-24 md:py-16">
-    <header class="mb-6 shrink-0 anim-fade-in-up">
+    <header class="mb-6 shrink-0">
       <h2 class="text-3xl md:text-5xl font-black tracking-tight" style="color: var(--text);">
         Cast in Practice
       </h2>
@@ -27,7 +27,7 @@ const loop = `for house in street:
 
     <div class="flex-grow flex flex-col justify-between gap-4">
       <!-- Boolean -->
-      <div class="grid md:grid-cols-[1fr_1.3fr] gap-5 items-center rounded-2xl p-4 anim-fade-in-up anim-delay-1" style="background: var(--bg-off);">
+      <div class="grid md:grid-cols-[1fr_1.3fr] gap-5 items-center rounded-2xl p-4" style="background: var(--bg-off);">
         <div class="flex items-center gap-4">
           <ArtSprite name="lever" state="off" color="sky" accent="coral" :size="64" />
           <ArtSprite name="door" color="lavender" accent="sun" :size="64" />
@@ -42,7 +42,7 @@ const loop = `for house in street:
       </div>
 
       <!-- List -->
-      <div class="grid md:grid-cols-[1fr_1.3fr] gap-5 items-center rounded-2xl p-4 anim-fade-in-up anim-delay-2" style="background: var(--bg-off);">
+      <div class="grid md:grid-cols-[1fr_1.3fr] gap-5 items-center rounded-2xl p-4" style="background: var(--bg-off);">
         <div class="flex items-center gap-4">
           <ArtSprite name="basket" color="peach" accent="text" :size="64" />
           <div class="flex">
@@ -61,7 +61,7 @@ const loop = `for house in street:
       </div>
 
       <!-- Loop -->
-      <div class="grid md:grid-cols-[1fr_1.3fr] gap-5 items-center rounded-2xl p-4 anim-fade-in-up anim-delay-3" style="background: var(--bg-off);">
+      <div class="grid md:grid-cols-[1fr_1.3fr] gap-5 items-center rounded-2xl p-4" style="background: var(--bg-off);">
         <div class="flex items-center gap-4">
           <div class="flex items-end">
             <ArtSprite name="house" color="sun" accent="coral" :size="52" />
@@ -80,7 +80,7 @@ const loop = `for house in street:
       </div>
     </div>
 
-    <div class="pt-5 flex gap-4 anim-fade-in anim-delay-5">
+    <div class="pt-5 flex gap-4">
       <div class="w-1.5 h-10 rounded-full shrink-0" style="background: var(--mint);"></div>
       <p class="text-xs md:text-sm leading-relaxed" style="color: var(--text-dim);">
         <strong style="color: var(--text);">Rule of the cast:</strong> a sprite keeps one meaning for the whole course. Colour separates

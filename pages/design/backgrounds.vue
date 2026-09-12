@@ -1,6 +1,6 @@
 <template>
   <div class="w-full h-full flex flex-col px-8 py-10 md:px-24 md:py-16">
-    <header class="mb-10 shrink-0 anim-fade-in-up">
+    <header class="mb-10 shrink-0">
       <h2 class="text-3xl md:text-5xl font-black tracking-tight" style="color: var(--text);">
         Backgrounds & Surfaces
       </h2>
@@ -10,7 +10,7 @@
       </p>
     </header>
 
-    <div class="flex-grow grid grid-cols-1 md:grid-cols-3 gap-6 anim-fade-in-up anim-delay-2">
+    <div class="flex-grow grid grid-cols-1 md:grid-cols-3 gap-6">
       <!-- Pure White -->
       <div class="rounded-2xl p-6 flex flex-col gap-4" style="background: var(--bg); border: 2px solid var(--border);">
         <div class="w-full h-24 rounded-xl flex items-center justify-center" style="background: #FFFFFF; border: 2px dashed var(--border);">
@@ -67,7 +67,7 @@
     </div>
 
     <!-- Dark exception -->
-    <div class="mt-6 rounded-2xl p-5 flex items-center gap-6 anim-fade-in-up anim-delay-4" style="background: var(--code-bg); border: 2px solid var(--code-border);">
+    <div class="mt-6 rounded-2xl p-5 flex items-center gap-6" style="background: var(--code-bg); border: 2px solid var(--code-border);">
       <div class="shrink-0">
         <code class="text-xs font-bold" style="color: var(--mint);">#1E1E2E</code>
       </div>
