@@ -237,65 +237,65 @@
       </div>
     </div>
   </div>
-
-  <script setup>
-  import { onMounted, onBeforeUnmount } from 'vue'
-
-  let countInterval = null
-
-  onMounted(() => {
-    // CountUp animation
-    const display = document.getElementById('count-display')
-    if (display) {
-      let current = 0
-      const target = 42
-      const duration = 2500
-      const fps = 30
-      const totalFrames = (duration / 1000) * fps
-      const increment = target / totalFrames
-      
-      const startTime = Date.now()
-      
-      countInterval = setInterval(() => {
-        const elapsed = Date.now() - startTime
-        const progress = Math.min(elapsed / duration, 1)
-        
-        // Ease-out cubic
-        const eased = 1 - Math.pow(1 - progress, 3)
-        current = Math.floor(eased * target)
-        
-        display.textContent = current
-        
-        if (progress >= 1) {
-          display.textContent = target
-          clearInterval(countInterval)
-          
-          // Restart after 2s pause
-          setTimeout(() => {
-            current = 0
-            display.textContent = '0'
-            const newStart = Date.now()
-            countInterval = setInterval(() => {
-              const newElapsed = Date.now() - newStart
-              const newProgress = Math.min(newElapsed / duration, 1)
-              const newEased = 1 - Math.pow(1 - newProgress, 3)
-              current = Math.floor(newEased * target)
-              display.textContent = current
-              if (newProgress >= 1) {
-                display.textContent = target
-                clearInterval(countInterval)
-              }
-            }, 1000 / fps)
-          }, 2000)
-        }
-      }, 1000 / fps)
-    }
-  })
-
-  onBeforeUnmount(() => {
-    if (countInterval) {
-      clearInterval(countInterval)
-    }
-  })
-  </script>
 </template>
+
+<script setup>
+import { onMounted, onBeforeUnmount } from 'vue'
+
+let countInterval = null
+
+onMounted(() => {
+  // CountUp animation
+  const display = document.getElementById('count-display')
+  if (display) {
+    let current = 0
+    const target = 42
+    const duration = 2500
+    const fps = 30
+    const totalFrames = (duration / 1000) * fps
+    const increment = target / totalFrames
+    
+    const startTime = Date.now()
+    
+    countInterval = setInterval(() => {
+      const elapsed = Date.now() - startTime
+      const progress = Math.min(elapsed / duration, 1)
+      
+      // Ease-out cubic
+      const eased = 1 - Math.pow(1 - progress, 3)
+      current = Math.floor(eased * target)
+      
+      display.textContent = current
+      
+      if (progress >= 1) {
+        display.textContent = target
+        clearInterval(countInterval)
+        
+        // Restart after 2s pause
+        setTimeout(() => {
+          current = 0
+          display.textContent = '0'
+          const newStart = Date.now()
+          countInterval = setInterval(() => {
+            const newElapsed = Date.now() - newStart
+            const newProgress = Math.min(newElapsed / duration, 1)
+            const newEased = 1 - Math.pow(1 - newProgress, 3)
+            current = Math.floor(newEased * target)
+            display.textContent = current
+            if (newProgress >= 1) {
+              display.textContent = target
+              clearInterval(countInterval)
+            }
+          }, 1000 / fps)
+        }, 2000)
+      }
+    }, 1000 / fps)
+  }
+})
+
+onBeforeUnmount(() => {
+  if (countInterval) {
+    clearInterval(countInterval)
+  }
+})
+</script>
