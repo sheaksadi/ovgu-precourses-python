@@ -2,18 +2,18 @@
 
 ## Overview
 
-This is a Nuxt 3 presentation framework for teaching Python to beginners. The design system is inspired by 3Blue1Brown's Manim animations and Jet Lag The Game's visual aesthetic.
+This is a Nuxt 3 presentation framework for teaching Python to beginners. The design system takes its restraint from 3Blue1Brown and its flat pastel look from Jet Lag The Game.
 
 ## Design Philosophy
 
 **Minimal Pastel**: White backgrounds, JetBrains Mono everywhere, bold pastel color blocks, flat graphics, no shadows, thick 2px borders.
 
-**Educational Focus**: Every animation serves pedagogy. Pseudo-code bridges concepts to syntax. Transforms show continuity, not replacement.
+**Educational Focus**: Every animation serves pedagogy. Motion is state, never decoration: nothing loops on its own, and the deck holds still until the presenter moves it. Pseudo-code bridges concepts to syntax, and a transform moves the words that survive instead of swapping one block for another.
 
 ## Directory Structure
 
 ```
-pages/design/           # Design system slides (PRE-0010 to PRE-0027)
+pages/design/           # Design system slides (PRE-0010 to PRE-0032)
   system.vue           # Cover page
   primary-colors.vue   # Coral, Mint, Sky
   secondary-colors.vue # Rose, Sun, Lavender, Peach, Sage
@@ -25,17 +25,27 @@ pages/design/           # Design system slides (PRE-0010 to PRE-0027)
   chrome.vue          # Progress bar, page numbers, deck title
   layouts.vue         # slide-bare, slide, slide-section
   spacing.vue         # Margins, spacing scale, border-radius
-  animation.vue       # Entry animations, timing rules
-  manim-entrances.vue      # Write, FadeIn, Grow, DrawBorderThenFill
-  manim-emphasis.vue       # Indicate, Wiggle, Circumscribe (code examples)
-  manim-transforms.vue     # ReplacementTransform, Transform, MoveToTarget, CountUp
-  manim-choreography.vue   # Timing, stagger, composition rules
-  code-animations.vue      # Block transform, line correlation, colored blocks
-  pseudo-transform.vue     # Pseudo-code → Python morphing
+  animation.vue        # Entry animations, timing rules
+  code-keywords.vue    # Syntax colours, keyword links, line focus
+  pseudo-to-python.vue # Staged pseudo-code → Python morph
+  cast-critters.vue    # The six animals, tints, sizes, names
+  props-places.vue     # Objects and scenery, one meaning each
+  cast-in-practice.vue # Worked scenes paired with real code
 
-assets/css/main.css    # All CSS variables and keyframes
+components/code/
+  Panel.vue            # <CodePanel>  — one tokenized sample
+  Morph.vue            # <CodeMorph>  — staged transform between samples
+
+components/art/
+  Sprite.vue           # <ArtSprite>  — one cast member, tinted
+
+utils/codeTokens.ts    # Tokenizer, concept links, morph keys
+utils/codeTheme.ts     # One ink map for both code components
+utils/sprites.ts       # The cast: 20 flat SVG sprites
+composables/useCodeLink.ts  # Shared "same idea" highlight
+assets/css/main.css    # CSS variables, five entry animations
 slides.config.ts       # Slide order and metadata
-slides.counter.json    # Next available slide ID (currently 28)
+slides.counter.json    # Next available slide ID (currently 33)
 ```
 
 ## Color System
@@ -74,146 +84,140 @@ slides.counter.json    # Next available slide ID (currently 28)
 
 ## Animation System
 
-### Entry Animations
+The deck has **five entry animations and two code components**. That is the whole
+inventory. Emphasis and transforms are not CSS classes any more: they belong to
+components, where they are driven by state instead of looping forever.
 
-**Write** (1.2s) — Clip-path reveal left-to-right
+### Entry animations
+
+| Class | Duration | Use for |
+| --- | --- | --- |
+| `anim-fade-in-up` | 500ms | Default. Headers, content blocks, cards |
+| `anim-fade-in` | 400ms | Captions, footnotes, supporting text |
+| `anim-pop-in` | 400ms | Tags, badges, code panels |
+| `anim-slide-left` | 500ms | Left column of a split slide |
+| `anim-slide-right` | 500ms | Right column of a split slide |
+
+Cascade them with `anim-delay-1` … `anim-delay-6` (80ms apart).
+
+### `<CodePanel>` — one code sample
+
 ```vue
-<div class="manim-write">def greet(name):</div>
+<CodePanel :code="python" variant="python" :focus="[3]" reveal />
+<CodePanel :code="pseudo" variant="pseudo" />
 ```
-Use for: Function signatures, class definitions, key statements
 
-**FadeIn** (0.4s) — Pure opacity 0→1
+| Prop | Default | What it does |
+| --- | --- | --- |
+| `code` | — | The sample. Tokenized, never hand-marked-up |
+| `variant` | `python` | Tab name, language label and accent. Both share one light surface |
+| `focus` | — | 1-based line numbers. Everything else dims to 32% |
+| `linkable` | `true` | Hovering a token highlights the same idea everywhere |
+| `chrome` | `true` | Tab bar with the file name and the language |
+| `gutter` | `true` | Line-number gutter |
+| `filename` | — | Tab label. Defaults to `main.py` / `plan.txt` |
+| `reveal` | `false` | Stagger the lines in on mount, 60ms apart |
+| `size` | `base` | `lg` steps the code up one size, for the hero sample on a slide |
+| `label` | — | Overrides the language label |
+
+### `<CodeMorph>` — pseudo-code becomes Python
+
 ```vue
-<div class="anim-fade-in">// Comment text</div>
+<CodeMorph :stages="stages" />
 ```
-Use for: Comments, labels, supporting text
 
-**GrowFromCenter** (0.4s) — Scale 0.9→1 with elastic
-```vue
-<div class="anim-pop-in">Badge</div>
-```
-Use for: Tags, badges, icons, decorative elements
+Each stage is `{ label, code, variant?, note? }`. Tokens that mean the same thing
+in two stages keep the same key, so `<TransitionGroup>` **moves** them (550ms)
+instead of tearing the block down. Words that exist in one stage only fade out
+first, and new syntax fades in 250ms later, once the moves have landed. The
+surface stays put; only the tab name, the accent and the words change.
 
-**DrawBorderThenFill** (1.9s) — Border traces (1.5s) then content fills (0.4s)
-```vue
-<div class="manim-border-draw" style="border: 3px solid var(--rose);">
-  <code class="manim-fill-after" style="animation-delay: 1.9s;">code</code>
-</div>
-```
-Use for: Code blocks, containers, theorem boxes
+Stages step by hand from the pills or the arrows; pass `autoplay` (and
+`interval`, default 3600ms) for an unattended screen, which pauses on hover.
 
-**CodeBlockIn** (0.8s) — translateY + blur → sharp
-```vue
-<div class="manim-code-block-in anim-delay-4">
-  <!-- Full code block -->
-</div>
-```
-Use for: Complete code examples
+### Keyword links
 
-### Emphasis Animations
+`utils/codeTokens.ts` gives every token a **concept**, and `useCodeLink()` shares
+the hovered concept across every panel on the slide:
 
-**Highlight Line** (3s cycle) — Scale pulse + mint border flash
-```vue
-<div class="manim-highlight-line">for item in items:</div>
-```
-Use for: Drawing attention to specific lines
+- synonyms link: `SAY` / `print`, `FOR EACH` / `for`, `SET` / `=`, `ADD` / `+=`,
+  `IF` / `if`, `OTHERWISE` / `else`, `>=` / `≥`,
+- identifiers link to themselves, so `total` lights up in both languages,
+- clicking pins the link, so it survives while the presenter talks; clicking the
+  slide background clears it.
 
-**Syntax Pulse** (2s cycle) — Color shift to coral + weight increase
-```vue
-<span class="manim-syntax-pulse">self</span>
-```
-Use for: Highlighting keywords or patterns
-
-**Wiggle** (1.5s cycle) — Rotation ±3°
-```vue
-<span class="manim-wiggle">x / 0</span>
-```
-Use for: Errors, edge cases, problematic code
-
-**Circumscribe** (3s cycle) — Border traces perimeter
-```vue
-<div class="relative">
-  <div class="content">Important block</div>
-  <div class="absolute inset-0 manim-circumscribe"></div>
-</div>
-```
-Use for: Boxing important structures
-
-**Character Reveal** — Staggered character appearance
-```vue
-<span class="manim-char-appear">H</span>
-<span class="manim-char-appear char-delay-1">e</span>
-<span class="manim-char-appear char-delay-2">l</span>
-<span class="manim-char-appear char-delay-3">l</span>
-<span class="manim-char-appear char-delay-4">o</span>
-```
-Use for: Dramatic reveals, "aha moment" lines
-
-### Transform Animations
-
-**ReplacementTransform** (5s) — Crossfade with vertical offset
-```vue
-<span class="manim-crossfade-out">old_expr</span>
-<span class="manim-crossfade-in">new_expr</span>
-```
-Use for: Variable reassignment, refactoring steps
-
-**PropertyTransform** (4s loop) — Color, size, shape morph
-```vue
-<div class="manim-prop-transform">element</div>
-```
-Use for: Parameter changes, state transitions
-
-**MoveToTarget** (4s with bounce) — Translate with arrival wiggle
-```vue
-<div class="manim-move-target">moving element</div>
-```
-Use for: Vector addition, function composition
-
-**CountUp** (2.5s) — JavaScript-driven number animation
-```vue
-<span id="count-display">42</span>
-
-<script setup>
-// See pages/design/manim-transforms.vue for implementation
-</script>
-```
-Use for: Statistics, scores, iteration counts
-
-### Pseudo-code Transforms
-
-**Block Morph** (3s) — Background, padding, color interpolation
-```vue
-<div class="manim-pseudo-to-code">STORE value</div>
-```
-Use for: Entire pseudo-code blocks transforming to syntax
+Add a synonym by editing `WORD_CONCEPTS` or `OPERATOR_CONCEPTS` in
+`utils/codeTokens.ts`. Nothing in a slide page needs to change.
 
 ## Animation Rules
 
 ### Timing
-- Entry animations: 0.4–1.2s
-- Emphasis cycles: 1.5–3s infinite
-- Transforms: 2–5s
-- Stagger delay: 80ms between siblings
-- Maximum: 400ms for any single animation
-- Maximum: 6 elements animating simultaneously
+- Entry animations: 400–500ms
+- Token move inside a morph: 550ms; the new syntax lands 250ms behind it
+- Colour and surface crossfades: 300–500ms
+- Stagger delay: 80ms between siblings, 60ms between code lines
+- Maximum: 6 elements animating at once
+- Nothing loops. An animation runs because state changed, and then it stops
 
 ### Easing
-- Entry: `cubic-bezier(0.22, 1, 0.36, 1)` — quick start, gentle settle
-- Emphasis: `ease-in-out`
-- Transforms: `cubic-bezier(0.4, 0, 0.2, 1)` — material design standard
+- Entry and movement: `cubic-bezier(0.22, 1, 0.36, 1)` — quick start, gentle settle
+- Colour, opacity and dimming: `ease`
 
 ### Hierarchy
-1. Headers enter first (Write)
-2. Accent bars (FadeIn, delay 80ms)
-3. Body content (FadeIn, delay 160ms)
-4. Code blocks (CodeBlockIn, delay 240ms)
-5. Tags/badges (Grow, delay 320ms)
+1. Header (`anim-fade-in-up`)
+2. Accent bar and lede (delay 80ms)
+3. Code panels (delay 160ms)
+4. Explanatory cards (delay 240ms)
+5. Footnote (`anim-fade-in`, delay 320ms)
 
 ### Properties
 - **GPU-accelerated**: transform, opacity (FAST)
 - **Avoid**: width, height, top, left (SLOW)
 - **Never**: transition: all (specify properties)
+
+## The Cast
+
+Examples use a fixed set of characters and objects, drawn as flat SVG on a 64×64
+grid and tinted from the palette. Import nothing: `<ArtSprite>` is auto-imported.
+
+```vue
+<ArtSprite name="cat" color="coral" accent="rose" :size="76" />
+<ArtSprite name="lever" state="on" color="sky" accent="mint" />
+```
+
+| Prop | Default | What it does |
+| --- | --- | --- |
+| `name` | — | Sprite key from `utils/sprites.ts` |
+| `color` | `coral` | Body. A palette token or any CSS colour |
+| `accent` | `sun` | Second colour: beak, roof, lever knob |
+| `size` | `64` | Pixels. Never below 40 on a projector |
+| `state` | `off` | Levers only. `on` flips the arm |
+| `label` | name | Screen-reader label |
+
+**Critters** — cat (Momo), dog (Rex), bird (Pip), frog (Bo), fish (Nemi), bunny (Hopps).
+**Cat poses** — `cat` (sitting, the default), `cat-loaf` (at rest), `cat-peek`
+(inside a box or list), `cat-sleep` (waiting, idle, done), `cat-stand` (moving,
+one pass of a loop). Five states of one character, never five characters.
+**Props** — lever, box, key, door, ball, book, basket, flag.
+**Places** — house, road, tree, hill, fence, sign.
+
+Rules that keep the set legible:
+
+- **One meaning per sprite, for the whole course.** A basket is a list, a lever
+  is a boolean, a sign is output. Never borrow a prop for a second concept.
+- **Colour separates instances, not concepts.** A mint fish and a coral fish are
+  two fish. Three coral cats and one mint cat is a list with one odd element.
+- **Names are fixed and one word.** Momo is always the cat; the names double as
+  variable names in the code beside the picture.
+- **Outlines are always `--text` at 2.5**, at every size, so the cast reads as
+  one set and matches the flat 2px borders everywhere else.
+- **Pair a scene with code.** The drawing carries the concept, the `<CodePanel>`
+  beside it carries the syntax. See `pages/design/cast-in-practice.vue`.
+
+Adding a sprite: append an entry to `SPRITES` in `utils/sprites.ts` with
+`category`, a one-line `use`, and markup where `currentColor` is the body and
+`var(--sprite-accent)` the second colour. It then appears in the style guide
+automatically, because those slides iterate the registry.
 
 ## Code Block Conventions
 
@@ -245,28 +249,27 @@ Use for: Entire pseudo-code blocks transforming to syntax
 
 ## Pseudo-code Patterns
 
-### Side-by-side Correlation
+### Side-by-side correlation
 ```vue
-<div class="grid grid-cols-2 gap-6">
-  <!-- Pseudo -->
-  <div class="rounded-xl p-4" style="background: var(--rose); color: white;">
-    <div class="manim-highlight-line">FOR each item IN list</div>
-  </div>
-  
-  <!-- Real code -->
-  <div class="rounded-xl" style="background: var(--code-bg);">
-    <pre class="p-4">
-<span class="manim-highlight-line"><span style="color: var(--sky);">for</span> item <span style="color: var(--sky);">in</span> my_list:</span>
-    </pre>
-  </div>
+<div class="grid md:grid-cols-2 gap-6 items-start">
+  <CodePanel :code="pseudo" variant="pseudo" />
+  <CodePanel :code="python" variant="python" />
 </div>
 ```
-Both highlight lines simultaneously (3s cycle).
+Both panels share one `useCodeLink()` state, so hovering a word in either panel
+lights up its twin in the other. No paired classes, no timing to keep in sync.
 
-### Progressive Disclosure
-Build code one line at a time with `anim-fade-in-up` and staggered delays.
+### Staged transform
+Use `<CodeMorph>` with three stages — plain English, structured pseudo-code,
+Python. Keep the identifiers identical across stages (`students`, `grade`,
+`total`); those are the tokens that travel, and they are what carries the
+audience from one stage to the next.
 
-### Colored Blocks for Control Flow
+### Line focus
+`:focus="[3]"` dims every other line to 32% and rails the live one. It is a prop,
+not a loop: the line stays lit until the presenter changes it.
+
+### Colored blocks for control flow
 - Coral = condition check
 - Mint = true branch
 - Sky = false branch
@@ -381,7 +384,7 @@ Never manually decrement. Deleted slides leave permanent gaps.
 
 ## Credits
 
-- Design inspired by: Jet Lag The Game, 3Blue1Brown (Manim)
+- Design inspired by: Jet Lag The Game, 3Blue1Brown
 - Font: JetBrains Mono
 - Colors: Catppuccin (code blocks)
 - Framework: Nuxt 3, Vue 3, Tailwind CSS v4

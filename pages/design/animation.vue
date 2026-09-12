@@ -90,6 +90,24 @@
         </div>
       </div>
 
+      <!-- Everything else is a component -->
+      <div class="rounded-2xl p-5" style="background: var(--bg-off);">
+        <p class="text-[10px] font-bold uppercase tracking-widest mb-3" style="color: var(--text-muted);">Everything else is a component</p>
+        <div class="grid md:grid-cols-2 gap-4 text-xs leading-relaxed" style="color: var(--text-dim);">
+          <p>
+            <code class="font-bold" style="color: var(--mint);">&lt;CodePanel&gt;</code> — one tokenized sample. Syntax colours,
+            <code style="color: var(--text);">:focus</code> for the live line, and keyword links that fire on hover.
+          </p>
+          <p>
+            <code class="font-bold" style="color: var(--lavender);">&lt;CodeMorph&gt;</code> — staged pseudo-code to Python. Shared
+            tokens move, new syntax fades in behind them.
+          </p>
+        </div>
+        <p class="text-xs mt-3 leading-relaxed" style="color: var(--text-dim);">
+          No emphasis classes, no infinite loops. Motion is state a presenter changes, so a slide never moves while it is being read.
+        </p>
+      </div>
+
       <!-- Golden rule -->
       <div class="rounded-2xl p-5 text-xs leading-relaxed" style="background: var(--bg-off); color: var(--text-dim);">
         <span class="font-bold" style="color: var(--text);">Golden rule:</span>
