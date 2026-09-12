@@ -25,6 +25,20 @@ const de = {
     momoHi: 'Hi, ich bin Momo!',
   },
 
+  home: {
+    lede: 'Wähle eine Ansicht.',
+    momo: 'Wohin?',
+    views: {
+      projector: { title: 'Beamer', desc: 'Die Folien groß auf der Leinwand. Folgt dem Vortrag.' },
+      presenter: { title: 'Vortragsansicht', desc: 'Aktuelle und nächste Folie, Notizen und Zeit.' },
+      control: { title: 'Steuerung', desc: 'Übersicht, Fernbedienung per QR-Code und Publikum.' },
+      follow: { title: 'Mitlesen', desc: 'Die Folien auf dem eigenen Gerät, auf Deutsch oder Englisch.' },
+    },
+    screens: '{n} Bildschirme folgen',
+    print: 'Handout drucken',
+    styleGuide: 'Style Guide',
+  },
+
   follow: {
     eyebrow: 'Python-Vorkurs',
     title: 'Mitlesen',

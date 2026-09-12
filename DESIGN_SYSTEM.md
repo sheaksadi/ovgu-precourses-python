@@ -13,24 +13,15 @@ This is a Nuxt 3 presentation framework for teaching Python to beginners. The de
 ## Directory Structure
 
 ```
-pages/design/           # Design system slides (PRE-0010 to PRE-0032)
-  system.vue           # Cover page
-  primary-colors.vue   # Coral, Mint, Sky
-  secondary-colors.vue # Rose, Sun, Lavender, Peach, Sage
-  backgrounds.vue      # White, off-white, warm tint surfaces
-  typography.vue       # JetBrains Mono scale and weights
-  buttons.vue          # Filled, outline, ghost
-  tags.vue            # Pastel pills
-  code-blocks.vue     # Dark Catppuccin surface
-  chrome.vue          # Progress bar, page numbers, deck title
-  layouts.vue         # slide-bare, slide, slide-section
-  spacing.vue         # Margins, spacing scale, border-radius
-  animation.vue        # Entry animations, timing rules
-  code-keywords.vue    # Syntax colours, keyword links, line focus
-  pseudo-to-python.vue # Staged pseudo-code → Python morph
-  cast-critters.vue    # The six animals, tints, sizes, names
-  props-places.vue     # Objects and scenery, one meaning each
-  cast-in-practice.vue # Worked scenes paired with real code
+pages/slides/           # Every slide page, one file per id: pre-0033.vue → /slides/pre-0033
+  pre-0033.vue         # Course title
+  pre-0038.vue         # Intro round (question reel)
+  pre-0034…0037.vue    # Momo if/else lesson, four stages
+  pre-0039.vue         # Try it yourself
+  pre-0040…0047.vue    # Variables lesson, eight stages
+  pre-0010…0032.vue    # Style guide: colours, type, buttons, tags, code, chrome,
+                       # layouts, spacing, motion, code components, the cast
+pages/index.vue          # Start page: projector, presenter, control panel, follow along
 
 components/code/
   Panel.vue            # <CodePanel>  — one tokenized sample
@@ -261,7 +252,7 @@ Rules that keep the set legible:
 - **Outlines are always `--text` at 2.5**, at every size, so the cast reads as
   one set and matches the flat 2px borders everywhere else.
 - **Pair a scene with code.** The drawing carries the concept, the `<CodePanel>`
-  beside it carries the syntax. See `pages/design/cast-in-practice.vue`.
+  beside it carries the syntax. See `pages/slides/pre-0032.vue` (Cast in Practice).
 
 Adding a sprite: append an entry to `SPRITES` in `utils/sprites.ts` with
 `category`, a one-line `use`, and markup where `currentColor` is the body and
@@ -356,17 +347,9 @@ npm run slide:new -- "Slide Title"                    # main slide
 npm run slide:new -- "Sub Title" --parent PRE-0XXX   # sub-slide
 ```
 
-For design system slides, manually override route in `slides.config.ts`:
-```ts
-{
-  id: 'PRE-0028',
-  title: 'New Design Slide',
-  route: '/design/new-slide',
-  teleprompter: '...',
-}
-```
-
-Create page at `pages/design/new-slide.vue`.
+The generator creates `pages/slides/<id>.vue` for every slide, style-guide slides
+included; there is no separate folder and no route to override. Move the new entry in
+`slides.config.ts` to where it belongs in the deck.
 
 ## CSS Variables
 

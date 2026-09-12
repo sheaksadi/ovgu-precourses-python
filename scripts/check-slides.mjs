@@ -45,9 +45,13 @@ const layouts = existsSync(layoutsDir)
   ? readdirSync(layoutsDir).filter(f => f.endsWith('.vue')).map(f => f.replace(/\.vue$/, ''))
   : []
 
-const pageDirs = readdirSync(pagesDir, { withFileTypes: true })
-  .filter(e => e.isDirectory() && ID_PATTERN.test(e.name.toUpperCase()))
-  .map(e => e.name)
+// Every slide page lives in pages/slides/<id lowercased>.vue.
+const slidesDir = join(pagesDir, 'slides')
+const pageFiles = existsSync(slidesDir)
+  ? readdirSync(slidesDir)
+    .filter(f => f.endsWith('.vue') && ID_PATTERN.test(f.slice(0, -4).toUpperCase()))
+    .map(f => f.slice(0, -4))
+  : []
 
 const ids = new Set()
 for (const entry of entries) {
@@ -63,17 +67,17 @@ for (const entry of entries) {
   ids.add(entry.id)
 
   const slug = entry.id.toLowerCase()
-  const defaultPage = join(pagesDir, slug, 'index.vue')
+  const defaultPage = join(slidesDir, `${slug}.vue`)
   const customPage = entry.route
     ? join(pagesDir, `${entry.route.replace(/^\//, '')}.vue`)
     : null
   if (customPage && existsSync(customPage)) {
-    // Custom route, e.g. `/design/system` → pages/design/system.vue
+    // Custom route, e.g. `/handout/cover` → pages/handout/cover.vue
   } else if (!existsSync(defaultPage)) {
     problems.push(
       customPage
-        ? `${entry.id}: no page at pages/${slug}/index.vue or ${entry.route}.vue`
-        : `${entry.id}: no page at pages/${slug}/index.vue`
+        ? `${entry.id}: no page at pages/slides/${slug}.vue or pages${entry.route}.vue`
+        : `${entry.id}: no page at pages/slides/${slug}.vue`
     )
   }
 
@@ -96,17 +100,16 @@ for (const entry of entries) {
   }
 }
 
-for (const dir of pageDirs) {
-  const id = dir.toUpperCase()
-  if (!ids.has(id)) {
-    problems.push(`pages/${dir}: no entry in slides.config.ts, so the slide never shows`)
+for (const name of pageFiles) {
+  if (!ids.has(name.toUpperCase())) {
+    problems.push(`pages/slides/${name}.vue: no entry in slides.config.ts, so the slide never shows`)
   }
 }
 
 const hidden = entries.filter(e => e.hidden)
 if (hidden.length) notes.push(`${hidden.length} hidden slide(s): ${hidden.map(e => e.id).join(', ')}`)
 
-console.log(`slides:check — ${entries.length} entries, ${pageDirs.length} page folder(s), next id ${counter.prefix}-${String(counter.next).padStart(4, '0')}`)
+console.log(`slides:check — ${entries.length} entries, ${pageFiles.length} slide page(s), next id ${counter.prefix}-${String(counter.next).padStart(4, '0')}`)
 for (const note of notes) console.log(`  note   ${note}`)
 for (const problem of problems) console.error(`  error  ${problem}`)
 

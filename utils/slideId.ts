@@ -32,13 +32,18 @@ export function isSlideId(id: string): boolean {
   return SLIDE_ID_PATTERN.test(id)
 }
 
-/** Route (and `pages/` directory name) that belongs to an id: `PRE-0001` -> `/pre-0001`. */
+/** Every slide page lives in `pages/slides/`, so every slide route starts here. */
+export const SLIDES_ROUTE_PREFIX = '/slides/'
+
+/** Route that belongs to an id: `PRE-0001` -> `/slides/pre-0001` (page `pages/slides/pre-0001.vue`). */
 export function slideIdToRoute(id: string): string {
-  return `/${id.toLowerCase()}`
+  return `${SLIDES_ROUTE_PREFIX}${id.toLowerCase()}`
 }
 
 /** Inverse of `slideIdToRoute`. Returns null for routes that are not slides. */
 export function routeToSlideId(path: string): string | null {
-  const id = path.replace(/^\/+|\/+$/g, '').toUpperCase()
+  const clean = path.replace(/\/+$/, '')
+  if (!clean.startsWith(SLIDES_ROUTE_PREFIX)) return null
+  const id = clean.slice(SLIDES_ROUTE_PREFIX.length).toUpperCase()
   return isSlideId(id) ? id : null
 }

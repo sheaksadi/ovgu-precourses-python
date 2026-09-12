@@ -24,6 +24,20 @@ const en: Messages = {
     momoHi: "Hi, I'm Momo!",
   },
 
+  home: {
+    lede: 'Pick a view.',
+    momo: 'Where to?',
+    views: {
+      projector: { title: 'Projector', desc: 'The slides, big on the screen. Follows the talk.' },
+      presenter: { title: 'Presenter view', desc: 'Current and next slide, notes and timing.' },
+      control: { title: 'Control panel', desc: 'Overview, remote control by QR code, and the audience.' },
+      follow: { title: 'Follow along', desc: 'The slides on your own device, in German or English.' },
+    },
+    screens: '{n} screens following',
+    print: 'Print handout',
+    styleGuide: 'Style guide',
+  },
+
   follow: {
     eyebrow: 'Python Pre-Course',
     title: 'Follow along',

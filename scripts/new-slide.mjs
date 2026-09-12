@@ -8,7 +8,7 @@
  *
  * The script owns the id counter in `slides.counter.json`. It takes the next
  * number, never reuses a number from a deleted slide, creates
- * `pages/<id lowercased>/index.vue`, and appends the entry to `slides.config.ts`
+ * `pages/slides/<id lowercased>.vue`, and appends the entry to `slides.config.ts`
  * just before the `// <slides:end>` marker. Order is the array order, so move
  * the entry afterwards if the slide does not belong at the end.
  */
@@ -61,8 +61,10 @@ if (!/^[A-Z]{3}$/.test(counter.prefix)) fail(`prefix in slides.counter.json must
 
 const id = formatSlideId(counter.prefix, counter.next)
 const slug = id.toLowerCase()
-const pageDir = join(root, 'pages', slug)
-if (existsSync(pageDir)) fail(`pages/${slug} already exists, so the counter in slides.counter.json is behind`)
+// Every slide page lives in one folder, served at /slides/<id>.
+const slidesDir = join(root, 'pages', 'slides')
+const pageFile = join(slidesDir, `${slug}.vue`)
+if (existsSync(pageFile)) fail(`pages/slides/${slug}.vue already exists, so the counter in slides.counter.json is behind`)
 
 let config = readFileSync(configPath, 'utf8')
 if (!config.includes('// <slides:end>')) fail('slides.config.ts is missing the // <slides:end> marker')
@@ -112,8 +114,8 @@ ${bodies[template]}
 </template>
 `
 
-mkdirSync(pageDir, { recursive: true })
-writeFileSync(join(pageDir, 'index.vue'), page)
+mkdirSync(slidesDir, { recursive: true })
+writeFileSync(pageFile, page)
 
 const entryLines = [
   '  {',
@@ -133,7 +135,7 @@ counter.next += 1
 writeFileSync(counterPath, `${JSON.stringify(counter, null, 2)}\n`)
 
 console.log(`Created ${id}`)
-console.log(`  page   pages/${slug}/index.vue`)
-console.log(`  route  /${slug}`)
+console.log(`  page   pages/slides/${slug}.vue`)
+console.log(`  route  /slides/${slug}`)
 console.log(`  config slides.config.ts (appended before // <slides:end>)`)
 console.log(`  next   id will be ${formatSlideId(counter.prefix, counter.next)}`)

@@ -25,7 +25,7 @@ export interface SlideEntry {
   backgroundColor?: string
   /** Keep the page and the id, but skip the slide during the presentation. */
   hidden?: boolean
-  /** Escape hatch for a page that does not live at `/<id lowercased>`. */
+  /** Escape hatch for a page that does not live at `pages/slides/<id lowercased>.vue`. */
   route?: string
 }
 
@@ -159,113 +159,96 @@ export const slides: SlideEntry[] = [
     title: 'Design System',
     subtitle: 'Python for Beginners — Style Guide',
     layout: 'slide-bare',
-    route: '/design/system',
     teleprompter: 'This is our design system and style guide. Every visual decision for the Python pre-courses deck is documented here.',
   },
   {
     id: 'PRE-0011',
     title: 'Primary Colors',
     parent: 'PRE-0010',
-    route: '/design/primary-colors',
     teleprompter: 'Three primary colors: Coral for action and emphasis, Mint for success and code, Sky for information and links.',
   },
   {
     id: 'PRE-0012',
     title: 'Secondary & Accent Colors',
     parent: 'PRE-0010',
-    route: '/design/secondary-colors',
     teleprompter: 'Five supporting colors for personality and decoration. Rose is our warm pink highlight, Sun for warnings, Lavender for special content.',
   },
   {
     id: 'PRE-0013',
     title: 'Backgrounds & Surfaces',
-    route: '/design/backgrounds',
     teleprompter: 'Three surface tiers: pure white for content, off-white for cards, warm tint for title slides. Code blocks are the only dark surface.',
   },
   {
     id: 'PRE-0014',
     title: 'Typography',
-    route: '/design/typography',
     teleprompter: 'One font everywhere: JetBrains Mono. Variable weight. We primarily use bold and black. The type scale goes from display down to chrome.',
   },
   {
     id: 'PRE-0015',
     title: 'Buttons & Interactions',
     parent: 'PRE-0014',
-    route: '/design/buttons',
     teleprompter: 'Three button tiers: filled primary, outlined secondary, ghost. All are flat, no shadows, 2px borders, rounded-lg.',
   },
   {
     id: 'PRE-0016',
     title: 'Tags, Pills & Labels',
     parent: 'PRE-0014',
-    route: '/design/tags',
     teleprompter: 'Small uppercase pills for categorizing content. Filled for strong presence, outlined for metadata. Each color has a semantic meaning.',
   },
   {
     id: 'PRE-0017',
     title: 'Code Blocks',
-    route: '/design/code-blocks',
     teleprompter: 'The only dark element in the system. Catppuccin-inspired dark surface with pastel window dots matching our palette.',
   },
   {
     id: 'PRE-0018',
     title: 'Page Chrome & Navigation',
     parent: 'PRE-0017',
-    route: '/design/chrome',
     teleprompter: 'Persistent chrome: deck title top-left, progress bar bottom, page number bottom-right. All in text-muted so they never compete with content.',
   },
   {
     id: 'PRE-0019',
     title: 'Title Cards & Layouts',
-    route: '/design/layouts',
     teleprompter: 'Three layout types: slide-bare for titles and drama, slide for all teaching content, slide-section for chapter breaks.',
   },
   {
     id: 'PRE-0020',
     title: 'Spacing & Layout',
     parent: 'PRE-0019',
-    route: '/design/spacing',
     teleprompter: 'Generous margins. Desktop has 96px horizontal padding. Spacing scale from 4px to 96px. Five border-radius tiers.',
   },
   {
     id: 'PRE-0021',
     title: 'Animation & Motion',
-    route: '/design/animation',
     teleprompter: 'Fast, subtle, purposeful animations. 80ms stagger between elements. All motion respects prefers-reduced-motion.',
   },
   {
     id: 'PRE-0028',
     title: 'Code & Keyword Links',
     parent: 'PRE-0021',
-    route: '/design/code-keywords',
     teleprompter: 'Two tools for teaching code: hovering a word links every token that means the same thing across both panels, and line focus dims everything but the live line. Click a word to pin the link while you talk.',
   },
   {
     id: 'PRE-0029',
     title: 'Pseudo → Python',
     parent: 'PRE-0021',
-    route: '/design/pseudo-to-python',
     teleprompter: 'One program in three stages. Shared tokens move to their new place, only new syntax fades in. Step it with the stage pills or the arrows.',
   },
   {
     id: 'PRE-0030',
     title: 'Cast: Critters',
-    route: '/design/cast-critters',
     teleprompter: 'Six animals carry every example in this course. Flat SVG, two-pixel outlines, tinted from the palette, so colour itself becomes data: three coral cats and one mint cat is a list with one odd element.',
   },
   {
     id: 'PRE-0031',
     title: 'Props & Places',
     parent: 'PRE-0030',
-    route: '/design/props-places',
     teleprompter: 'The things the cast acts on. A box is a variable, a basket is a list, a lever is a boolean, a door is a branch, a road is a sequence, a fence is a range.',
   },
   {
     id: 'PRE-0032',
     title: 'Cast in Practice',
     parent: 'PRE-0030',
-    route: '/design/cast-in-practice',
     teleprompter: 'Three worked scenes: a lever next to a boolean, a basket of fish next to a list, a street of houses next to a for loop. Picture on the left, code on the right, same words highlighted in both.',
   },
   // <slides:end>

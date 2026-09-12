@@ -51,12 +51,14 @@ export default defineNuxtConfig({
         'lucide:x',
         'lucide:menu',
         'lucide:eye',
-        'lucide:eye-off'
+        'lucide:eye-off',
+        // Start page view buttons, rendered from a list.
+        'lucide:projector',
+        'lucide:presentation',
+        'lucide:layout-dashboard',
+        'lucide:smartphone'
       ]
     }
-  },
-  routeRules: {
-    '/design': { redirect: '/design/system' },
   },
   nitro: {
     experimental: {
