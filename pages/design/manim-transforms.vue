@@ -1,90 +1,301 @@
 <template>
   <div class="w-full h-full flex flex-col px-8 py-10 md:px-24 md:py-16 overflow-y-auto">
-    <h2 class="text-3xl md:text-5xl font-black tracking-tight anim-fade-in-up" style="color: var(--text);">
-      Manim Transforms
-    </h2>
-    <div class="w-16 h-1.5 rounded-full mt-3 mb-2 anim-fade-in-up anim-delay-1" style="background: var(--sky);"></div>
-    <p class="text-sm md:text-base font-medium mb-8 anim-fade-in-up anim-delay-1" style="color: var(--text-dim);">
-      Transforms change what's already visible. The audience sees continuity, not replacement.
-    </p>
+    <!-- Header -->
+    <div class="mb-8 anim-fade-in-up">
+      <h2 class="text-3xl md:text-5xl font-black tracking-tight" style="color: var(--text);">
+        Animation: Transforms
+      </h2>
+      <div class="w-16 h-1.5 rounded-full mt-3 mb-2" style="background: var(--sky);"></div>
+      <p class="text-sm md:text-base font-medium" style="color: var(--text-dim);">
+        Revealing relationships through continuous change. The journey from one form to another 
+        often teaches more than the destination.
+      </p>
+    </div>
 
-    <div class="flex-grow grid grid-cols-2 gap-8">
-      <div class="flex flex-col gap-3 anim-fade-in-up anim-delay-1">
-        <p class="text-sm font-bold" style="color: var(--text);">ReplacementTransform</p>
-        <div class="rounded-2xl p-6 flex items-center justify-center min-h-[130px] relative" style="background: var(--bg-off); border: 2px solid var(--border);">
-          <span class="absolute text-2xl font-black manim-crossfade-out" style="color: var(--coral);">Before</span>
-          <span class="absolute text-2xl font-black manim-crossfade-in" style="color: var(--mint);">After</span>
+    <!-- Main content -->
+    <div class="flex-grow flex flex-col gap-6">
+      
+      <!-- ReplacementTransform: Character-level morphing -->
+      <div class="rounded-2xl p-6 flex flex-col gap-4 anim-fade-in-up anim-delay-1" style="background: var(--bg-off); border: 2px solid var(--border);">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <div class="w-1 h-8 rounded-full" style="background: var(--coral);"></div>
+            <div>
+              <span class="text-sm font-bold" style="color: var(--text);">ReplacementTransform</span>
+              <p class="text-xs" style="color: var(--text-dim);">Morphing expressions character by character</p>
+            </div>
+          </div>
+          <code class="text-[10px] px-2 py-1 rounded" style="background: var(--bg); color: var(--text-muted);">5s smooth</code>
         </div>
-        <p class="text-xs" style="color: var(--text-dim);">One element fades and morphs into another. Use when replacing content in the same location — old values becoming new ones, step progressions.</p>
-        <code class="text-[10px] font-bold px-1.5 py-0.5 rounded w-fit" style="background: var(--bg-off); color: var(--text-muted);">manim-crossfade-out / manim-crossfade-in</code>
+
+        <div class="rounded-xl p-8 flex items-center justify-center min-h-[120px] relative overflow-hidden" style="background: var(--bg);">
+          <!-- From state -->
+          <div class="absolute flex items-center gap-1 text-2xl font-black manim-crossfade-out" style="color: var(--coral); font-family: 'JetBrains Mono', monospace;">
+            <span>n</span>
+            <span>a</span>
+            <span>m</span>
+            <span>e</span>
+            <span class="mx-1">=</span>
+            <span>"</span>
+            <span>P</span>
+            <span>y</span>
+            <span>t</span>
+            <span>h</span>
+            <span>o</span>
+            <span>n</span>
+            <span>"</span>
+          </div>
+          
+          <!-- To state -->
+          <div class="absolute flex items-center gap-1 text-2xl font-black manim-crossfade-in" style="color: var(--mint); font-family: 'JetBrains Mono', monospace;">
+            <span>g</span>
+            <span>r</span>
+            <span>e</span>
+            <span>e</span>
+            <span>t</span>
+            <span class="mx-1">=</span>
+            <span>f</span>
+            <span>"</span>
+            <span>H</span>
+            <span>i</span>
+            <span class="mx-0.5">,</span>
+            <span class="mx-1">{</span>
+            <span>n</span>
+            <span>a</span>
+            <span>m</span>
+            <span>e</span>
+            <span>}</span>
+            <span>"</span>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-3 gap-3 text-xs">
+          <div class="rounded-lg p-3" style="background: var(--bg); border: 1px solid var(--border);">
+            <div class="font-bold mb-1" style="color: var(--coral);">0-2s: Fade Out</div>
+            <div style="color: var(--text-dim);">Original expression dissolves upward with scale</div>
+          </div>
+          <div class="rounded-lg p-3" style="background: var(--bg); border: 1px solid var(--border);">
+            <div class="font-bold mb-1" style="color: var(--text-muted);">2-3s: Transition</div>
+            <div style="color: var(--text-dim);">Brief empty state creates anticipation</div>
+          </div>
+          <div class="rounded-lg p-3" style="background: var(--bg); border: 1px solid var(--border);">
+            <div class="font-bold mb-1" style="color: var(--mint);">3-5s: Fade In</div>
+            <div style="color: var(--text-dim);">New expression materializes from below</div>
+          </div>
+        </div>
+
+        <p class="text-xs leading-relaxed pt-3" style="border-top: 1px solid var(--border); color: var(--text-dim);">
+          <strong style="color: var(--text);">When to use:</strong> Variable reassignment, refactoring steps, 
+          expression simplification. The viewer sees these are <em>related but distinct</em> — 
+          continuity of concept, not identity.
+        </p>
       </div>
 
-      <div class="flex flex-col gap-3 anim-fade-in-up anim-delay-2">
-        <p class="text-sm font-bold" style="color: var(--text);">Transform</p>
-        <div class="rounded-2xl p-6 flex items-center justify-center min-h-[130px]" style="background: var(--bg-off); border: 2px solid var(--border);">
-          <div class="w-16 h-16 rounded-xl flex items-center justify-center text-white text-sm font-black manim-prop-transform">A</div>
+      <!-- Transform: Property morphing with proper sizing -->
+      <div class="rounded-2xl p-6 flex flex-col gap-4 anim-fade-in-up anim-delay-2" style="background: var(--bg-off); border: 2px solid var(--border);">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <div class="w-1 h-8 rounded-full" style="background: var(--mint);"></div>
+            <div>
+              <span class="text-sm font-bold" style="color: var(--text);">Transform</span>
+              <p class="text-xs" style="color: var(--text-dim);">Continuous property morphing with intelligent sizing</p>
+            </div>
+          </div>
+          <code class="text-[10px] px-2 py-1 rounded" style="background: var(--bg); color: var(--text-muted);">4s loop</code>
         </div>
-        <p class="text-xs" style="color: var(--text-dim);">Same element smoothly changes properties: color, size, border-radius, position. The identity persists. Use for state changes — selected/unselected, enabled/disabled.</p>
-        <code class="text-[10px] font-bold px-1.5 py-0.5 rounded w-fit" style="background: var(--bg-off); color: var(--text-muted);">manim-prop-transform</code>
+
+        <div class="rounded-xl p-8 flex items-center justify-center min-h-[120px]" style="background: var(--bg);">
+          <div class="flex items-center justify-center manim-prop-transform" style="color: white; font-size: 1.25rem; font-weight: 900;">
+            <span class="block">def</span>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-4 gap-3">
+          <div class="text-center">
+            <div class="rounded-lg h-14 mb-2 flex items-center justify-center text-white text-xs font-bold" style="background: var(--coral);">
+              Square
+            </div>
+            <div class="text-[10px] font-bold" style="color: var(--text-muted);">0.0s · Start</div>
+            <div class="text-[9px] mt-0.5" style="color: var(--text-dim);">4rem × 4rem</div>
+          </div>
+          <div class="text-center">
+            <div class="rounded-xl h-12 mb-2 flex items-center justify-center text-white text-xs font-bold" style="background: var(--sky);">
+              Rect
+            </div>
+            <div class="text-[10px] font-bold" style="color: var(--text-muted);">1.0s</div>
+            <div class="text-[9px] mt-0.5" style="color: var(--text-dim);">5rem × 3rem</div>
+          </div>
+          <div class="text-center">
+            <div class="rounded-full w-12 h-12 mx-auto mb-2 flex items-center justify-center text-white text-xs font-bold" style="background: var(--mint);">
+              Circle
+            </div>
+            <div class="text-[10px] font-bold" style="color: var(--text-muted);">2.0s</div>
+            <div class="text-[9px] mt-0.5" style="color: var(--text-dim);">3rem dia</div>
+          </div>
+          <div class="text-center">
+            <div class="rounded-lg h-14 mb-2 flex items-center justify-center text-white text-xs font-bold" style="background: var(--lavender);">
+              Wide
+            </div>
+            <div class="text-[10px] font-bold" style="color: var(--text-muted);">3.0s</div>
+            <div class="text-[9px] mt-0.5" style="color: var(--text-dim);">6rem × 4rem</div>
+          </div>
+        </div>
+
+        <p class="text-xs leading-relaxed pt-3" style="border-top: 1px solid var(--border); color: var(--text-dim);">
+          <strong style="color: var(--text);">Sizing intelligence:</strong> Transform calculates 
+          final dimensions <em>before</em> animating, ensuring text content fits perfectly at every 
+          keyframe. Color, shape, and size morph in harmony.
+        </p>
       </div>
 
-      <div class="flex flex-col gap-3 anim-fade-in-up anim-delay-2">
-        <p class="text-sm font-bold" style="color: var(--text);">MoveToTarget</p>
-        <div class="rounded-2xl p-6 flex items-center justify-center min-h-[130px] relative overflow-hidden" style="background: var(--bg-off); border: 2px solid var(--border);">
-          <div class="absolute left-8 flex items-center gap-1 opacity-30">
-            <div class="w-3 h-3 rounded-full" style="background: var(--border);"></div>
-            <span class="text-[10px] font-bold" style="color: var(--text-muted);">start</span>
+      <!-- MoveToTarget with bounce + CountUp -->
+      <div class="grid grid-cols-2 gap-6 anim-fade-in-up anim-delay-3">
+        <div class="rounded-2xl p-6 flex flex-col gap-4" style="background: var(--bg-off); border: 2px solid var(--border);">
+          <div class="flex items-center gap-3">
+            <div class="w-1 h-8 rounded-full" style="background: var(--rose);"></div>
+            <div>
+              <span class="text-sm font-bold" style="color: var(--text);">MoveToTarget</span>
+              <p class="text-xs" style="color: var(--text-dim);">Smooth path with arrival bounce</p>
+            </div>
           </div>
-          <div class="absolute right-8 flex items-center gap-1 opacity-30">
-            <span class="text-[10px] font-bold" style="color: var(--text-muted);">end</span>
-            <div class="w-3 h-3 rounded-full" style="background: var(--border);"></div>
-          </div>
-          <div class="w-10 h-10 rounded-full manim-move-target" style="background: var(--rose);"></div>
-        </div>
-        <p class="text-xs" style="color: var(--text-dim);">Element glides from its current position to a target. Use for reordering lists, moving items between groups, or spatial storytelling.</p>
-        <code class="text-[10px] font-bold px-1.5 py-0.5 rounded w-fit" style="background: var(--bg-off); color: var(--text-muted);">manim-move-target</code>
-      </div>
 
-      <div class="flex flex-col gap-3 anim-fade-in-up anim-delay-3">
-        <p class="text-sm font-bold" style="color: var(--text);">CountUp</p>
-        <div class="rounded-2xl p-6 flex items-center justify-center min-h-[130px]" style="background: var(--bg-off); border: 2px solid var(--border);">
-          <div class="flex items-baseline gap-1">
-            <span class="text-5xl font-black tabular-nums manim-count-up" style="color: var(--lavender);">
-              <span class="tabular-nums manim-count-tick">42</span>
-            </span>
-            <span class="text-lg font-bold" style="color: var(--text-muted);">%</span>
+          <div class="rounded-xl p-6 flex items-center justify-center min-h-[100px] relative overflow-hidden" style="background: var(--bg);">
+            <!-- Ghost positions -->
+            <div class="absolute left-6 flex items-center gap-1 opacity-30">
+              <div class="w-2 h-2 rounded-full" style="background: var(--border);"></div>
+              <span class="text-[9px] font-bold" style="color: var(--text-muted);">start</span>
+            </div>
+            <div class="absolute right-6 flex items-center gap-1 opacity-30">
+              <span class="text-[9px] font-bold" style="color: var(--text-muted);">target</span>
+              <div class="w-2 h-2 rounded-full" style="background: var(--border);"></div>
+            </div>
+            
+            <!-- Moving element -->
+            <div class="w-10 h-10 rounded-full flex items-center justify-center text-white text-sm font-bold manim-move-target" style="background: var(--rose);">
+              •
+            </div>
+          </div>
+
+          <div class="text-xs leading-relaxed" style="color: var(--text-dim);">
+            <strong style="color: var(--text);">4s easing with wiggle:</strong> Element travels 
+            smoothly, then <em>bounces</em> twice on arrival (±2px, ±1px). Creates satisfying 
+            "landed" feeling — physics-inspired.
           </div>
         </div>
-        <p class="text-xs" style="color: var(--text-dim);">Number ticks from 0 to target value. Use for statistics, progress, scores — any number that should feel earned rather than static.</p>
-        <code class="text-[10px] font-bold px-1.5 py-0.5 rounded w-fit" style="background: var(--bg-off); color: var(--text-muted);">manim-count-up</code>
+
+        <div class="rounded-2xl p-6 flex flex-col gap-4" style="background: var(--bg-off); border: 2px solid var(--border);">
+          <div class="flex items-center gap-3">
+            <div class="w-1 h-8 rounded-full" style="background: var(--lavender);"></div>
+            <div>
+              <span class="text-sm font-bold" style="color: var(--text);">CountUp</span>
+              <p class="text-xs" style="color: var(--text-dim);">Numbers that build drama</p>
+            </div>
+          </div>
+
+          <div class="rounded-xl p-6 flex items-center justify-center min-h-[100px]" style="background: var(--bg);">
+            <div class="flex items-baseline gap-1 manim-count-up">
+              <span class="text-6xl font-black tabular-nums" style="color: var(--lavender);" id="count-display">42</span>
+              <span class="text-xl font-bold" style="color: var(--text-muted);">%</span>
+            </div>
+          </div>
+
+          <div class="text-xs leading-relaxed" style="color: var(--text-dim);">
+            <strong style="color: var(--text);">Earned, not declared:</strong> Counter ticks 
+            from 0→42 over 2.5s with ease-out. Each digit change has subtle scale pulse. 
+            Use for stats, scores, iteration counts.
+          </div>
+        </div>
       </div>
     </div>
 
-    <div class="mt-8 pt-5 anim-fade-in anim-delay-5" style="border-top: 2px solid var(--border);">
-      <p class="text-xs font-bold uppercase tracking-widest mb-3" style="color: var(--text-muted);">Transform Rules</p>
-      <div class="grid grid-cols-3 gap-6">
-        <div class="flex items-start gap-2">
-          <div class="w-1 h-full min-h-[40px] rounded-full shrink-0" style="background: var(--coral);"></div>
-          <div>
-            <p class="text-xs font-bold" style="color: var(--text);">Specific properties only</p>
-            <p class="text-[10px] mt-0.5" style="color: var(--text-dim);">Always transition specific properties (transform, opacity, color) — never <code>all</code>. Prevents accidental animations on layout shifts.</p>
+    <!-- Technical principle -->
+    <div class="mt-8 pt-6 flex gap-4 anim-fade-in anim-delay-5" style="border-top: 2px solid var(--border);">
+      <div class="w-1.5 h-full min-h-[60px] rounded-full shrink-0" style="background: var(--sky);"></div>
+      <div class="flex-grow">
+        <p class="text-xs font-bold uppercase tracking-widest mb-2" style="color: var(--text-muted);">Transform Rules</p>
+        <p class="text-sm font-medium leading-relaxed mb-3" style="color: var(--text-dim);">
+          <strong style="color: var(--text);">(1) Continuity</strong> — no sudden jumps, every frame is valid; 
+          <strong style="color: var(--text);">(2) Specificity</strong> — transition explicit properties 
+          (transform, opacity, color), never <code style="font-size: 0.85em; padding: 0 0.25em; border-radius: 0.25em; background: var(--bg-off);">all</code>; 
+          <strong style="color: var(--text);">(3) GPU acceleration</strong> — 
+          prefer transform/opacity over width/height/position.
+        </p>
+        <div class="flex items-center gap-6 text-[11px]">
+          <div class="flex items-center gap-2">
+            <div class="w-2 h-2 rounded-sm" style="background: var(--mint);"></div>
+            <span style="color: var(--text-muted);">Fast: <strong style="color: var(--text);">transform, opacity</strong></span>
           </div>
-        </div>
-        <div class="flex items-start gap-2">
-          <div class="w-1 h-full min-h-[40px] rounded-full shrink-0" style="background: var(--mint);"></div>
-          <div>
-            <p class="text-xs font-bold" style="color: var(--text);">GPU-accelerated transforms</p>
-            <p class="text-[10px] mt-0.5" style="color: var(--text-dim);">Prefer <code>transform</code> and <code>opacity</code> — they composite on the GPU. Avoid animating <code>width</code>, <code>height</code>, <code>top</code>, <code>left</code>.</p>
+          <div class="flex items-center gap-2">
+            <div class="w-2 h-2 rounded-sm" style="background: var(--coral);"></div>
+            <span style="color: var(--text-muted);">Slow: <strong style="color: var(--text);">width, height, top, left</strong></span>
           </div>
-        </div>
-        <div class="flex items-start gap-2">
-          <div class="w-1 h-full min-h-[40px] rounded-full shrink-0" style="background: var(--sky);"></div>
-          <div>
-            <p class="text-xs font-bold" style="color: var(--text);">will-change: sparingly</p>
-            <p class="text-[10px] mt-0.5" style="color: var(--text-dim);">Only apply <code>will-change</code> to elements about to animate, and remove it after. Over-use wastes memory.</p>
+          <div class="flex items-center gap-2">
+            <div class="w-2 h-2 rounded-sm" style="background: var(--sky);"></div>
+            <span style="color: var(--text-muted);">Duration: <strong style="color: var(--text);">400-1200ms ideal</strong></span>
           </div>
         </div>
       </div>
     </div>
   </div>
+
+  <script setup>
+  import { onMounted, onBeforeUnmount } from 'vue'
+
+  let countInterval = null
+
+  onMounted(() => {
+    // CountUp animation
+    const display = document.getElementById('count-display')
+    if (display) {
+      let current = 0
+      const target = 42
+      const duration = 2500
+      const fps = 30
+      const totalFrames = (duration / 1000) * fps
+      const increment = target / totalFrames
+      
+      const startTime = Date.now()
+      
+      countInterval = setInterval(() => {
+        const elapsed = Date.now() - startTime
+        const progress = Math.min(elapsed / duration, 1)
+        
+        // Ease-out cubic
+        const eased = 1 - Math.pow(1 - progress, 3)
+        current = Math.floor(eased * target)
+        
+        display.textContent = current
+        
+        if (progress >= 1) {
+          display.textContent = target
+          clearInterval(countInterval)
+          
+          // Restart after 2s pause
+          setTimeout(() => {
+            current = 0
+            display.textContent = '0'
+            const newStart = Date.now()
+            countInterval = setInterval(() => {
+              const newElapsed = Date.now() - newStart
+              const newProgress = Math.min(newElapsed / duration, 1)
+              const newEased = 1 - Math.pow(1 - newProgress, 3)
+              current = Math.floor(newEased * target)
+              display.textContent = current
+              if (newProgress >= 1) {
+                display.textContent = target
+                clearInterval(countInterval)
+              }
+            }, 1000 / fps)
+          }, 2000)
+        }
+      }, 1000 / fps)
+    }
+  })
+
+  onBeforeUnmount(() => {
+    if (countInterval) {
+      clearInterval(countInterval)
+    }
+  })
+  </script>
 </template>

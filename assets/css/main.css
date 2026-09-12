@@ -170,14 +170,14 @@ body {
   70% { box-shadow: none; }
 }
 @keyframes manim-crossfade-out {
-  0%, 10% { opacity: 1; transform: scale(1); }
-  30%, 70% { opacity: 0; transform: scale(0.9); }
-  90%, 100% { opacity: 1; transform: scale(1); }
+  0% { opacity: 1; transform: scale(1) translateY(0); }
+  40% { opacity: 0; transform: scale(0.92) translateY(-8px); }
+  100% { opacity: 0; transform: scale(0.92) translateY(-8px); }
 }
 @keyframes manim-crossfade-in {
-  0%, 10% { opacity: 0; transform: scale(1.1); }
-  30%, 70% { opacity: 1; transform: scale(1); }
-  90%, 100% { opacity: 0; transform: scale(1.1); }
+  0% { opacity: 0; transform: scale(0.92) translateY(8px); }
+  60% { opacity: 0; transform: scale(0.92) translateY(8px); }
+  100% { opacity: 1; transform: scale(1) translateY(0); }
 }
 @keyframes manim-prop-transform {
   0%, 100% { background: var(--coral); width: 4rem; height: 4rem; border-radius: 0.75rem; }
@@ -186,15 +186,20 @@ body {
   75% { background: var(--lavender); width: 6rem; height: 4rem; border-radius: 0.5rem; }
 }
 @keyframes manim-move-target {
-  0%, 100% { transform: translateX(-70px); }
-  40%, 60% { transform: translateX(70px); }
+  0% { transform: translateX(-70px); }
+  45% { transform: translateX(70px) translateY(-2px); }
+  50% { transform: translateX(70px) translateY(2px); }
+  55% { transform: translateX(70px) translateY(-1px); }
+  60%, 100% { transform: translateX(70px) translateY(0); }
 }
 @keyframes manim-count-tick {
-  0% { opacity: 0.6; transform: translateY(4px); }
-  100% { opacity: 1; transform: translateY(0); }
+  0% { opacity: 0; transform: scale(1.2) translateY(-4px); }
+  50% { opacity: 1; transform: scale(1) translateY(0); }
+  100% { opacity: 1; transform: scale(1) translateY(0); }
 }
 @keyframes manim-count-up {
-  0% { opacity: 0; transform: scale(0.8); }
+  0% { opacity: 0; transform: scale(0.9); }
+  10% { opacity: 1; }
   100% { opacity: 1; transform: scale(1); }
 }
 @keyframes manim-stagger-bar {
@@ -226,6 +231,60 @@ body {
   100% { opacity: 1; transform: translateX(0); }
 }
 
+/* ─── Code & Syntax Highlighting ─────────────────────────────────────────── */
+@keyframes manim-highlight-line {
+  0% { background: transparent; }
+  15%, 85% { background: rgba(78, 205, 196, 0.15); border-left: 3px solid var(--mint); }
+  100% { background: transparent; border-left: 3px solid transparent; }
+}
+@keyframes manim-char-appear {
+  0% { opacity: 0; transform: translateY(4px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+@keyframes manim-syntax-pulse {
+  0%, 100% { color: inherit; }
+  50% { color: var(--coral); font-weight: 700; }
+}
+@keyframes manim-pseudo-to-code {
+  0% { 
+    background: var(--rose); 
+    color: white; 
+    border-radius: 0.5rem; 
+    padding: 0.5rem 1rem;
+    font-weight: 700;
+  }
+  40% { 
+    opacity: 0.5; 
+    transform: scale(0.95); 
+  }
+  60% { 
+    background: var(--code-bg); 
+    color: var(--code-text); 
+    opacity: 0.5; 
+  }
+  100% { 
+    background: var(--code-bg); 
+    color: var(--mint); 
+    border-radius: 0.25rem; 
+    padding: 0.25rem 0.5rem;
+    font-weight: 400;
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+@keyframes manim-code-block-in {
+  0% { 
+    opacity: 0; 
+    transform: translateY(12px) scale(0.96); 
+    filter: blur(4px);
+  }
+  100% { 
+    opacity: 1; 
+    transform: translateY(0) scale(1); 
+    filter: blur(0);
+  }
+}
+
 .manim-write { animation: manim-write 1.2s ease-out both; }
 .manim-spin-in { animation: manim-spin-in 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) both; }
 .manim-shrink-in { animation: manim-shrink-in 0.6s cubic-bezier(0.22, 1, 0.36, 1) both; }
@@ -238,18 +297,33 @@ body {
 .manim-focus-bright { animation: manim-focus-bright 3s ease-in-out infinite; }
 .manim-focus-dim { animation: manim-focus-dim 3s ease-in-out infinite; }
 .manim-focus-ring { animation: manim-focus-ring 3s ease-in-out infinite; }
-.manim-crossfade-out { animation: manim-crossfade-out 3s ease-in-out infinite; }
-.manim-crossfade-in { animation: manim-crossfade-in 3s ease-in-out infinite; }
+.manim-crossfade-out { animation: manim-crossfade-out 5s cubic-bezier(0.4, 0, 0.2, 1) infinite; }
+.manim-crossfade-in { animation: manim-crossfade-in 5s cubic-bezier(0.4, 0, 0.2, 1) infinite; }
 .manim-prop-transform { animation: manim-prop-transform 4s cubic-bezier(0.34, 1.56, 0.64, 1) infinite; }
-.manim-move-target { animation: manim-move-target 3s cubic-bezier(0.22, 1, 0.36, 1) infinite; }
-.manim-count-tick { animation: manim-count-tick 2.5s steps(42) both; }
-.manim-count-up { animation: manim-count-up 2.5s ease-out both; }
+.manim-move-target { animation: manim-move-target 4s cubic-bezier(0.16, 1, 0.3, 1) infinite; }
+.manim-count-tick { animation: manim-count-tick 0.4s ease-out both; }
+.manim-count-up { animation: manim-count-up 2.5s cubic-bezier(0.16, 1, 0.3, 1) both; }
 .manim-stagger-bar { width: 0; animation: manim-stagger-bar 0.4s ease-out both; }
 .manim-seq-a { animation: manim-seq-a 3s ease-out infinite; }
 .manim-seq-b { animation: manim-seq-b 3s ease-out infinite; }
 .manim-seq-c { animation: manim-seq-c 3s ease-out infinite; }
 .manim-par-in { animation: manim-par-in 3s ease-out infinite; }
 .manim-timeline-in { animation: manim-timeline-in 0.4s ease-out both; }
+.manim-highlight-line { animation: manim-highlight-line 3s ease-in-out infinite; padding-left: 1rem; }
+.manim-char-appear { animation: manim-char-appear 0.3s cubic-bezier(0.22, 1, 0.36, 1) both; }
+.manim-syntax-pulse { animation: manim-syntax-pulse 2s ease-in-out infinite; }
+.manim-pseudo-to-code { animation: manim-pseudo-to-code 3s cubic-bezier(0.4, 0, 0.2, 1) infinite; }
+.manim-code-block-in { animation: manim-code-block-in 0.8s cubic-bezier(0.16, 1, 0.3, 1) both; }
+
+/* Stagger delays for character-by-character reveals */
+.char-delay-1 { animation-delay: 0.05s; }
+.char-delay-2 { animation-delay: 0.10s; }
+.char-delay-3 { animation-delay: 0.15s; }
+.char-delay-4 { animation-delay: 0.20s; }
+.char-delay-5 { animation-delay: 0.25s; }
+.char-delay-6 { animation-delay: 0.30s; }
+.char-delay-7 { animation-delay: 0.35s; }
+.char-delay-8 { animation-delay: 0.40s; }
 
 /* ─── Pastel tag/pill ────────────────────────────────────────────────── */
 .tag {

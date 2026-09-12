@@ -160,6 +160,20 @@ export const slides: SlideEntry[] = [
     route: '/design/manim-choreography',
     teleprompter: 'How to compose animations: 80ms stagger, max 400ms, max 6 elements at once. Headers first. Code blocks pop in. Every animation has enter and exit.',
   },
+  {
+    id: 'PRE-0026',
+    title: 'Code Animation Patterns',
+    parent: 'PRE-0021',
+    route: '/design/code-animations',
+    teleprompter: 'Four patterns for teaching code: block transform, line correlation, colored blocks, progressive disclosure. Pseudo-code bridges concept to implementation.',
+  },
+  {
+    id: 'PRE-0027',
+    title: 'Pseudo → Python Transform',
+    parent: 'PRE-0021',
+    route: '/design/pseudo-transform',
+    teleprompter: 'Step-by-step morphing from plain English to Python. Variables, conditionals, loops, and functions. Each transform respects cognitive continuity.',
+  },
   // <slides:end>
 ]
 
