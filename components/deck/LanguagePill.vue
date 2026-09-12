@@ -24,7 +24,7 @@ const { locale, locales, setLocale, t } = useI18n()
       :aria-pressed="code === locale"
       @click="setLocale(code)"
     >
-      {{ code.toUpperCase() }}
+      <span class="text-trim">{{ code.toUpperCase() }}</span>
     </button>
   </div>
 </template>
@@ -51,7 +51,7 @@ const { locale, locales, setLocale, t } = useI18n()
 
 .lang-option {
   min-width: 2.6rem;
-  padding: 0.4rem 0.6rem;
+  padding: calc(0.4rem + 0.14em) 0.6rem;
   border-radius: 999px;
   font-family: 'JetBrains Mono', monospace;
   font-size: 0.72rem;

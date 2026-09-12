@@ -98,10 +98,27 @@ body {
   }
 }
 
+/* ─── Optical centring for labels in pills, dots and bubbles ────────────
+ *
+ * A font's line box has more room below the baseline than above the cap
+ * height, so short labels sit high in a pill. Trimming the text box to cap
+ * height and baseline puts the letters in the true middle; the pill then gets
+ * its height from padding (about 0.38em more per side than an untrimmed label
+ * at line-height 1.5). Wrap the text in `.text-trim` inside grid or flex pills
+ * and buttons, or set `text-box` on a block-level pill directly. Browsers
+ * without `text-box` keep the untrimmed line box.
+ *
+ * ─────────────────────────────────────────────────────────────────────── */
+.text-trim {
+  display: block;
+  text-box: trim-both cap alphabetic;
+}
+
 /* ─── Pastel tag/pill ────────────────────────────────────────────────── */
 .tag {
   display: inline-block;
-  padding: 0.25rem 0.75rem;
+  padding: calc(0.25rem + 0.38em) 0.75rem;
+  text-box: trim-both cap alphabetic;
   border-radius: 9999px;
   font-size: 0.75rem;
   font-weight: 700;

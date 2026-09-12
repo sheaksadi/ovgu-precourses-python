@@ -65,7 +65,7 @@ const ink = (token: CodeToken) => codeInk(stage.value.variant ?? 'python', token
         }"
         @click="go(position)"
       >
-        {{ item.label }}
+        <span class="text-trim">{{ item.label }}</span>
       </button>
 
       <div class="ml-auto flex items-center gap-2">
@@ -209,6 +209,7 @@ const ink = (token: CodeToken) => codeInk(stage.value.variant ?? 'python', token
   color: var(--text);
 }
 .morph-step {
+  padding-block: calc(0.375rem + 0.38em);
   transition: background 0.25s ease, color 0.25s ease, border-color 0.25s ease;
 }
 .morph-note {

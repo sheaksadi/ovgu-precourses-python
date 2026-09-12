@@ -323,6 +323,20 @@ not a loop: the line stays lit until the presenter changes it.
 - Mint = true branch
 - Sky = false branch
 
+## Pills, Dots and Bubbles
+
+Short labels in pills, number dots and speech bubbles must sit in the true middle.
+A font's line box has more room below the baseline than above the capitals, so an
+untrimmed label rides high.
+
+- **Block-level pill:** set `text-box: trim-both cap alphabetic` on it and give it
+  its height with padding (about `0.38em` more per side than before, at line-height 1.5).
+- **Pill, dot or button with flex/grid inside:** wrap the text in `<span class="text-trim">`
+  (`assets/css/main.css`).
+- **Faces stacked in one grid cell** (the lesson's Frage / Fall / `if` chips) need
+  `align-self: center`, or the smaller faces stretch and their text rides high again.
+- Checked by measuring letter pixels in 3× screenshots: every pill within 1px of centre.
+
 ## Slide Layouts
 
 ### slide-bare

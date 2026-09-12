@@ -200,7 +200,7 @@ onBeforeUnmount(() => {
             <span class="site-name">{{ COMPILER.name }}</span>
             <span ref="runButton" class="site-run" :class="{ 'is-pressed': pressed === 'run' }">
               <Icon name="lucide:play" />
-              Run
+              <span class="text-trim">Run</span>
             </span>
           </div>
           <div class="site-body">
@@ -239,7 +239,7 @@ onBeforeUnmount(() => {
     <div class="demo-controls">
       <button type="button" class="replay" @click="play">
         <Icon name="lucide:rotate-ccw" />
-        {{ t('tryit.replay') }}
+        <span class="text-trim">{{ t('tryit.replay') }}</span>
       </button>
       <span class="hint">{{ t('tryit.hint') }}</span>
     </div>
@@ -269,7 +269,8 @@ onBeforeUnmount(() => {
   position: absolute;
   bottom: calc(100% - 0.4vh);
   right: 30%;
-  padding: 0.7vh 1.3vh;
+  padding: calc(0.7vh + 0.24em) 1.3vh;
+  text-box: trim-both cap alphabetic;
   border-radius: 1.4vh;
   background: var(--bg);
   border: 2px solid var(--text);
@@ -412,7 +413,8 @@ onBeforeUnmount(() => {
 }
 
 .search-button {
-  padding: 1.1vh 2.6vh;
+  padding: calc(1.1vh + 0.38em) 2.6vh;
+  text-box: trim-both cap alphabetic;
   border-radius: 1.2vh;
   background: var(--bg-off);
   border: 2px solid var(--border);
@@ -518,7 +520,7 @@ onBeforeUnmount(() => {
   display: inline-flex;
   align-items: center;
   gap: 0.7vh;
-  padding: 0.9vh 2vh;
+  padding: calc(0.9vh + 0.25em) 2vh;
   border-radius: 1vh;
   background: var(--mint);
   font-size: clamp(0.75rem, 1.7vh, 1.1rem);
@@ -628,7 +630,7 @@ onBeforeUnmount(() => {
   display: inline-flex;
   align-items: center;
   gap: 0.9vh;
-  padding: 1vh 2vh;
+  padding: calc(1vh + 0.25em) 2vh;
   border-radius: 1.2vh;
   border: 2px solid var(--text);
   font-size: clamp(0.8rem, 1.8vh, 1.2rem);

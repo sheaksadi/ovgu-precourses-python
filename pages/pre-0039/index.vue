@@ -20,7 +20,7 @@ const steps = computed(() => tm<string[]>('tryit.steps'))
 
       <ol class="tryit-steps">
         <li v-for="(step, index) in steps" :key="index" class="tryit-step">
-          <span class="tryit-num">{{ index + 1 }}</span>
+          <span class="tryit-num"><span class="text-trim">{{ index + 1 }}</span></span>
           <span>{{ step }}</span>
         </li>
       </ol>

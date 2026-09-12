@@ -56,7 +56,7 @@ const litWord = (part: 'momo' | 'key' | 'house' | 'door') => lit(`word:${words.v
             'step-new': index + 1 === stage && stage > 1,
           }"
         >
-          <span class="step-dot">{{ index + 1 }}</span>
+          <span class="step-dot"><span class="text-trim">{{ index + 1 }}</span></span>
           <span class="step-label">{{ label }}</span>
         </li>
       </ol>
@@ -97,7 +97,7 @@ const litWord = (part: 'momo' | 'key' | 'house' | 'door') => lit(`word:${words.v
             <div class="carried-key" :class="{ 'is-lit': litWord('key') }">
               <ArtSprite name="key" color="sun" accent="text" :size="48" class="sprite-fill" />
             </div>
-            <span class="key-question">?</span>
+            <span class="key-question"><span class="text-trim">?</span></span>
           </div>
           <span class="outcome outcome-yes">{{ t('door.goesIn') }}</span>
         </div>
@@ -280,7 +280,11 @@ const litWord = (part: 'momo' | 'key' | 'house' | 'door') => lit(`word:${words.v
 
 .chip-face {
   justify-self: start;
-  padding: 0.5vh 1.2vh;
+  /* The if/else face is a size up and makes the shared cell taller; without this
+     the smaller faces stretch to fill it and their text rides high. */
+  align-self: center;
+  padding: calc(0.5vh + 0.38em) 1.2vh;
+  text-box: trim-both cap alphabetic;
   border-radius: 999px;
   font-size: clamp(0.65rem, 1.4vh, 0.95rem);
   font-weight: 800;
@@ -416,7 +420,8 @@ const litWord = (part: 'momo' | 'key' | 'house' | 'door') => lit(`word:${words.v
   position: absolute;
   top: 0.6vh;
   right: calc(3% + 17.5vh);
-  padding: 0.6vh 1.3vh;
+  padding: calc(0.6vh + 0.38em) 1.3vh;
+  text-box: trim-both cap alphabetic;
   border-radius: 999px;
   font-size: clamp(0.7rem, 1.6vh, 1.1rem);
   font-weight: 800;

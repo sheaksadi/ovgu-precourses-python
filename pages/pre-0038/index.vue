@@ -19,7 +19,7 @@ const steps = computed(() => tm<Array<{ title: string, hint?: string }>>('intro.
 
       <ol class="intro-steps">
         <li v-for="(step, index) in steps" :key="index" class="intro-step">
-          <span class="intro-num">{{ index + 1 }}</span>
+          <span class="intro-num"><span class="text-trim">{{ index + 1 }}</span></span>
           <span class="intro-text">
             <span>{{ step.title }}</span>
             <span v-if="step.hint" class="intro-hint">{{ step.hint }}</span>

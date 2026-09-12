@@ -258,7 +258,7 @@ onBeforeUnmount(() => {
     <div class="spinner-controls">
       <button type="button" class="spin-button" :disabled="phase === 'spinning'" @click="spin">
         <Icon name="lucide:refresh-cw" class="spin-icon" :class="{ 'is-spinning': phase === 'spinning' }" />
-        {{ phase === 'landed' ? t('intro.spinAgain') : t('intro.spin') }}
+        <span class="text-trim">{{ phase === 'landed' ? t('intro.spinAgain') : t('intro.spin') }}</span>
       </button>
       <span class="spin-hint">{{ t('intro.hint') }}</span>
       <button
@@ -299,7 +299,8 @@ onBeforeUnmount(() => {
   position: absolute;
   bottom: calc(100% - 0.4vh);
   right: 30%;
-  padding: 0.7vh 1.3vh;
+  padding: calc(0.7vh + 0.24em) 1.3vh;
+  text-box: trim-both cap alphabetic;
   border-radius: 1.4vh;
   background: var(--bg);
   border: 2px solid var(--text);
@@ -418,7 +419,7 @@ onBeforeUnmount(() => {
   display: inline-flex;
   align-items: center;
   gap: 1vh;
-  padding: 1.2vh 2.4vh;
+  padding: calc(1.2vh + 0.25em) 2.4vh;
   border-radius: 1.4vh;
   background: var(--coral);
   border: 2px solid var(--coral);

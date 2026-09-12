@@ -208,7 +208,8 @@ const shortUrl = (value: string) => value.replace(/^https?:\/\//, '')
   position: absolute;
   bottom: calc(100% - 0.4vh);
   right: 30%;
-  padding: 0.7vh 1.3vh;
+  padding: calc(0.7vh + 0.24em) 1.3vh;
+  text-box: trim-both cap alphabetic;
   border-radius: 1.4vh;
   background: var(--bg);
   border: 2px solid var(--text);

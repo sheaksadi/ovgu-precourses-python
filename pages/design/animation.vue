@@ -43,8 +43,8 @@ const replay = ref(0)
         <p class="label">2 · State change</p>
         <div class="stage">
           <div class="demo-steps">
-            <span class="demo-dot is-done">1</span>
-            <span :key="`step-${replay}`" class="demo-dot is-now demo-step-in">2</span>
+            <span class="demo-dot is-done"><span class="text-trim">1</span></span>
+            <span :key="`step-${replay}`" class="demo-dot is-now demo-step-in"><span class="text-trim">2</span></span>
           </div>
         </div>
         <p class="note">
@@ -160,8 +160,9 @@ const replay = ref(0)
   top: 0.9rem;
   left: 50%;
   translate: -50% 0;
-  padding: 0.25rem 0.7rem;
+  padding: calc(0.25rem + 0.38em) 0.7rem;
   border-radius: 0.7rem;
+  text-box: trim-both cap alphabetic;
   background: var(--bg);
   border: 2px solid var(--text);
   font-size: 0.8rem;
