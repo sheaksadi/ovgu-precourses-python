@@ -1,14 +1,14 @@
 <script setup lang="ts">
 /**
- * PRE-0038 — introductions. Each person says their name, then spins an
- * icebreaker question and answers it. Text lives in `intro.*` in `locales/`;
- * the reel is `components/intro/Spinner.vue`.
+ * PRE-0038 — introductions. Each person says their name, tells the room
+ * something about themselves, then spins an icebreaker question.
+ * Text lives in `intro.*` in `locales/`; the reel is `components/intro/Spinner.vue`.
  */
 import { computed } from 'vue'
 import { useI18n } from '~/composables/useI18n'
 
 const { t, tm } = useI18n()
-const steps = computed(() => tm<string[]>('intro.steps'))
+const steps = computed(() => tm<Array<{ title: string, hint?: string }>>('intro.steps'))
 </script>
 
 <template>
@@ -18,13 +18,12 @@ const steps = computed(() => tm<string[]>('intro.steps'))
       <h2 class="intro-title">{{ t('intro.title') }}</h2>
 
       <ol class="intro-steps">
-        <li
-          v-for="(step, index) in steps"
-          :key="index"
-          class="intro-step"
-        >
+        <li v-for="(step, index) in steps" :key="index" class="intro-step">
           <span class="intro-num">{{ index + 1 }}</span>
-          <span>{{ step }}</span>
+          <span class="intro-text">
+            <span>{{ step.title }}</span>
+            <span v-if="step.hint" class="intro-hint">{{ step.hint }}</span>
+          </span>
         </li>
       </ol>
     </section>
@@ -75,10 +74,11 @@ const steps = computed(() => tm<string[]>('intro.steps'))
 
 .intro-step {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 1.4vw;
   font-size: clamp(1rem, 3vh, 2.1rem);
   font-weight: 800;
+  line-height: 1.3;
   color: var(--text);
 }
 
@@ -101,6 +101,22 @@ const steps = computed(() => tm<string[]>('intro.steps'))
 }
 .intro-step:nth-child(3) .intro-num {
   background: var(--mint);
+}
+
+/* Title sits level with the number; the hint runs underneath in small type. */
+.intro-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7vh;
+  padding-top: 0.55vh;
+}
+
+.intro-hint {
+  max-width: 26vw;
+  font-size: clamp(0.75rem, 1.8vh, 1.2rem);
+  font-weight: 600;
+  line-height: 1.45;
+  color: var(--text-dim);
 }
 
 .intro-reel {

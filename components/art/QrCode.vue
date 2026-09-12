@@ -18,6 +18,8 @@ import type { SpriteName } from '~/utils/sprites'
 const props = withDefaults(defineProps<{
   /** Route the code opens. */
   path?: string
+  /** A full address outside the deck, such as the online compiler. Wins over `path`. */
+  href?: string
   /** Sprite in the centre badge. `false` for a plain code. */
   badge?: SpriteName | false
   badgeColor?: string
@@ -36,15 +38,19 @@ const url = ref('')
 const matrix = ref<{ size: number, dark: boolean[] } | null>(null)
 
 onMounted(async () => {
-  const { protocol, host, port } = window.location
-  let target = host
-  try {
-    const res = await $fetch<{ ip: string }>('/api/network-ip')
-    if (res?.ip && res.ip !== 'localhost') target = port ? `${res.ip}:${port}` : res.ip
-  } catch {
-    // Fall back to the address the presenter opened the deck on.
+  if (props.href) {
+    url.value = props.href
+  } else {
+    const { protocol, host, port } = window.location
+    let target = host
+    try {
+      const res = await $fetch<{ ip: string }>('/api/network-ip')
+      if (res?.ip && res.ip !== 'localhost') target = port ? `${res.ip}:${port}` : res.ip
+    } catch {
+      // Fall back to the address the presenter opened the deck on.
+    }
+    url.value = `${protocol}//${target}${props.path}`
   }
-  url.value = `${protocol}//${target}${props.path}`
   emit('url', url.value)
 
   const QRCode = (await import('qrcode')).default

@@ -103,6 +103,10 @@ Motion that answers a click or a "next": the lesson's stages, the step that was
 just reached, the question reel. It lives in the component that owns the state,
 runs once and stops. The two code components below are the reference.
 
+A demo may play once on its own when its slide lands, like a short screen
+recording, as long as it stops at the end and offers a replay button (and Enter).
+Reference: the "try it yourself" browser in `components/tryit/BrowserDemo.vue`.
+
 ### 3. One accent
 
 At most one small pop after the slide lands, usually Momo's speech bubble

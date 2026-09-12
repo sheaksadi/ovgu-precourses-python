@@ -38,7 +38,11 @@ const en: Messages = {
   intro: {
     eyebrow: 'Introductions',
     title: 'Who are you?',
-    steps: ['Say your name', 'Spin a question', 'Answer it'],
+    steps: [
+      { title: 'Say your name' },
+      { title: 'Introduce yourself', hint: 'Hobbies, something quirky, something special – or something nice about you.' },
+      { title: 'Spin a question' },
+    ],
     spin: 'Spin',
     spinAgain: 'Spin again',
     hint: 'or press Enter',
@@ -72,6 +76,25 @@ const en: Messages = {
       'Which song is on repeat for you right now?',
       'An AI runs your day. What is it never allowed to do?',
     ],
+  },
+
+  tryit: {
+    eyebrow: 'Try it yourself',
+    title: 'Your turn!',
+    steps: ['Search for “python online compiler”', 'Open an online compiler', 'Paste the code and press Run'],
+    scan: 'Or scan to open it',
+    query: 'python online compiler',
+    search: 'Search',
+    snippet: 'Write and run Python code right in your browser – nothing to install.',
+    output: 'Momo goes into the house',
+    done: '✓ done',
+    replay: 'Show again',
+    hint: 'or press Enter',
+    demoLabel: 'Demo: search for Python online, open a compiler and run the code',
+    momo: {
+      idle: 'Watch this!',
+      done: 'Your turn!',
+    },
   },
 
   door: {

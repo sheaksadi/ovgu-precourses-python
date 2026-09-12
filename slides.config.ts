@@ -61,9 +61,9 @@ export const slides: SlideEntry[] = [
   {
     id: 'PRE-0038',
     title: 'Vorstellungsrunde',
-    subtitle: 'Name sagen, Frage drehen, antworten',
+    subtitle: 'Name sagen, kurz vorstellen, Frage drehen',
     duration: 10,
-    teleprompter: 'Reihum: Name sagen, dann Enter drücken oder auf das Rad tippen und die Frage beantworten. Keine Frage kommt doppelt, bis alle einmal dran waren. Ton an und aus unten rechts. Selbst anfangen hilft: Momo zuerst.',
+    teleprompter: 'Reihum: Name sagen, kurz vorstellen – Hobbys, etwas Schräges oder Besonderes, etwas Nettes über sich. Dann Enter drücken oder auf das Rad tippen und die Frage beantworten. Keine Frage kommt doppelt, bis alle einmal dran waren. Ton an und aus unten rechts. Selbst anfangen hilft.',
   },
   {
     id: 'PRE-0034',
@@ -91,6 +91,13 @@ export const slides: SlideEntry[] = [
     parent: 'PRE-0034',
     transition: 'none',
     teleprompter: 'Und jetzt als echtes Python. Oben unser Plan, unten derselbe Plan, den der Computer ausführen kann. if und else bleiben gleich, die Frage wird zu einer Variablen hat_schluessel, und was Momo tut, wird zu print. Ändere True zu False und frag: Was steht jetzt da?',
+  },
+  {
+    id: 'PRE-0039',
+    title: 'Probier’s selbst',
+    subtitle: 'Online-Compiler öffnen und den Code ausführen',
+    duration: 5,
+    teleprompter: 'Jetzt selbst ausprobieren. Die Vorführung zeigt den Weg: suchen, Online-Compiler öffnen, Code einfügen, Run. Wer mag, scannt den Code. Aufgabe: True zu False ändern und nochmal Run drücken – was steht jetzt da? Enter zeigt die Vorführung nochmal.',
   },
   {
     id: 'PRE-0010',

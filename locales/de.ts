@@ -39,7 +39,11 @@ const de = {
   intro: {
     eyebrow: 'Vorstellungsrunde',
     title: 'Wer bist du?',
-    steps: ['Sag deinen Namen', 'Dreh eine Frage', 'Antworte'],
+    steps: [
+      { title: 'Sag deinen Namen' },
+      { title: 'Stell dich kurz vor', hint: 'Hobbys, etwas Schräges, etwas Besonderes – oder etwas Nettes über dich.' },
+      { title: 'Dreh eine Frage' },
+    ],
     spin: 'Drehen',
     spinAgain: 'Nochmal drehen',
     hint: 'oder Enter drücken',
@@ -73,6 +77,25 @@ const de = {
       'Welcher Song läuft bei dir gerade in Dauerschleife?',
       'Eine KI übernimmt deinen Tag. Was darf sie auf keinen Fall?',
     ],
+  },
+
+  tryit: {
+    eyebrow: 'Selbst ausprobieren',
+    title: 'Probier’s selbst!',
+    steps: ['Suche nach „python online ausführen“', 'Öffne einen Online-Compiler', 'Code einfügen und Run drücken'],
+    scan: 'Oder direkt scannen',
+    query: 'python online ausführen',
+    search: 'Suchen',
+    snippet: 'Python-Code direkt im Browser schreiben und ausführen – ohne Installation.',
+    output: 'Momo geht ins Haus',
+    done: '✓ fertig',
+    replay: 'Nochmal zeigen',
+    hint: 'oder Enter drücken',
+    demoLabel: 'Vorführung: Python online suchen, einen Compiler öffnen und den Code ausführen',
+    momo: {
+      idle: 'Schau mal!',
+      done: 'Jetzt du!',
+    },
   },
 
   door: {
