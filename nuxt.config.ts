@@ -3,6 +3,10 @@ import tailwindcss from "@tailwindcss/vite";
 export default defineNuxtConfig({
   compatibilityDate: "2024-11-01",
   devtools: { enabled: true },
+  // Listen on the local network, not just this laptop, so phones can open the
+  // follow-along QR code and the remote. Anyone on the same Wi-Fi can view the
+  // deck; moving the room still needs the room key.
+  devServer: { host: '0.0.0.0' },
   css: ['~/assets/css/main.css'],
   app: {
     // A slide that switches layout (the bare title slide into a chrome slide)
