@@ -620,6 +620,10 @@ const segments = (text: string) => text.split('`').map((part, index) => ({ part,
     left: 47vw;
     width: 47vw;
   }
+  /* Four boxes share less width, so they shrink a little. */
+  .type-row .vbox-art {
+    width: 11vh;
+  }
 }
 
 /* ─── Takeaway ───────────────────────────────────────────────────────── */
@@ -718,10 +722,15 @@ const segments = (text: string) => text.split('`').map((part, index) => ({ part,
 .stage-6 .vb-name {
   animation: undim 0.35s ease 0.1s both;
 }
-.stage-6 .vb-name .vbox-art,
-.stage-6 .vb-age .vbox-art {
-  outline: 3px solid var(--lavender);
-  outline-offset: 0.8vh;
+/* Lit by their name tag and value, not a ring, so neighbours never overlap. */
+.stage-6 .vb-name .vbox-label,
+.stage-6 .vb-age .vbox-label {
+  background: var(--lavender);
+}
+.stage-6 .vb-name .vbox-value,
+.stage-6 .vb-age .vbox-value {
+  border-color: var(--lavender);
+  box-shadow: 0 0 0 2px var(--lavender);
 }
 .stage-6 .sentence {
   animation: appear 0.4s ease 0.4s both;
