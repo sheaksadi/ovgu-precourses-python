@@ -104,7 +104,8 @@ const OPERATOR_CONCEPTS: Record<string, string> = {
 
 const TOKEN_PATTERNS: Array<[TokenKind, RegExp]> = [
   ['comment', /^(?:#|\/\/)[^\n]*/],
-  ['string', /^(?:"[^"]*"|'[^']*')/],
+  // A prefix like f"…" or rb'…' belongs to the string, so it never gets a space before the quote.
+  ['string', /^(?:[fFrRbBuU]{1,2}(?=["']))?(?:"[^"]*"|'[^']*')/],
   ['decorator', /^@[A-Za-z_][A-Za-z0-9_]*/],
   ['number', /^\d+(?:\.\d+)?/],
   // Unicode letters, so German pseudo-code (`Schlüssel`, `Tür`) stays one word.
