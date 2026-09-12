@@ -22,5 +22,7 @@ const slideBg = computed(() => currentSlide.value?.backgroundColor || '')
     </main>
 
     <SyncPill />
+    <DeckLanguagePill />
+    <DeckInteractiveHint />
   </div>
 </template>

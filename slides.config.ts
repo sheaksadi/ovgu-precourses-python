@@ -57,6 +57,14 @@ export const slides: SlideEntry[] = [
     teleprompter: 'Welcome to the Python pre-course. Scan the code in the corner to open the slides on your own device: you can follow along, move at your own pace, and the sync button brings you back to where we are.',
   },
   {
+    id: 'PRE-0038',
+    title: 'Vorstellungsrunde',
+    subtitle: 'Name sagen, Frage drehen, antworten',
+    duration: 10,
+    transition: 'fade',
+    teleprompter: 'Reihum: Name sagen, dann Enter drücken oder auf das Rad tippen und die Frage beantworten. Keine Frage kommt doppelt, bis alle einmal dran waren. Ton an und aus unten rechts. Selbst anfangen hilft: Momo zuerst.',
+  },
+  {
     id: 'PRE-0034',
     title: 'Kommt Momo ins Haus?',
     subtitle: 'Problem',

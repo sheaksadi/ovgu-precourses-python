@@ -31,6 +31,8 @@ const slideBg = computed(() => currentSlide.value?.backgroundColor || '')
     </div>
 
     <SyncPill />
+    <DeckLanguagePill />
+    <DeckInteractiveHint />
 
     <!-- Progress bar: bold coral -->
     <div v-if="deckConfig.showProgressBar" class="absolute bottom-0 left-0 h-[3px] w-full z-50" style="background: var(--border);">

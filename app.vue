@@ -5,6 +5,7 @@ import { useKeyBindings } from '~/composables/useKeyBindings'
 import { useSlideData } from '~/composables/useSlideData'
 import { useWebSocket } from '~/composables/useWebSocket'
 import { useDeckRole } from '~/composables/useDeckRole'
+import { useI18n } from '~/composables/useI18n'
 import Teleprompter from '~/components/teleprompter/Teleprompter.vue'
 import InteractionGuardModal from '~/components/interactive/InteractionGuardModal.vue'
 import { useRoute, useRouter } from 'vue-router'
@@ -17,6 +18,8 @@ const { isViewer, isPeek, isInteractive, adoptDeviceSettings } = useDeckRole()
 const route = useRoute()
 const router = useRouter()
 const ws = useWebSocket()
+// Language is per device, like the view mode: `l` switches this screen only.
+const { toggleLocale } = useI18n()
 
 const routeSlide = computed(() => getSlideByRoute(route.path))
 
@@ -109,6 +112,12 @@ const handleKeydown = (e: KeyboardEvent) => {
   if (resolveKeys('toggleTeleprompter').includes(key) || key === 'T') {
     e.preventDefault()
     toggleTeleprompter()
+    return
+  }
+
+  if (resolveKeys('toggleLanguage').includes(key)) {
+    e.preventDefault()
+    toggleLocale()
     return
   }
 

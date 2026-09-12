@@ -16,6 +16,8 @@ export const defaultKeyBindings: KeyBinding[] = [
   { key: 'F', action: 'toggleFullscreen' },
   { key: 's', action: 'syncToGlobal' },
   { key: 'S', action: 'syncToGlobal' },
+  { key: 'l', action: 'toggleLanguage' },
+  { key: 'L', action: 'toggleLanguage' },
 ]
 
 export interface CustomKeyBindings {

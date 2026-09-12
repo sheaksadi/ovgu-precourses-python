@@ -4,7 +4,9 @@
  * quarter to open the interactive deck on their own device.
  */
 import { ref } from 'vue'
+import { useI18n } from '~/composables/useI18n'
 
+const { t } = useI18n()
 const joinUrl = ref('')
 const shortUrl = (value: string) => value.replace(/^https?:\/\//, '')
 </script>
@@ -25,26 +27,26 @@ const shortUrl = (value: string) => value.replace(/^https?:\/\//, '')
       </div>
 
       <p class="eyebrow anim-fade-in-up">
-        OVGU Magdeburg <span class="mx-2" style="color: var(--border);">/</span> Winter Semester 2026/27
+        {{ t('title.university') }} <span class="mx-2" style="color: var(--border);">/</span> {{ t('title.semester') }}
       </p>
 
       <h1 class="title anim-fade-in-up anim-delay-1">
-        Python<br>Pre-Course
+        {{ t('title.line1') }}<br>{{ t('title.line2') }}
       </h1>
 
       <p class="subtitle anim-fade-in-up anim-delay-2">
-        for <span class="subtitle-mark">AI &amp; Machine Learning</span> Engineering
+        {{ t('title.subtitleBefore') }} <span class="subtitle-mark">{{ t('title.subtitleMark') }}</span> {{ t('title.subtitleAfter') }}
       </p>
     </header>
 
     <!-- Bottom left: who is teaching -->
     <footer class="absolute bottom-[8vh] left-[6vw] flex flex-col gap-[2.6vh] anim-fade-in-up anim-delay-4">
       <div class="person">
-        <span class="role">Instructor</span>
+        <span class="role">{{ t('title.instructor') }}</span>
         <span class="name name-lead">Karim</span>
       </div>
       <div class="person">
-        <span class="role">Tutor</span>
+        <span class="role">{{ t('title.tutor') }}</span>
         <span class="name name-support">Sheak Sadi</span>
       </div>
     </footer>
@@ -52,7 +54,7 @@ const shortUrl = (value: string) => value.replace(/^https?:\/\//, '')
     <!-- Bottom right quarter: the way in -->
     <aside class="qr-dock absolute anim-pop-in anim-delay-3">
       <div class="qr-peek" aria-hidden="true">
-        <span class="qr-bubble">Hi, I'm Momo!</span>
+        <span class="qr-bubble">{{ t('title.momoHi') }}</span>
         <ArtSprite name="cat-peek" color="coral" accent="sun" :size="96" class="w-full h-full" />
       </div>
 
@@ -60,7 +62,7 @@ const shortUrl = (value: string) => value.replace(/^https?:\/\//, '')
         <ArtQrCode path="/join" badge="cat" badge-color="coral" badge-accent="rose" @url="joinUrl = $event" />
 
         <div class="qr-caption">
-          <span class="qr-cta">Scan to follow along</span>
+          <span class="qr-cta">{{ t('title.scan') }}</span>
           <span class="qr-url">{{ joinUrl ? shortUrl(joinUrl) : '…' }}</span>
         </div>
       </div>
@@ -152,6 +154,14 @@ const shortUrl = (value: string) => value.replace(/^https?:\/\//, '')
   right: 5vw;
   bottom: 7vh;
   width: min(50vh, 40vw);
+}
+
+/* A phone following along already scanned it; in portrait the code only gets in the way. */
+@media (max-aspect-ratio: 3/4) {
+  .qr-dock,
+  .dot-field {
+    display: none;
+  }
 }
 
 .qr-card {

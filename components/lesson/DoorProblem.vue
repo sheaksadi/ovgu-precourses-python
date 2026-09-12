@@ -9,38 +9,37 @@
  *
  *   1. Problem      — Momo stands at her door. Does she have the key?
  *   2. Lösen        — the scene splits into both cases and plays them out.
- *   3. Aufschreiben — the cases move up and the German pseudo-code arrives.
+ *   3. Aufschreiben — the cases move up and the pseudo-code arrives.
  *   4. Python       — the pictures clear, the pseudo-code moves to the top and
  *                     the Python version lands below it.
  *
  * Each stage opens on the previous stage's last frame, so the cut between
- * slides is invisible. All motion is CSS with `animation-fill-mode: both`, so
- * reduced motion lands straight on the final frame. In stage 3, hovering a word
- * in the code lights up its part of the picture, and hovering a lane lights up
- * its keyword.
+ * slides is invisible. The step row only shows the steps reached so far. All
+ * motion is CSS with `animation-fill-mode: both`, so reduced motion lands
+ * straight on the final frame. Hovering a word in the code lights up its part
+ * of the picture, and hovering a lane lights up its keyword.
+ *
+ * Every word on screen comes from `door.*` in `locales/`.
  */
-import { onMounted } from 'vue'
+import { computed, onMounted } from 'vue'
 import { useCodeLink } from '~/composables/useCodeLink'
+import { useI18n } from '~/composables/useI18n'
 
-defineProps<{ stage: 1 | 2 | 3 | 4 }>()
+const props = defineProps<{ stage: 1 | 2 | 3 | 4 }>()
 
 const link = useCodeLink()
+const { t, tm } = useI18n()
 onMounted(() => link.clear())
 
-const steps = ['Problem', 'Lösen', 'Aufschreiben', 'Python']
+/** Steps reached so far: the row grows by one step per stage. */
+const steps = computed(() => tm<string[]>('door.steps').slice(0, props.stage))
+const code = computed(() => t('door.pseudo'))
+const python = computed(() => t('door.python'))
 
-const code = `if Momo hat den Schlüssel:
-    Momo geht ins Haus
-else:
-    Momo schläft vor der Tür`
-
-const python = `hat_schluessel = True
-if hat_schluessel:
-    print("Momo geht ins Haus")
-else:
-    print("Momo schläft vor der Tür")`
-
+/** The pseudo-code word for each part of the picture, in the current language. */
+const words = computed(() => tm<Record<'momo' | 'key' | 'house' | 'door', string>>('door.words'))
 const lit = (key: string) => link.isActive(key)
+const litWord = (part: 'momo' | 'key' | 'house' | 'door') => lit(`word:${words.value[part]}`)
 </script>
 
 <template>
@@ -49,15 +48,19 @@ const lit = (key: string) => link.isActive(key)
       <ol class="steps">
         <li
           v-for="(label, index) in steps"
-          :key="label"
+          :key="index"
           class="step"
-          :class="{ 'step-done': index + 1 < stage, 'step-now': index + 1 === stage }"
+          :class="{
+            'step-done': index + 1 < stage,
+            'step-now': index + 1 === stage,
+            'step-new': index + 1 === stage && stage > 1,
+          }"
         >
           <span class="step-dot">{{ index + 1 }}</span>
           <span class="step-label">{{ label }}</span>
         </li>
       </ol>
-      <h2 class="lesson-title">Kommt Momo ins Haus?</h2>
+      <h2 class="lesson-title">{{ t('door.title') }}</h2>
     </header>
 
     <div class="lanes">
@@ -70,33 +73,33 @@ const lit = (key: string) => link.isActive(key)
       >
         <div class="lane-label">
           <span class="chip">
-            <span class="chip-face chip-q">Frage</span>
-            <span class="chip-face chip-case">Fall 1</span>
+            <span class="chip-face chip-q">{{ t('door.question') }}</span>
+            <span class="chip-face chip-case">{{ t('door.case1') }}</span>
             <span class="chip-face chip-code">if</span>
           </span>
           <span class="cond">
-            <span class="cond-face cond-q">Schlüssel dabei?</span>
-            <span class="cond-face cond-a">mit Schlüssel</span>
+            <span class="cond-face cond-q">{{ t('door.hasKey') }}</span>
+            <span class="cond-face cond-a">{{ t('door.withKey') }}</span>
           </span>
         </div>
 
         <div class="track">
           <span class="road"></span>
-          <div class="home" :class="{ 'is-lit': lit('word:haus') }">
+          <div class="home" :class="{ 'is-lit': litWord('house') }">
             <ArtSprite name="house" color="sky" accent="coral" :size="96" class="sprite-fill" />
             <span class="door-light"></span>
-            <span class="door-mark" :class="{ 'is-lit': lit('word:tür') }"></span>
+            <span class="door-mark" :class="{ 'is-lit': litWord('door') }"></span>
           </div>
-          <div class="walker walker-yes" :class="{ 'is-lit': lit('word:momo') }">
+          <div class="walker walker-yes" :class="{ 'is-lit': litWord('momo') }">
             <div class="bob">
               <ArtSprite name="cat-stand" color="coral" accent="rose" :size="96" class="sprite-fill" />
             </div>
-            <div class="carried-key" :class="{ 'is-lit': lit('word:schlüssel') }">
+            <div class="carried-key" :class="{ 'is-lit': litWord('key') }">
               <ArtSprite name="key" color="sun" accent="text" :size="48" class="sprite-fill" />
             </div>
             <span class="key-question">?</span>
           </div>
-          <span class="outcome outcome-yes">✓ geht ins Haus</span>
+          <span class="outcome outcome-yes">{{ t('door.goesIn') }}</span>
         </div>
       </section>
 
@@ -109,36 +112,36 @@ const lit = (key: string) => link.isActive(key)
       >
         <div class="lane-label">
           <span class="chip">
-            <span class="chip-face chip-case">Fall 2</span>
+            <span class="chip-face chip-case">{{ t('door.case2') }}</span>
             <span class="chip-face chip-code">else</span>
           </span>
           <span class="cond">
-            <span class="cond-face cond-a">ohne Schlüssel</span>
+            <span class="cond-face cond-a">{{ t('door.withoutKey') }}</span>
           </span>
         </div>
 
         <div class="track">
           <span class="road"></span>
-          <div class="home" :class="{ 'is-lit': lit('word:haus') }">
+          <div class="home" :class="{ 'is-lit': litWord('house') }">
             <ArtSprite name="house" color="sky" accent="coral" :size="96" class="sprite-fill" />
-            <span class="door-mark" :class="{ 'is-lit': lit('word:tür') }"></span>
+            <span class="door-mark" :class="{ 'is-lit': litWord('door') }"></span>
           </div>
-          <div class="walker walker-no" :class="{ 'is-lit': lit('word:momo') }">
+          <div class="walker walker-no" :class="{ 'is-lit': litWord('momo') }">
             <div class="bob">
               <ArtSprite name="cat-stand" color="coral" accent="rose" :size="96" class="sprite-fill" />
             </div>
           </div>
-          <div class="sleeper" :class="{ 'is-lit': lit('word:momo') }">
+          <div class="sleeper" :class="{ 'is-lit': litWord('momo') }">
             <ArtSprite name="cat-sleep" color="coral" accent="rose" :size="96" class="sprite-fill" />
           </div>
-          <span class="outcome outcome-no">✗ schläft vor der Tür</span>
+          <span class="outcome outcome-no">{{ t('door.sleeps') }}</span>
         </div>
       </section>
     </div>
 
     <p class="prompt">
-      Momo steht vor ihrer Haustür. Manchmal hat sie den Schlüssel dabei, manchmal nicht.
-      <strong>Was passiert in beiden Fällen?</strong>
+      {{ t('door.prompt') }}
+      <strong>{{ t('door.ask') }}</strong>
     </p>
 
     <div class="code-dock">
@@ -151,7 +154,7 @@ const lit = (key: string) => link.isActive(key)
           <path d="M12 4 V19 M6 13 L12 19 L18 13" />
         </svg>
       </span>
-      <span class="to-python-label">in Python</span>
+      <span class="to-python-label">{{ t('door.toPython') }}</span>
     </div>
 
     <div class="python-dock">
@@ -217,6 +220,11 @@ const lit = (key: string) => link.isActive(key)
   border-color: var(--text);
   color: var(--bg);
   animation: step-pop 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* The step this stage adds slides in beside the ones already reached. */
+.step-new {
+  animation: step-in 0.45s cubic-bezier(0.22, 1, 0.36, 1) 0.1s both;
 }
 
 .lesson-title {
@@ -676,6 +684,10 @@ const lit = (key: string) => link.isActive(key)
 @keyframes step-pop {
   from { transform: scale(0.7); }
   to { transform: scale(1); }
+}
+@keyframes step-in {
+  from { opacity: 0; transform: translateX(-1.4vw); }
+  to { opacity: 1; transform: none; }
 }
 @keyframes walk {
   from { left: 2%; }

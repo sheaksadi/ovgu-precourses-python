@@ -175,6 +175,44 @@ Add a synonym by editing `WORD_CONCEPTS` or `OPERATOR_CONCEPTS` in
 - **Avoid**: width, height, top, left (SLOW)
 - **Never**: transition: all (specify properties)
 
+## Language
+
+Every course-facing word lives in `locales/de.ts` and `locales/en.ts`, never in a
+page. German is the source shape: `en.ts` is typed against it, so a missing key
+fails. Code samples are translated too, pseudo-code and Python strings alike.
+
+```vue
+<script setup lang="ts">
+const { t, tm } = useI18n()
+const questions = computed(() => tm<string[]>('intro.questions'))
+</script>
+
+<h2>{{ t('door.title') }}</h2>
+<p>{{ t('follow.startsAt', { label: '2.1', title: 'Problem' }) }}</p>
+```
+
+- **Per device.** The projector and each phone pick their own language. `?lang=en`
+  on a link, then the `deck-lang` cookie, so the server renders the right words.
+- **Switching.** `l` on a keyboard. Touch screens get a small DE | EN pill bottom
+  left; the projector never shows it.
+- **Only `if`, `else` and Python stay English** in every language.
+- **Picture links follow the language.** A scene that lights up on hovered words
+  keeps those words in the dictionary (`door.words`), not in the component.
+- The design-system slides and the speaker notes in `slides.config.ts` are not
+  translated; they are for the people building and giving the course.
+
+## Sound
+
+Sound is an accent, never a soundtrack.
+
+- **Synthesised, not downloaded.** Web Audio oscillators, a few milliseconds each.
+- **Only in answer to a click or a key.** Nothing plays on load or on its own.
+- **Quiet.** Peaks stay below 0.07 gain; ticks sit lower still.
+- **Always mutable.** A speaker button next to the control, remembered per device.
+- **Reference:** the question reel in `components/intro/Spinner.vue` — a tick per
+  passing card, brighter while fast and softer as it slows, then a two-note chime
+  a fifth apart when it lands.
+
 ## The Cast
 
 Examples use a fixed set of characters and objects, drawn as flat SVG on a 64×64
