@@ -60,7 +60,9 @@ export const useWebSocket = () => {
         wasDisconnected.value = false
         send({ type: 'sync_request' })
       }
-      ws!.send('ping')
+      // A fast navigation can replace `ws` with a newer socket that is still
+      // connecting before this handler runs, so check before pinging.
+      if (ws?.readyState === WebSocket.OPEN) ws.send('ping')
       clearInterval(pingTimer)
       pingTimer = setInterval(() => {
         if (ws?.readyState === WebSocket.OPEN) {
