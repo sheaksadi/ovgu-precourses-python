@@ -1,22 +1,18 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue'
+import { computed, onMounted } from 'vue'
 import SlideTable from '~/components/dashboard/SlideTable.vue'
 import QRCodeDisplay from '~/components/control/QRCodeDisplay.vue'
 import { usePresentationStore } from '~/stores/presentationStore'
 import { useWebSocket } from '~/composables/useWebSocket'
-import { useRoomKey } from '~/composables/useRoomKey'
 
 const store = usePresentationStore()
 const ws = useWebSocket()
-const { available: keyAvailable, open: controlOpen, load: loadRoomKey, linkQuery } = useRoomKey()
-const remoteQuery = ref('')
 
 const following = computed(() => Math.max(0, store.presence.viewers - store.presence.detached))
 
-onMounted(async () => {
+onMounted(() => {
   if (ws && ws.connect) ws.connect()
-  await loadRoomKey()
-  remoteQuery.value = linkQuery()
+  if (ws && ws.sendHello) ws.sendHello()
 })
 </script>
 
@@ -58,17 +54,19 @@ onMounted(async () => {
             Scan this QR code with your phone to use it as a remote control and teleprompter. Both devices must be on the same network.
             The remote and the presenter view are the only surfaces that move the room's slide.
           </p>
-          <p v-if="keyAvailable === false && !controlOpen" class="text-xs text-amber-300 mb-4">
-            This dashboard is open from another device, so it cannot show the room key. Open the
-            dashboard on the machine running the presentation to hand out a working remote link.
+          <p class="text-xs text-gray-500 mb-4">Any remote or presenter view can drive this room.</p>
+          <QRCodeDisplay path="/control" />
+        </div>
+
+        <div class="bg-gray-900 rounded-xl p-6 border border-gray-800 shadow-2xl">
+          <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
+            <Icon name="lucide:presentation" class="text-sky-400" />
+            Mobile Presenter View
+          </h3>
+          <p class="text-sm text-gray-400 mb-6 leading-relaxed">
+            Scan this code when you want previews, notes, slide actions, and room controls on your phone.
           </p>
-          <p v-else-if="controlOpen" class="text-xs text-gray-500 mb-4">
-            Control is open: DECK_OPEN_CONTROL=1 is set, so any device on the network can drive the room.
-          </p>
-          <p v-else class="text-xs text-gray-500 mb-4">
-            The link below carries this session's room key. It stops working when the server restarts.
-          </p>
-          <QRCodeDisplay path="/control" :query="remoteQuery" />
+          <QRCodeDisplay path="/presenter" />
         </div>
 
         <div class="bg-gray-900 rounded-xl p-6 border border-gray-800 shadow-2xl">

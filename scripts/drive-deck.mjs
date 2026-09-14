@@ -134,12 +134,6 @@ const check = (name, pass, detail = '') =>
 
 const browser = await connect(await browserWs())
 
-// The remote needs the room key, which the local machine may read.
-const { key = '', open: controlOpen = false } = await fetch(`${BASE}/api/room-key`)
-  .then(r => (r.ok ? r.json() : {}))
-  .catch(() => ({}))
-const keyQuery = key && !controlOpen ? `?key=${encodeURIComponent(key)}` : ''
-
 // --- Surfaces -----------------------------------------------------------
 const dashboard = await openPage(browser, `${BASE}/dashboard`, 1440, 1400)
 const presenter = await openPage(browser, `${BASE}/presenter`, 1600, 1000)
@@ -155,7 +149,7 @@ await wait(1200)
 await evaluate(reset, 'localStorage.clear()')
 
 const viewer = await openPage(browser, `${BASE}/pre-0001`, 1280, 720)
-const control = await openPage(browser, `${BASE}/control${keyQuery}`, 430, 860)
+const control = await openPage(browser, `${BASE}/control`, 430, 860)
 await wait(3000)
 
 await clickText(control, 'button', 'Resume Presentation')

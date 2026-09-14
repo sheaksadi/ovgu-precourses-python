@@ -82,6 +82,12 @@ export const wsManager = {
 
   getState: () => currentState,
 
+  /** Send one server event to every live connection. */
+  broadcast: (payload: unknown) => {
+    const message = JSON.stringify(payload)
+    for (const { peer } of peers.values()) peer.send(message)
+  },
+
   setState: (state: { slideId?: string, isPresenting?: boolean }) => {
     currentState = { ...currentState, ...state }
   },

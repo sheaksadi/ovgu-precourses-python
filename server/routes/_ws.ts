@@ -1,6 +1,5 @@
 import { wsManager } from '../utils/wsManager'
 import type { PeerRole } from '../utils/wsManager'
-import { isControlOpen, isValidRoomKey } from '../utils/roomKey'
 
 /** Pointer ids per connection, keyed by `peer.id` for the same reason. */
 const peerClientIds = new Map<string, Set<string>>()
@@ -8,7 +7,6 @@ const peerClientIds = new Map<string, Set<string>>()
 const keyOf = (peer: any): string => String(peer?.id ?? peer)
 
 const KNOWN_ROLES: PeerRole[] = ['control', 'presenter', 'viewer', 'dashboard', 'peek']
-const CONTROLLER_ROLES: PeerRole[] = ['control', 'presenter']
 
 /** A client that misses this many milliseconds of heartbeats has gone. */
 const PEER_TTL = 15000
@@ -69,35 +67,18 @@ export default defineWebSocketHandler({
       if (data.type === 'hello') {
         const claimed: PeerRole = KNOWN_ROLES.includes(data.role) ? data.role : 'viewer'
 
-        // A controller must present the room key, which only the machine running
-        // the deck can read and which the remote receives inside its QR code.
-        const authorised = !CONTROLLER_ROLES.includes(claimed) || isValidRoomKey(data.key)
-        const role: PeerRole = authorised ? claimed : 'viewer'
-
-        wsManager.setPeerIdentity(peer, role, data.mode === 'interactive' ? 'interactive' : 'stage')
+        wsManager.setPeerIdentity(peer, claimed, data.mode === 'interactive' ? 'interactive' : 'stage')
         peer.send(JSON.stringify({
           type: 'role',
-          role,
+          role: claimed,
           claimed,
-          authorised,
-          open: isControlOpen()
+          authorised: true
         }))
         broadcastPresence(peer)
       }
       else if (data.type === 'navigate') {
-        // Only the phone remote and the presenter view own the room's position.
-        if (!wsManager.canControl(peer)) {
-          peer.send(JSON.stringify({ type: 'state', ...wsManager.getState() }))
-          return
-        }
-
-        wsManager.setState({
-          slideId: data.slideId,
-          isPresenting: data.isPresenting !== undefined ? data.isPresenting : wsManager.getState().isPresenting
-        })
-        const stateMsg = JSON.stringify({ type: 'state', ...wsManager.getState() })
-        peer.publish('presentation', stateMsg)
-        peer.send(stateMsg)
+        // Room writes use POST /api/navigate. WebSocket is broadcast-only.
+        peer.send(JSON.stringify({ type: 'state', ...wsManager.getState() }))
       }
       else if (data.type === 'presence') {
         wsManager.setPeerPresence(peer, {
@@ -112,7 +93,8 @@ export default defineWebSocketHandler({
         peer.send(JSON.stringify({ type: 'presence_summary', ...wsManager.getPresenceSummary() }))
       }
       else if (data.type === 'command') {
-        peer.publish('presentation', text)
+        // Room commands use POST /api/command. WebSocket is broadcast-only.
+        return
       }
       else if (data.type === 'pointer') {
         if (!peerClientIds.has(keyOf(peer))) peerClientIds.set(keyOf(peer), new Set())

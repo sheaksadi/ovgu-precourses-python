@@ -1,19 +1,31 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { usePresentation } from '~/composables/usePresentation'
 import { useSlideData } from '~/composables/useSlideData'
 import { usePresentationStore } from '~/stores/presentationStore'
 import { useWebSocket } from '~/composables/useWebSocket'
 import QRCodeDisplay from '~/components/control/QRCodeDisplay.vue'
 
-const { nextSlide, prevSlide, goToSlide, goToIndex, currentIndex, currentSlide, flatSlides } = usePresentation()
-const { firstSlideId } = useSlideData()
+const { goToSlide, goToIndex, flatSlides } = usePresentation()
+const { firstSlideId, getSlideById } = useSlideData()
 const { sendCommand, sendPointer } = useWebSocket()
 const store = usePresentationStore()
 const menuOpen = ref(false)
 const showQrModal = ref(false)
 
-const currentSlideData = currentSlide
+// Control page has no local slide — track the global room position instead.
+const currentSlideData = computed(() => getSlideById(store.globalSlideId) || getSlideById(firstSlideId.value))
+const currentIndex = computed(() => flatSlides.value.findIndex(s => s.id === (store.globalSlideId || firstSlideId.value)))
+
+const nextSlide = () => {
+  const i = currentIndex.value
+  if (i < flatSlides.value.length - 1) goToIndex(i + 1)
+  else if (i < 0) goToIndex(0)
+}
+const prevSlide = () => {
+  const i = currentIndex.value
+  if (i > 0) goToIndex(i - 1)
+}
 
 // Laser Pointer Touchpad logic
 const touchpadRef = ref<HTMLElement | null>(null)
@@ -108,16 +120,6 @@ definePageMeta({
       <QRCodeDisplay />
     </div>
 
-    <!-- Control refused: this remote has no room key -->
-    <div
-      v-if="store.controlRejected"
-      class="flex-none px-4 py-3 bg-amber-500/10 border-b border-amber-500/40 text-amber-200 text-xs leading-relaxed"
-      role="status"
-    >
-      This remote cannot move the room yet. Scan the Remote Control QR code on the dashboard, which
-      carries this session's room key.
-    </div>
-
     <!-- ===== Top Nav Bar ===== -->
     <header class="flex-none p-3 border-b border-gray-800 bg-black z-50">
       <div class="flex items-center gap-2 min-w-0">
@@ -158,23 +160,8 @@ definePageMeta({
 
     <!-- ===== Main Content ===== -->
     <div class="flex-1 flex flex-col min-h-0">
-      <!-- Ready State -->
-      <div v-if="!store.isPresenting" class="flex-1 flex flex-col items-center justify-center p-6 text-center">
-        <div class="bg-gray-900 p-8 rounded-3xl border border-gray-800 max-w-sm w-full shadow-2xl">
-          <Icon name="lucide:monitor-play" class="text-6xl text-blue-500 mb-6 mx-auto" />
-          <h2 class="text-2xl font-bold mb-2">Ready to Present</h2>
-          <p class="text-gray-400 mb-8">The main screen is on the dashboard.</p>
-          <button 
-            @click="() => { store.isPresenting = true; goToSlide(store.globalSlideId || firstSlideId || '') }" 
-            class="w-full py-4 bg-blue-600 active:bg-blue-500 text-white rounded-xl text-lg font-bold transition-colors shadow-[0_0_20px_rgba(37,99,235,0.3)]"
-          >
-            Resume Presentation
-          </button>
-        </div>
-      </div>
-
-      <!-- Presenting State - Notes scrolls, controls pinned bottom -->
-      <div v-else class="flex-1 flex flex-col justify-end min-h-0">
+      <!-- Always show controls — no "ready to present" gate -->
+      <div class="flex-1 flex flex-col justify-end min-h-0">
         <!-- Scrollable Notes -->
         <div class="flex-1 min-h-0 overflow-y-auto px-5 pt-3 pb-2">
           <div v-if="currentSlideData?.teleprompter" class="text-lg leading-relaxed text-gray-200">

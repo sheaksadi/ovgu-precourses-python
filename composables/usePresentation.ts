@@ -3,6 +3,7 @@ import { usePresentationStore } from '~/stores/presentationStore'
 import { useInteractionStore } from '~/stores/interactionStore'
 import { useSlideData } from '~/composables/useSlideData'
 import { useDeckRole } from '~/composables/useDeckRole'
+import { useWebSocket } from '~/composables/useWebSocket'
 import { useRouter } from '#app'
 
 export interface MoveOptions {
@@ -26,6 +27,7 @@ export const usePresentation = () => {
   const { flatSlides, mainSlideCount, getSlideById, getSlideByRoute, firstSlideId } = useSlideData()
   const { canControlGlobal, isViewer, isInteractive, isPeek, queryMode } = useDeckRole()
   const router = useRouter()
+  const socket = useWebSocket()
 
   /** Position of the slide this device renders. */
   const currentIndex = computed(() =>
@@ -86,10 +88,12 @@ export const usePresentation = () => {
     interactions.closeGuard()
     store.setLocal(target.id)
 
-    // A viewer that moves by itself stops following the presenter.
+    // Any local viewer move detaches. Server-originated moves keep following on.
     if (isViewer.value) store.setFollowing(!!options.fromFollow)
 
-    if (canControlGlobal.value) store.setGlobal(target.id)
+    if (canControlGlobal.value) {
+      return socket.navigate(target.id, store.isPresenting)
+    }
 
     // Controllers drive other screens over the socket, they do not route here.
     // A peek frame routes too: the presenter view tells it what to show.
@@ -106,24 +110,23 @@ export const usePresentation = () => {
   }
 
   const nextSlide = (options: MoveOptions = {}) => {
-    const index = currentIndex.value
+    const index = canControlGlobal.value ? globalIndex.value : currentIndex.value
     if (index < 0) return goToIndex(0, options)
     if (index < flatSlides.value.length - 1) return goToIndex(index + 1, options)
     return false
   }
 
   const prevSlide = (options: MoveOptions = {}) => {
-    const index = currentIndex.value
+    const index = canControlGlobal.value ? globalIndex.value : currentIndex.value
     if (index > 0) return goToIndex(index - 1, options)
     return false
   }
 
   /** Rejoin the room after drifting. */
   const syncToGlobal = () => {
-    const target = store.globalSlideId
-    if (!target) return false
     store.setFollowing(true)
-    return requestSlide(target, { fromFollow: true, force: true })
+    socket.requestState()
+    return true
   }
 
   const toggleTeleprompter = () => {
@@ -136,7 +139,10 @@ export const usePresentation = () => {
   }
 
   const exitPresentation = () => {
-    if (canControlGlobal.value) store.isPresenting = false
+    if (canControlGlobal.value && store.globalSlideId) {
+      store.isPresenting = false
+      socket.navigate(store.globalSlideId, false)
+    }
     if (isViewer.value) router.push('/')
   }
 

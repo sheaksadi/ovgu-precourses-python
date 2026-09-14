@@ -4,13 +4,12 @@
  *
  * Start the app first (`npm run dev`, or `npm run build` then
  * `node .output/server/index.mjs`), then run `npm run check:sync`. The script
- * runs on the same machine as the server, so it fetches the room key the same
- * way the dashboard does.
+ * runs against the same HTTP and WebSocket protocol used by browsers.
  *
  * It asserts that:
  *   - a slide view cannot move the room,
- *   - a controller without the room key cannot either,
- *   - the phone remote and the presenter view can, with the key,
+ *   - direct WebSocket writes cannot move the room,
+ *   - controller HTTP events move the room,
  *   - presence reports viewers, drift and interaction, and ignores peek frames,
  *   - the room forgets its position once the last client leaves.
  *
@@ -32,17 +31,7 @@ async function roomPeers() {
   }
 }
 
-async function roomKey() {
-  try {
-    const res = await fetch(`${BASE}/api/room-key`)
-    if (!res.ok) return { key: '', open: false }
-    return await res.json()
-  } catch {
-    return { key: '', open: false }
-  }
-}
-
-function open(role, { mode = 'stage', key = '' } = {}) {
+function open(role, { mode = 'stage' } = {}) {
   return new Promise((resolve, reject) => {
     const ws = new WebSocket(WS_URL)
     const log = []
@@ -52,7 +41,7 @@ function open(role, { mode = 'stage', key = '' } = {}) {
     })
     ws.addEventListener('error', reject)
     ws.addEventListener('open', () => {
-      ws.send(JSON.stringify({ type: 'hello', role, mode, key }))
+      ws.send(JSON.stringify({ type: 'hello', role, mode }))
       resolve({
         ws,
         log,
@@ -69,20 +58,13 @@ const results = []
 const check = (name, pass, detail = '') =>
   results.push(`${pass ? 'PASS' : 'FAIL'}  ${name}${detail ? ` — ${detail}` : ''}`)
 
-const { key, open: controlOpen } = await roomKey()
-if (!key && !controlOpen) {
-  console.error('check:sync — could not read the room key from /api/room-key. Run this on the machine serving the deck.')
-  process.exit(1)
-}
-
 // Other people may have the deck open right now, so the counts below are read
 // from the server and compared with each other rather than with fixed numbers.
 const before = await roomPeers()
 const othersConnected = before?.clients || 0
 
 const viewer = await open('viewer', { mode: 'interactive' })
-const control = await open('control', { key })
-const keyless = await open('control')
+const control = await open('control')
 const peek = await open('peek')
 await wait(300)
 
@@ -92,26 +74,27 @@ await wait(250)
 check('viewer navigate rejected', last(viewer.log, 'state')?.slideId !== 'PRE-0007',
   `room on ${JSON.stringify(last(viewer.log, 'state')?.slideId)}`)
 
-// A controller without the key is downgraded to a viewer.
-check('keyless controller downgraded', last(keyless.log, 'role')?.role === 'viewer' || controlOpen,
-  `server said ${JSON.stringify(last(keyless.log, 'role')?.role)}`)
-keyless.send({ type: 'navigate', slideId: 'PRE-0003' })
+// WebSocket is broadcast-only, even for a controller role.
+control.send({ type: 'navigate', slideId: 'PRE-0003' })
 await wait(250)
-check('keyless controller cannot navigate',
-  controlOpen || last(viewer.log, 'state')?.slideId !== 'PRE-0003',
+check('direct WebSocket navigate rejected',
+  last(viewer.log, 'state')?.slideId !== 'PRE-0003',
   `room on ${JSON.stringify(last(viewer.log, 'state')?.slideId)}`)
 
-// The remote can, and every screen hears about it.
-control.send({ type: 'navigate', slideId: 'PRE-0004', isPresenting: true })
+// Controller HTTP events move the room, and every screen hears about it.
+await fetch(`${BASE}/api/navigate`, {
+  method: 'POST',
+  headers: { 'content-type': 'application/json', 'x-deck-controller': 'check-control' },
+  body: JSON.stringify({ slideId: 'PRE-0010', isPresenting: true })
+})
 await wait(250)
-check('remote navigate accepted', last(control.log, 'state')?.slideId === 'PRE-0004',
+check('remote navigate accepted', last(control.log, 'state')?.slideId === 'PRE-0010',
   `remote sees ${JSON.stringify(last(control.log, 'state')?.slideId)}`)
-check('viewer receives the room state', last(viewer.log, 'state')?.slideId === 'PRE-0004',
+check('viewer receives the room state', last(viewer.log, 'state')?.slideId === 'PRE-0010',
   `viewer sees ${JSON.stringify(last(viewer.log, 'state')?.slideId)}`)
 
-// Presence: slide views count, the peek frame does not. The keyless controller
-// was downgraded to a viewer, so the room holds two screens at this point.
-viewer.send({ type: 'presence', slideId: 'PRE-0004', detached: false, interacting: false })
+// Presence: slide views count, the peek frame does not.
+viewer.send({ type: 'presence', slideId: 'PRE-0010', detached: false, interacting: false })
 peek.send({ type: 'presence', slideId: 'PRE-0001', detached: true, interacting: true })
 await wait(250)
 const server = await roomPeers()
@@ -135,16 +118,21 @@ check('presence reports drift and interaction',
   JSON.stringify(drifted?.summary))
 
 // The presenter view is the second controller.
-const presenter = await open('presenter', { key })
+const presenter = await open('presenter')
 await wait(200)
-presenter.send({ type: 'navigate', slideId: 'PRE-0009' })
+await wait(100)
+await fetch(`${BASE}/api/navigate`, {
+  method: 'POST',
+  headers: { 'content-type': 'application/json', 'x-deck-controller': 'check-presenter' },
+  body: JSON.stringify({ slideId: 'PRE-0011' })
+})
 await wait(250)
-check('presenter navigate accepted', last(viewer.log, 'state')?.slideId === 'PRE-0009',
+check('presenter navigate accepted', last(viewer.log, 'state')?.slideId === 'PRE-0011',
   `viewer sees ${JSON.stringify(last(viewer.log, 'state')?.slideId)}`)
 
 // Everyone leaves: the room forgets where it was. The socket close event is not
 // reliable here, so the server prunes on the heartbeat and this waits for it.
-for (const peer of [viewer, control, keyless, peek, presenter]) peer.close()
+for (const peer of [viewer, control, peek, presenter]) peer.close()
 
 if (othersConnected > 0) {
   results.push(`SKIP  room resets once every client is gone — ${othersConnected} other client(s) are connected, so the room is not empty`)

@@ -5,7 +5,7 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   // Listen on the local network, not just this laptop, so phones can open the
   // follow-along QR code and the remote. Anyone on the same Wi-Fi can view the
-  // deck; moving the room still needs the room key.
+  // deck; only controller routes expose room-writing controls.
   devServer: { host: '0.0.0.0' },
   css: ['~/assets/css/main.css'],
   app: {

@@ -12,7 +12,6 @@ import { usePresentation } from '~/composables/usePresentation'
 import { useSlideData } from '~/composables/useSlideData'
 import { useWebSocket } from '~/composables/useWebSocket'
 import { useKeyBindings } from '~/composables/useKeyBindings'
-import { useRoomKey } from '~/composables/useRoomKey'
 import SlidePreview from '~/components/presenter/SlidePreview.vue'
 
 definePageMeta({ layout: false })
@@ -25,14 +24,11 @@ const {
   globalIndex,
   goToSlide,
   nextSlide,
-  prevSlide,
-  startPresentation,
-  exitPresentation
+  prevSlide
 } = usePresentation()
 const { deckConfig, slideTree } = useSlideData()
 const { resolveKeys } = useKeyBindings()
 const ws = useWebSocket()
-const { available: keyAvailable, open: controlOpen, load: loadRoomKey } = useRoomKey()
 
 /** The presenter view drives the room, so its own position is the room's. */
 const current = computed(() => globalSlide.value || flatSlides.value[0])
@@ -94,12 +90,6 @@ const paceClass = computed(() => {
 
 const slideOverrun = computed(() => slideBudget.value > 0 && slideElapsed.value > slideBudget.value * 60)
 
-const start = () => {
-  startPresentation()
-  slideElapsed.value = 0
-  if (!running.value) startTimer()
-}
-
 const advance = () => {
   nextSlide()
   slideElapsed.value = 0
@@ -114,6 +104,12 @@ const back = () => {
 const jumpTo = (slideId: string) => {
   goToSlide(slideId)
   slideElapsed.value = 0
+}
+
+const runSlideAction = () => {
+  const action = current.value?.presenterAction
+  if (!action || !current.value) return
+  ws.sendCommand('slide_action', { slideId: current.value.id, action: action.command })
 }
 
 const followingCount = computed(() => Math.max(0, store.presence.viewers - store.presence.detached))
@@ -158,11 +154,8 @@ const handleKeydown = (e: KeyboardEvent) => {
   }
 }
 
-onMounted(async () => {
+onMounted(() => {
   window.addEventListener('keydown', handleKeydown)
-  if (ws && ws.connect) ws.connect()
-  await loadRoomKey()
-  // Re-announce with the key, so the server accepts this view as a controller.
   if (ws && ws.sendHello) ws.sendHello()
 })
 
@@ -176,7 +169,7 @@ onUnmounted(() => {
 <template>
   <div class="min-h-dvh bg-gray-950 text-gray-200 font-sans flex flex-col">
     <!-- Header -->
-    <header class="flex-none flex flex-wrap items-center justify-between gap-4 px-6 py-4 border-b border-gray-800">
+    <header class="flex-none flex flex-wrap items-center justify-between gap-3 px-3 py-3 sm:px-6 sm:py-4 border-b border-gray-800">
       <div class="flex items-center gap-3 min-w-0">
         <span class="text-xs font-bold uppercase tracking-widest text-blue-400">Presenter view</span>
         <span class="text-gray-700">/</span>
@@ -206,25 +199,7 @@ onUnmounted(() => {
       </div>
     </header>
 
-    <!-- Control authorisation warnings -->
-    <div
-      v-if="keyAvailable === false && !controlOpen"
-      class="flex-none px-6 py-3 bg-amber-500/10 border-b border-amber-500/30 text-amber-200 text-sm"
-      role="status"
-    >
-      This presenter view cannot drive the room: the room key goes only to the machine running
-      the presentation. Open it there, or start the server with
-      <code class="font-mono">DECK_OPEN_CONTROL=1</code>.
-    </div>
-    <div
-      v-else-if="store.controlRejected"
-      class="flex-none px-6 py-3 bg-red-500/10 border-b border-red-500/30 text-red-200 text-sm"
-      role="status"
-    >
-      The server refused this view's control role. Reload the page to send the room key again.
-    </div>
-
-    <main class="flex-1 grid grid-cols-1 lg:grid-cols-3 gap-6 p-6 min-h-0">
+    <main class="flex-1 grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 p-3 sm:p-6 min-h-0">
       <!-- Live slide and controls -->
       <section class="lg:col-span-2 flex flex-col gap-4 min-h-0">
         <div class="flex items-center justify-between gap-4">
@@ -247,35 +222,30 @@ onUnmounted(() => {
           :slide-id="current?.id"
           :route="current?.route"
           label="Live slide"
-          placeholder="Press start to open the first slide"
         />
 
-        <div class="grid grid-cols-4 gap-3">
+        <div class="sticky bottom-0 z-20 grid grid-cols-2 gap-3 bg-gray-950 py-2">
           <button
+            type="button"
             @click="back"
-            class="py-3 rounded-xl bg-gray-900 hover:bg-gray-800 border border-gray-800 font-medium flex items-center justify-center gap-2"
+            class="min-h-14 touch-manipulation py-3 rounded-xl bg-gray-900 hover:bg-gray-800 active:bg-gray-700 border border-gray-800 font-medium flex items-center justify-center gap-2"
           >
             <Icon name="lucide:arrow-left" /> Prev
           </button>
           <button
+            type="button"
             @click="advance"
-            class="py-3 rounded-xl bg-blue-600 hover:bg-blue-500 border border-blue-500 text-white font-bold flex items-center justify-center gap-2 col-span-2"
+            class="min-h-14 touch-manipulation py-3 rounded-xl bg-blue-600 hover:bg-blue-500 active:bg-blue-400 border border-blue-500 text-white font-bold flex items-center justify-center gap-2"
           >
             Next <Icon name="lucide:arrow-right" />
           </button>
           <button
-            v-if="!store.isPresenting"
-            @click="start"
-            class="py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 border border-emerald-500 text-white font-bold"
+            v-if="current?.presenterAction"
+            type="button"
+            @click="runSlideAction"
+            class="col-span-2 min-h-14 touch-manipulation py-3 rounded-xl bg-amber-500 hover:bg-amber-400 active:bg-amber-300 border border-amber-400 text-gray-950 font-bold flex items-center justify-center gap-2"
           >
-            Start
-          </button>
-          <button
-            v-else
-            @click="exitPresentation"
-            class="py-3 rounded-xl bg-gray-900 hover:bg-gray-800 border border-gray-800 font-medium"
-          >
-            End
+            <Icon name="lucide:refresh-cw" /> {{ current.presenterAction.label }}
           </button>
         </div>
 

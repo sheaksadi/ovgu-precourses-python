@@ -11,7 +11,7 @@ import InteractionGuardModal from '~/components/interactive/InteractionGuardModa
 import { useRoute, useRouter } from 'vue-router'
 import type { LayoutKey } from '#build/types/layouts'
 
-const { nextSlide, prevSlide, exitPresentation, toggleTeleprompter, syncToGlobal, store, interactions } = usePresentation()
+const { nextSlide, prevSlide, requestSlide, exitPresentation, toggleTeleprompter, syncToGlobal, store, interactions } = usePresentation()
 const { getSlideByRoute, getSlideById } = useSlideData()
 const { resolveKeys } = useKeyBindings()
 const { isViewer, isPeek, isInteractive, adoptDeviceSettings } = useDeckRole()
@@ -137,6 +137,17 @@ const handleKeydown = (e: KeyboardEvent) => {
 watch(routeSlide, (slide) => {
   if (slide && slide.id !== store.localSlideId) store.setLocal(slide.id)
 })
+
+/** Every server state event moves attached slide views. Detached views ignore it. */
+watch(
+  () => store.stateRevision,
+  () => {
+    if (!isViewer.value || isPeek.value || !routeSlide.value || !store.following) return
+    if (store.globalSlideId && store.localSlideId !== store.globalSlideId) {
+      requestSlide(store.globalSlideId, { fromFollow: true })
+    }
+  }
+)
 
 const onSlideRoute = computed(() => !!routeSlide.value)
 

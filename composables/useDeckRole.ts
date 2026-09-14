@@ -9,11 +9,9 @@ export type ViewMode = 'stage' | 'interactive'
 export const storageKey = (name: string) => `deck:${slideCounter.prefix}:${name}`
 
 const VIEW_MODE_KEY = () => storageKey('view-mode')
-const ROOM_KEY = () => storageKey('room-key')
 
 /** Read once per client, then shared, so every component agrees. */
 const storedMode = ref<ViewMode | null>(null)
-const storedRoomKey = ref<string>('')
 let storedLoaded = false
 
 function readStorage(key: string): string | null {
@@ -37,8 +35,7 @@ function writeStorage(key: string, value: string) {
  *
  * The role comes from the route alone, so a slide view can never promote itself
  * into a controller with a query parameter. Only the phone remote and the
- * presenter view may move the global slide position, and the server also asks
- * them for the room key before it accepts a move.
+ * presenter view may move the global slide position.
  *
  * The view mode is the opposite: a per-device preference. It travels in the
  * `mode` query parameter so the server renders the right chrome straight away,
@@ -68,19 +65,9 @@ export const useDeckRole = () => {
     return raw === 'interactive' || raw === 'stage' ? raw : null
   })
 
-  const queryKey = computed(() => {
-    const raw = Array.isArray(route.query.key) ? route.query.key[0] : route.query.key
-    return typeof raw === 'string' ? raw : ''
-  })
-
   const setViewMode = (mode: ViewMode) => {
     storedMode.value = mode
     if (import.meta.client) writeStorage(VIEW_MODE_KEY(), mode)
-  }
-
-  const setRoomKey = (key: string) => {
-    storedRoomKey.value = key
-    if (import.meta.client && key) writeStorage(ROOM_KEY(), key)
   }
 
   /**
@@ -92,15 +79,12 @@ export const useDeckRole = () => {
       storedLoaded = true
       const remembered = readStorage(VIEW_MODE_KEY())
       if (remembered === 'interactive' || remembered === 'stage') storedMode.value = remembered
-      storedRoomKey.value = readStorage(ROOM_KEY()) || ''
     }
     if (queryMode.value) setViewMode(queryMode.value)
-    if (queryKey.value) setRoomKey(queryKey.value)
   }
 
   /** The query parameter wins, so a shared link always behaves as intended. */
   const viewMode = computed<ViewMode>(() => queryMode.value || storedMode.value || 'stage')
-  const roomKey = computed(() => queryKey.value || storedRoomKey.value)
 
   const isInteractive = computed(() => isViewer.value && viewMode.value === 'interactive')
 
@@ -111,10 +95,8 @@ export const useDeckRole = () => {
     isViewer,
     viewMode,
     queryMode,
-    roomKey,
     isInteractive,
     setViewMode,
-    setRoomKey,
     adoptDeviceSettings
   }
 }

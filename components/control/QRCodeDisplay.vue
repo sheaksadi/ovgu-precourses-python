@@ -43,7 +43,7 @@ const render = async () => {
 }
 
 onMounted(render)
-// The room key arrives after the first render, so redraw when it does.
+// Redraw when caller changes target query.
 watch(() => props.query, () => { if (controlUrl.value) render() })
 </script>
 

@@ -21,17 +21,18 @@ const store = usePresentationStore()
 const { getSlideById, firstSlideId } = useSlideData()
 const { t, locale, locales, setLocale } = useI18n()
 
-/** The room's slide while a talk runs, otherwise the first slide. */
+/** The room's slide while a talk runs, otherwise the first slide, with current language. */
 const projectorTarget = computed(() => {
   const slide = getSlideById(store.globalSlideId) || getSlideById(firstSlideId.value)
-  return slide ? { path: slide.route, query: { mode: 'stage' } } : '/'
+  return slide ? { path: slide.route, query: { mode: 'stage', lang: locale.value } } : '/'
 })
 
 const views = computed(() => [
   { key: 'projector', to: projectorTarget.value, icon: 'lucide:projector', color: 'coral' },
   { key: 'presenter', to: '/presenter', icon: 'lucide:presentation', color: 'sky' },
   { key: 'control', to: '/dashboard', icon: 'lucide:layout-dashboard', color: 'lavender' },
-  { key: 'follow', to: '/join', icon: 'lucide:smartphone', color: 'mint' },
+  { key: 'remote', to: '/control', icon: 'lucide:smartphone', color: 'purple' },
+  { key: 'follow', to: '/join', icon: 'lucide:users', color: 'mint' },
 ])
 
 const styleGuide = slideIdToRoute('PRE-0010')

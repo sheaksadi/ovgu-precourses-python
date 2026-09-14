@@ -17,6 +17,7 @@ export interface FlatSlide {
   backgroundColor?: string
   /** Present when the slide declares an interaction. */
   interactive?: SlideInteractive
+  presenterAction?: SlideEntry['presenterAction']
   /** True when the entry declares a `parent`. */
   isSubSlide: boolean
   parentId?: string
@@ -84,6 +85,7 @@ export const useSlideData = () => {
         duration: entry.duration,
         backgroundColor: entry.backgroundColor,
         interactive: entry.interactive,
+        presenterAction: entry.presenterAction,
         isSubSlide,
         parentId: parent?.id,
         parentTitle: parent?.title,

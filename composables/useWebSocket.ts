@@ -1,23 +1,39 @@
-import { ref, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { usePresentationStore } from '~/stores/presentationStore'
 import { useInteractionStore } from '~/stores/interactionStore'
-import { usePresentation } from '~/composables/usePresentation'
 import { useDeckRole } from '~/composables/useDeckRole'
+import { useSlideData } from '~/composables/useSlideData'
+import { useRoute } from 'vue-router'
 
 let ws: WebSocket | null = null
 let reconnectTimer: any = null
 let pingTimer: any = null
+const isConnected = ref(false)
+let watchersStarted = false
+let controllerId = ''
+
+const controllerHeaders = () => {
+  if (!controllerId) {
+    try {
+      controllerId = localStorage.getItem('deck-controller-id') || ''
+      if (!controllerId) {
+        controllerId = `${Date.now()}-${Math.random().toString(36).slice(2)}`
+        localStorage.setItem('deck-controller-id', controllerId)
+      }
+    } catch {
+      controllerId = `${Date.now()}-${Math.random().toString(36).slice(2)}`
+    }
+  }
+  return { 'x-deck-controller': controllerId }
+}
 
 export const useWebSocket = () => {
   const store = usePresentationStore()
   const interactions = useInteractionStore()
-  const { requestSlide, onSlideRoute } = usePresentation()
-  const { role, canControlGlobal, isViewer, isPeek, viewMode, roomKey } = useDeckRole()
-  const isConnected = ref(false)
-  const wasDisconnected = ref(false)
-
-  let isRemoteUpdate = false
-  let remoteUpdateTimer: any = null
+  const { role, canControlGlobal, isViewer, viewMode } = useDeckRole()
+  const { getSlideByRoute } = useSlideData()
+  const route = useRoute()
+  const onSlideRoute = computed(() => !!getSlideByRoute(route.path))
 
   const send = (payload: unknown) => {
     if (ws && ws.readyState === WebSocket.OPEN) ws.send(JSON.stringify(payload))
@@ -25,7 +41,23 @@ export const useWebSocket = () => {
 
   /** Tell the server which surface this is. It gates writes on this. */
   const sendHello = () => {
-    send({ type: 'hello', role: role.value, mode: viewMode.value, key: roomKey.value })
+    send({ type: 'hello', role: role.value, mode: viewMode.value })
+  }
+
+  /** Controllers publish intent; only a server state event mutates global state. */
+  const navigate = (slideId: string, isPresenting?: boolean) => {
+    if (!canControlGlobal.value || !slideId) return false
+    $fetch('/api/navigate', {
+      method: 'POST',
+      headers: controllerHeaders(),
+      body: { slideId, isPresenting }
+    })
+    return true
+  }
+
+  const requestState = () => {
+    if (!ws || ws.readyState === WebSocket.CLOSED) connect()
+    else if (ws.readyState === WebSocket.OPEN) send({ type: 'sync_request' })
   }
 
   /** Report where this viewer is, so the presenter view can see the room. */
@@ -44,9 +76,8 @@ export const useWebSocket = () => {
   const connect = () => {
     if (import.meta.server) return
 
-    if (ws && ws.readyState === WebSocket.OPEN) return
+    if (ws && (ws.readyState === WebSocket.OPEN || ws.readyState === WebSocket.CONNECTING)) return
 
-    wasDisconnected.value = false
     const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:'
     const wsUrl = `${protocol}//${window.location.host}/_ws`
 
@@ -56,10 +87,9 @@ export const useWebSocket = () => {
       isConnected.value = true
       sendHello()
       sendPresence()
-      if (wasDisconnected.value) {
-        wasDisconnected.value = false
-        send({ type: 'sync_request' })
-      }
+      // Always request current state on connect/reconnect so the device is
+      // never stuck on a stale slide after a WiFi hiccup.
+      send({ type: 'sync_request' })
       // A fast navigation can replace `ws` with a newer socket that is still
       // connecting before this handler runs, so check before pinging.
       if (ws?.readyState === WebSocket.OPEN) ws.send('ping')
@@ -81,8 +111,7 @@ export const useWebSocket = () => {
           store.setConnectedClients(data.count)
         }
         else if (data.type === 'role') {
-          // The server downgrades a controller that cannot show the room key.
-          store.setControlRejected(!data.authorised)
+          // Role acknowledgement; room position still changes only through HTTP endpoints.
         }
         else if (data.type === 'presence_summary') {
           store.setPresence({
@@ -93,10 +122,6 @@ export const useWebSocket = () => {
           })
         }
         else if (data.type === 'state') {
-          isRemoteUpdate = true
-          clearTimeout(remoteUpdateTimer)
-          remoteUpdateTimer = setTimeout(() => { isRemoteUpdate = false }, 100)
-
           const wasPresenting = store.isPresenting
           if (data.isPresenting !== undefined) {
             store.isPresenting = data.isPresenting
@@ -104,24 +129,16 @@ export const useWebSocket = () => {
 
           if (data.slideId) store.setGlobal(data.slideId)
 
-          // The presenter ended the session: say so on the slide instead of
-          // yanking the device away, which used to interrupt anyone working.
           if (wasPresenting && !data.isPresenting) store.setSessionEnded(true)
           if (data.isPresenting) store.setSessionEnded(false)
 
-          // A controller always adopts the room. A peek frame never does, since
-          // the presenter view drives it. A slide screen follows until it drifts,
-          // and a page that is not a slide is never dragged into one.
-          const mayFollow = canControlGlobal.value
-            ? true
-            : (isPeek.value || !onSlideRoute.value ? false : store.following)
-          if (data.slideId && mayFollow && store.localSlideId !== data.slideId) {
-            requestSlide(data.slideId, { fromFollow: true })
-          }
         }
         else if (data.type === 'command') {
           if (data.name === 'goto_dashboard' && window.location.pathname !== '/control') {
             window.location.href = '/dashboard'
+          }
+          else if (data.name === 'slide_action') {
+            window.dispatchEvent(new CustomEvent('deck:slide-action', { detail: data }))
           }
         }
         else if (data.type === 'pointer') {
@@ -133,9 +150,7 @@ export const useWebSocket = () => {
     }
 
     ws.onclose = () => {
-      const wasConnected = isConnected.value
       isConnected.value = false
-      if (wasConnected) wasDisconnected.value = true
       clearInterval(pingTimer)
       clearTimeout(reconnectTimer)
       reconnectTimer = setTimeout(() => {
@@ -144,47 +159,47 @@ export const useWebSocket = () => {
     }
   }
 
-  const sendCommand = (name: string) => {
-    send({ type: 'command', name })
+  const sendCommand = (name: string, payload: Record<string, unknown> = {}) => {
+    if (!canControlGlobal.value) return
+    $fetch('/api/command', {
+      method: 'POST',
+      headers: controllerHeaders(),
+      body: { name, ...payload }
+    })
   }
 
   const sendPointer = (clientId: string, active: boolean, x: number, y: number, color: string) => {
     send({ type: 'pointer', clientId, active, x, y, color })
   }
 
-  // Only the remote and the presenter view publish the room's position.
-  watch(
-    () => [store.globalSlideId, store.isPresenting] as [string, boolean],
-    ([slideId, isPresenting], [oldSlideId, oldPresenting]) => {
-      if (isRemoteUpdate || !canControlGlobal.value) return
-      if (slideId === oldSlideId && isPresenting === oldPresenting) return
-      send({ type: 'navigate', slideId, isPresenting })
-    }
-  )
+  if (import.meta.client && !watchersStarted) {
+    watchersStarted = true
 
-  // A viewer reports drift and interaction state instead of driving the room.
-  watch(
-    () => [store.localSlideId, store.detached, onSlideRoute.value, interactions.pendingCount] as [string, boolean, boolean, number],
-    () => { sendPresence() }
-  )
+    // A viewer reports local position and explicit follow mode.
+    watch(
+      () => [store.localSlideId, store.detached, onSlideRoute.value, interactions.pendingCount] as [string, boolean, boolean, number],
+      () => sendPresence()
+    )
 
-  // Auto-follow: a viewer that asked to stay in step catches up by itself once
-  // it is no longer busy with an interaction.
-  watch(
-    () => [store.autoFollow, store.globalSlideId, store.localSlideId] as [boolean, string, string],
-    ([autoFollow, globalSlideId, localSlideId]) => {
-      if (!isViewer.value || !onSlideRoute.value || !autoFollow || store.following) return
-      if (!globalSlideId || globalSlideId === localSlideId) return
-      if (localSlideId && interactions.pendingOn(localSlideId)) return
-      store.setFollowing(true)
-      requestSlide(globalSlideId, { fromFollow: true })
-    }
-  )
+    // Auto-follow reattaches once this device is no longer busy.
+    watch(
+      () => [store.autoFollow, store.globalSlideId, store.localSlideId] as [boolean, string, string],
+      ([autoFollow, globalSlideId, localSlideId]) => {
+        if (!isViewer.value || !onSlideRoute.value || !autoFollow || store.following) return
+        if (!globalSlideId || globalSlideId === localSlideId) return
+        if (localSlideId && interactions.pendingOn(localSlideId)) return
+        store.setFollowing(true)
+        requestState()
+      }
+    )
+  }
 
   return {
     connect,
     isConnected,
     sendHello,
+    navigate,
+    requestState,
     sendCommand,
     sendPointer,
     sendPresence

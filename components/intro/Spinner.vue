@@ -122,10 +122,11 @@ const land = () => {
   chime()
 }
 
-const spin = () => {
+const spin = (targetQuestion?: number) => {
   if (phase.value === 'spinning' || !order.value.length) return
   const n = count.value
-  const slot = order.value.indexOf(nextQuestion())
+  const question = targetQuestion === undefined ? nextQuestion() : mod(targetQuestion, n)
+  const slot = order.value.indexOf(question)
   const start = position.value
   const from = Math.round(start)
   const end = from + LOOPS * n + mod(slot - mod(from, n), n)
@@ -213,10 +214,16 @@ const onKey = (event: KeyboardEvent) => {
   spin()
 }
 
+const onSlideAction = (event: Event) => {
+  const detail = (event as CustomEvent).detail
+  if (detail?.slideId === 'PRE-0038' && detail.action === 'spin') spin(detail.sequence - 1)
+}
+
 onMounted(() => {
   order.value = shuffle(range(count.value))
   try { muted.value = localStorage.getItem(MUTE_KEY) === '1' } catch { /* private mode */ }
   window.addEventListener('keydown', onKey)
+  window.addEventListener('deck:slide-action', onSlideAction)
 })
 
 // Both dictionaries hold the same number of questions; reshuffle if that ever changes.
@@ -227,6 +234,7 @@ watch(count, (n) => {
 onBeforeUnmount(() => {
   cancelAnimationFrame(frame)
   window.removeEventListener('keydown', onKey)
+  window.removeEventListener('deck:slide-action', onSlideAction)
   audio?.close().catch(() => {})
 })
 </script>
@@ -238,7 +246,7 @@ onBeforeUnmount(() => {
       <ArtSprite name="cat-peek" color="coral" accent="sun" :size="96" class="w-full h-full" />
     </div>
 
-    <button type="button" class="reel" :class="`is-${phase}`" :aria-label="t('intro.spin')" @click="spin">
+    <button type="button" class="reel" :class="`is-${phase}`" :aria-label="t('intro.spin')" @click="spin()">
       <span class="reel-frame" aria-hidden="true"></span>
       <span class="reel-rows" :style="{ filter: blur }" aria-hidden="true">
         <span
@@ -256,7 +264,7 @@ onBeforeUnmount(() => {
     <p class="sr-only" aria-live="polite">{{ phase === 'landed' && current >= 0 ? questions[current] : '' }}</p>
 
     <div class="spinner-controls">
-      <button type="button" class="spin-button" :disabled="phase === 'spinning'" @click="spin">
+      <button type="button" class="spin-button" :disabled="phase === 'spinning'" @click="spin()">
         <Icon name="lucide:refresh-cw" class="spin-icon" :class="{ 'is-spinning': phase === 'spinning' }" />
         <span class="text-trim">{{ phase === 'landed' ? t('intro.spinAgain') : t('intro.spin') }}</span>
       </button>

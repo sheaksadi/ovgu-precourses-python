@@ -19,6 +19,8 @@ export const usePresentationStore = defineStore('presentation', {
     localSlideId: '' as string,
     /** A viewer follows the room until it navigates on its own. */
     following: true,
+    /** Increments for every server state event, including explicit sync replies. */
+    stateRevision: 0,
     isPresenting: false,
     showTeleprompter: false,
     connectedClients: 0,
@@ -29,20 +31,18 @@ export const usePresentationStore = defineStore('presentation', {
      * busy with an interaction. Off by default, so drifting is deliberate.
      */
     autoFollow: false,
-    /** Set when the server refuses this client's controller role. */
-    controlRejected: false,
     presence: { viewers: 0, detached: 0, interacting: 0, bySlide: {} } as PresenceSummary,
     pointers: {} as Record<string, { active: boolean, x: number, y: number, color: string }>
   }),
   getters: {
-    /** True when this device has drifted away from the global slide. */
-    detached: (state) =>
-      !!state.globalSlideId && !!state.localSlideId && state.globalSlideId !== state.localSlideId
+    /** Explicit local mode. It stays detached even if both slides happen to match. */
+    detached: (state) => !state.following
   },
   actions: {
     /** The room moved. Following is decided by the caller, not here. */
     setGlobal(slideId: string) {
       this.globalSlideId = slideId
+      this.stateRevision++
     },
     /** This device moved. */
     setLocal(slideId: string) {
@@ -56,9 +56,6 @@ export const usePresentationStore = defineStore('presentation', {
     },
     setSessionEnded(ended: boolean) {
       this.sessionEnded = ended
-    },
-    setControlRejected(rejected: boolean) {
-      this.controlRejected = rejected
     },
     setPresence(summary: Partial<PresenceSummary>) {
       this.presence = { ...this.presence, ...summary }

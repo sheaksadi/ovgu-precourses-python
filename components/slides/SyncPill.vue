@@ -11,12 +11,12 @@ import { computed, ref } from 'vue'
 import { usePresentation } from '~/composables/usePresentation'
 import { useDeckRole } from '~/composables/useDeckRole'
 
-const { store, globalSlide, currentIndex, globalIndex, isViewer, isInteractive, syncToGlobal } = usePresentation()
+const { store, globalSlide, currentIndex, globalIndex, isViewer, syncToGlobal } = usePresentation()
 const { isPeek } = useDeckRole()
 
 const showPill = computed(() => isViewer.value && !isPeek.value)
 const detached = computed(() => showPill.value && store.detached)
-const showFollowing = computed(() => showPill.value && isInteractive.value && !detached.value)
+const showFollowing = computed(() => showPill.value && !detached.value)
 const target = computed(() => globalSlide.value)
 
 /** How far this screen is from the room, and in which direction. */

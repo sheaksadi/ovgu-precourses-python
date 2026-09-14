@@ -9,8 +9,7 @@
  * the centre badge can cover a few modules safely.
  *
  * The link points at this machine's LAN address (from `/api/network-ip`), since
- * a phone cannot open `localhost`. It never carries the room key: `/join` is the
- * audience landing page and only reads.
+ * a phone cannot open `localhost`. `/join` is the audience landing page and only reads.
  */
 import { computed, onMounted, ref } from 'vue'
 import type { SpriteName } from '~/utils/sprites'
