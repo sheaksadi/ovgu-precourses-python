@@ -42,12 +42,12 @@ Tick items off as they land. Content after the APIs section is discussed later.
 
 ## Phase 1: audience identity and notifications
 
-- [ ] **Names on the follow-along view.** Opening `/join` (or a slide on a
+- [x] **Names on the follow-along view.** Opening `/join` (or a slide on a
       phone) offers an optional name field. Skipping it gives a generated cute
       name (e.g. "Sleepy Otter", "Kleiner Pinguin"), kept per device in a
       cookie and changeable later. The server knows every audience member by
       a stable client id and name.
-- [ ] **Notification system.** One toast component in the design system: stacks
+- [x] **Notification system.** One toast component in the design system: stacks
       in the top-right, enters and leaves with the deck's motion, holds a few
       seconds. It gets a page in the style guide section, so every notification
       in the deck looks the same.
@@ -132,3 +132,24 @@ building a function.
 ## Sub-plans
 
 Written here as each phase starts.
+
+### Phase 1: identity and notifications
+
+- `utils/cuteNames.ts`: adjective + animal, 16 × 16 names, in German with the
+  right adjective ending or in English. A generated name is stored as text but
+  can be read back into its parts, so it follows the language switch.
+  `avatarFor(name)` gives a colour from the name and the cast sprite when the
+  animal has one.
+- `composables/useAudience.ts`: `deck-audience` (device id) and `deck-name`
+  cookies, generated on first use, so server render and reload agree.
+- `/join`: optional name field; empty shows "Without a name you are
+  [Fluffy Otter 🎲]", the die rolls another. Opening the slides saves the name.
+- WebSocket hello carries `audienceId` and `name` for viewers; the server keeps
+  them per peer (`wsManager.getAudience()`), trimmed to 24 characters. Nothing is
+  broadcast yet; phases 2 and 3 use it.
+- `composables/useToasts.ts` + `components/deck/ToastCard.vue` (look) +
+  `components/deck/ToastStack.vue` (live, in `app.vue`). Style guide slide
+  PRE-0136 "Notifications" under Typography, and a section in DESIGN_SYSTEM.md.
+- Later, when names are editable from a slide (not only `/join`), add a small
+  name chip next to the language pill on touch devices.
+

@@ -6,6 +6,16 @@ export interface PeerPresence {
   slideId: string
   detached: boolean
   interacting: boolean
+  /** Viewers only: the device id and display name from `useAudience`. */
+  audienceId: string
+  name: string
+}
+
+export interface AudienceMember {
+  audienceId: string
+  name: string
+  slideId: string
+  detached: boolean
 }
 
 export interface PresenceSummary {
@@ -54,8 +64,12 @@ const peers = new Map<string, PeerEntry>()
 const keyOf = (peer: any): string => String(peer?.id ?? peer)
 
 function defaultPresence(): PeerPresence {
-  return { role: 'viewer', mode: 'stage', slideId: '', detached: false, interacting: false }
+  return { role: 'viewer', mode: 'stage', slideId: '', detached: false, interacting: false, audienceId: '', name: '' }
 }
+
+/** Untrusted text from a client, trimmed to one short line. */
+const cleanText = (value: unknown, max: number) =>
+  typeof value === 'string' ? value.replace(/\s+/g, ' ').trim().slice(0, max) : ''
 
 function entryFor(peer: any): PeerEntry {
   const key = keyOf(peer)
@@ -101,10 +115,12 @@ export const wsManager = {
   },
 
   /** Record what a peer says it is. The role decides whether it may write. */
-  setPeerIdentity: (peer: any, role: PeerRole, mode: 'stage' | 'interactive') => {
+  setPeerIdentity: (peer: any, role: PeerRole, mode: 'stage' | 'interactive', who?: { audienceId?: unknown, name?: unknown }) => {
     const entry = entryFor(peer)
     entry.presence.role = role
     entry.presence.mode = mode
+    entry.presence.audienceId = role === 'viewer' ? cleanText(who?.audienceId, 40) : ''
+    entry.presence.name = role === 'viewer' ? cleanText(who?.name, 24) : ''
     entry.lastSeen = Date.now()
   },
 
@@ -151,6 +167,21 @@ export const wsManager = {
     const counts = { control: 0, presenter: 0, viewer: 0, dashboard: 0, peek: 0 }
     for (const { presence } of peers.values()) counts[presence.role]++
     return counts
+  },
+
+  /** Named audience devices showing a slide, one entry per device even with several tabs open. */
+  getAudience: (): AudienceMember[] => {
+    const members = new Map<string, AudienceMember>()
+    for (const { presence } of peers.values()) {
+      if (!AUDIENCE_ROLES.includes(presence.role) || !presence.audienceId || !presence.slideId) continue
+      members.set(presence.audienceId, {
+        audienceId: presence.audienceId,
+        name: presence.name,
+        slideId: presence.slideId,
+        detached: presence.detached,
+      })
+    }
+    return [...members.values()]
   },
 
   getPresenceSummary: (): PresenceSummary => {

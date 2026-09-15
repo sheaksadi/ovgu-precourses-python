@@ -335,6 +335,28 @@ untrimmed label rides high.
   `align-self: center`, or the smaller faces stretch and their text rides high again.
 - Checked by measuring letter pixels in 3× screenshots: every pill within 1px of centre.
 
+## Notifications
+
+Everything the room should notice while a slide is up (a solve, a first place,
+a lost connection) is one kind of card, so it never looks improvised. The style
+guide slide "Notifications" shows every tone and plays them live.
+
+- **Where:** top-right, newest on top, at most four at once. On slide views the
+  stack starts below the sync pill. Peek frames inside the presenter view show none.
+- **Card:** background `--bg`, 2px `--text` border, 1em radius, sized in `clamp()`
+  so it reads on the projector and fits a phone. Title in one line (who and
+  what), body muted (where).
+- **Badge:** a person's avatar from `avatarFor(name)` in `utils/cuteNames.ts`
+  (their animal sprite, or their initial on a colour derived from the name), or a
+  Lucide icon for messages about the room.
+- **Tone:** mint = solved, sun = first place or ranking, sky = room news,
+  coral = something went wrong. The badge and the hold bar carry it.
+- **Motion:** in from 1.5rem to the right over 400ms with the entry easing, out
+  as a 200ms fade, the rest glide into place. A 3px bar runs out over the hold
+  time (4s). A click dismisses.
+- **Code:** `useToasts().push({ title, body, tone, name })`
+  (`composables/useToasts.ts`). The stack is mounted once in `app.vue`.
+
 ## Slide Layouts
 
 ### slide-bare

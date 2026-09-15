@@ -3,6 +3,7 @@ import { usePresentationStore } from '~/stores/presentationStore'
 import { useInteractionStore } from '~/stores/interactionStore'
 import { useDeckRole } from '~/composables/useDeckRole'
 import { useSlideData } from '~/composables/useSlideData'
+import { useAudience } from '~/composables/useAudience'
 import { useRoute } from 'vue-router'
 
 let ws: WebSocket | null = null
@@ -32,6 +33,7 @@ export const useWebSocket = () => {
   const interactions = useInteractionStore()
   const { role, canControlGlobal, isViewer, viewMode } = useDeckRole()
   const { getSlideByRoute } = useSlideData()
+  const audience = useAudience()
   const route = useRoute()
   const onSlideRoute = computed(() => !!getSlideByRoute(route.path))
 
@@ -39,9 +41,14 @@ export const useWebSocket = () => {
     if (ws && ws.readyState === WebSocket.OPEN) ws.send(JSON.stringify(payload))
   }
 
-  /** Tell the server which surface this is. It gates writes on this. */
+  /** Tell the server which surface this is. It gates writes on this. A viewer also says who it is. */
   const sendHello = () => {
-    send({ type: 'hello', role: role.value, mode: viewMode.value })
+    send({
+      type: 'hello',
+      role: role.value,
+      mode: viewMode.value,
+      ...(isViewer.value ? { audienceId: audience.id.value, name: audience.name.value } : {}),
+    })
   }
 
   /** Controllers publish intent; only a server state event mutates global state. */
@@ -174,6 +181,9 @@ export const useWebSocket = () => {
 
   if (import.meta.client && !watchersStarted) {
     watchersStarted = true
+
+    // A new name reaches the room without reconnecting.
+    watch(() => audience.name.value, () => sendHello())
 
     // A viewer reports local position and explicit follow mode.
     watch(

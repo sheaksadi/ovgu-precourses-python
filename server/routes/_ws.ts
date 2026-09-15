@@ -67,7 +67,10 @@ export default defineWebSocketHandler({
       if (data.type === 'hello') {
         const claimed: PeerRole = KNOWN_ROLES.includes(data.role) ? data.role : 'viewer'
 
-        wsManager.setPeerIdentity(peer, claimed, data.mode === 'interactive' ? 'interactive' : 'stage')
+        wsManager.setPeerIdentity(peer, claimed, data.mode === 'interactive' ? 'interactive' : 'stage', {
+          audienceId: data.audienceId,
+          name: data.name
+        })
         peer.send(JSON.stringify({
           type: 'role',
           role: claimed,

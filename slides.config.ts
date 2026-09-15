@@ -780,6 +780,12 @@ export const slides: SlideEntry[] = [
     teleprompter: 'Small uppercase pills for categorizing content. Filled for strong presence, outlined for metadata. Each color has a semantic meaning.',
   },
   {
+    id: 'PRE-0136',
+    title: 'Notifications',
+    parent: 'PRE-0014',
+    teleprompter: 'One notification for the whole deck: a card in the top-right corner, newest on top, at most four. It holds four seconds and the thin bar shows how long. Mint means solved, sun means first place, sky is room news, coral is a problem.',
+  },
+  {
     id: 'PRE-0017',
     title: 'Code Blocks',
     teleprompter: 'The only dark element in the system. Catppuccin-inspired dark surface with pastel window dots matching our palette.',
