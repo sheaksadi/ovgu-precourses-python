@@ -1,7 +1,7 @@
 # Course plan: from lists to APIs
 
-Working plan for the part of the deck that follows "Code ausführen" (PRE-0056 to
-PRE-0058). Each lesson follows the pattern of the if/else and variables lessons:
+Working plan for the part of the deck that follows "Code ausführen" (PRE-0056).
+Each lesson follows the pattern of the if/else and variables lessons:
 a small problem with the cast, the idea played out as a picture, the same idea
 written down, then Python. Every stage is one slide, and it opens on the
 previous stage's last frame, so pressing "next" feels like one continuous scene.

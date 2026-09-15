@@ -1,16 +1,16 @@
 <script setup lang="ts">
 /**
- * PyCharm install walk-through. Auto-imported as `<PycharmInstallDemo :stage="1" />`.
+ * PyCharm install walk-through. Auto-imported as `<PycharmInstallDemo />`.
  *
- * One browser over four slides (PRE-0048 and its three sub-slides), played like
- * the try-it demo (`components/tryit/BrowserDemo.vue`), each stage one step:
+ * One browser on one slide (PRE-0048), played in one go like the try-it demo
+ * (`components/tryit/BrowserDemo.vue`). The step list ticks along as it plays:
  *
  *   1. type "pycharm download" and search     3. scroll down past Professional
  *   2. open the jetbrains.com result          4. download the Community Edition
  *
- * `useDemoPlayer` runs the stages: each opens on the previous stage's last frame
- * and plays only its own step. The download page is laid out in vh, so its
- * scroll position renders on the server.
+ * `useDemoPlayer` runs the timeline, replays it on Enter and jumps to the last
+ * frame for reduced motion. The download page is laid out in vh, so its scroll
+ * position renders on the server.
  *
  * Text lives in `pycharm.*` in `locales/`, the address in `utils/pycharm.ts`.
  */
@@ -21,15 +21,16 @@ import { PYCHARM } from '~/utils/pycharm'
 
 type Scene = 'search' | 'results' | 'loading' | 'site'
 
-const props = defineProps<{ stage: 1 | 2 | 3 | 4 }>()
 const { t, tm } = useI18n()
 
 /** Wheel notches it takes to bring the Community Edition into view. */
 const SCROLL_STEPS = 3
 const OS = ['Windows', 'macOS', 'Linux']
 
+/** The step the demo is showing, 1 to 4. */
+const step = ref(1)
 const steps = computed(() => tm<string[]>('pycharm.steps'))
-const tip = computed(() => tm<string[]>('pycharm.tips')[props.stage - 1])
+const tip = computed(() => tm<string[]>('pycharm.tips')[step.value - 1])
 
 const frame = ref<HTMLElement | null>(null)
 const scene = ref<Scene>('search')
@@ -42,69 +43,66 @@ const pressed = ref<string | null>(null)
 const onSite = computed(() => scene.value === 'loading' || scene.value === 'site')
 
 const reset = () => {
-  scene.value = props.stage === 1 ? 'search' : props.stage === 2 ? 'results' : 'site'
-  query.value = props.stage === 1 ? '' : t('pycharm.query')
-  scroll.value = props.stage === 4 ? SCROLL_STEPS : 0
-  picked.value = props.stage === 4
+  step.value = 1
+  scene.value = 'search'
+  query.value = ''
+  scroll.value = 0
+  picked.value = false
   download.value = 'none'
   pressed.value = null
 }
 
 const land = () => {
-  scene.value = props.stage === 1 ? 'results' : 'site'
+  step.value = 4
+  scene.value = 'site'
   query.value = t('pycharm.query')
-  scroll.value = props.stage >= 3 ? SCROLL_STEPS : 0
-  picked.value = props.stage >= 3
-  download.value = props.stage === 4 ? 'done' : 'none'
+  scroll.value = SCROLL_STEPS
+  picked.value = true
+  download.value = 'done'
   pressed.value = null
 }
 
 const { pointer, instant, finished, later, pointAt, pointAtFraction, play } = useDemoPlayer({
   id: 'pycharm-install',
-  stage: props.stage,
+  stage: 1,
   frame,
   reset,
   land,
   script: () => {
-    let at = 500
-
-    if (props.stage === 1) {
-      // Typed like a person: a beat before each word.
-      const text = t('pycharm.query')
-      at = 700
-      for (let i = 1; i <= text.length; i++) {
-        later(at, () => { query.value = text.slice(0, i) })
-        at += text[i] === ' ' ? 240 : 80 + (i % 3) * 25
-      }
-      later(at += 400, () => pointAt('[data-point="search"]'))
-      later(at += 750, () => { pressed.value = 'search' })
-      later(at += 180, () => { pressed.value = null; scene.value = 'results' })
+    // 1. Search, typed like a person: a beat before each word.
+    const text = t('pycharm.query')
+    let at = 700
+    for (let i = 1; i <= text.length; i++) {
+      later(at, () => { query.value = text.slice(0, i) })
+      at += text[i] === ' ' ? 240 : 80 + (i % 3) * 25
     }
+    later(at += 400, () => pointAt('[data-point="search"]'))
+    later(at += 750, () => { pressed.value = 'search' })
+    later(at += 180, () => { pressed.value = null; scene.value = 'results' })
 
-    if (props.stage === 2) {
-      later(at, () => pointAt('[data-point="result"]'))
-      later(at += 800, () => { pressed.value = 'result' })
-      later(at += 180, () => { pressed.value = null; scene.value = 'loading' })
-      later(at += 700, () => { scene.value = 'site' })
-      later(at += 500, () => pointAtFraction(0.74, 0.58))
-    }
+    // 2. Open the jetbrains.com result.
+    later(at += 900, () => { step.value = 2 })
+    later(at += 300, () => pointAt('[data-point="result"]'))
+    later(at += 800, () => { pressed.value = 'result' })
+    later(at += 180, () => { pressed.value = null; scene.value = 'loading' })
+    later(at += 700, () => { scene.value = 'site' })
+    later(at += 500, () => pointAtFraction(0.74, 0.58))
 
-    if (props.stage === 3) {
-      later(at, () => pointAtFraction(0.74, 0.58))
-      at += 800
-      for (let i = 1; i <= SCROLL_STEPS; i++) {
-        later(at, () => { scroll.value = i })
-        at += 560
-      }
-      later(at += 150, () => { picked.value = true })
+    // 3. Scroll past Professional.
+    later(at += 1100, () => { step.value = 3 })
+    at += 900
+    for (let i = 1; i <= SCROLL_STEPS; i++) {
+      later(at, () => { scroll.value = i })
+      at += 560
     }
+    later(at += 150, () => { picked.value = true })
 
-    if (props.stage === 4) {
-      later(at, () => pointAt('[data-point="download"]'))
-      later(at += 800, () => { pressed.value = 'download' })
-      later(at += 180, () => { pressed.value = null; download.value = 'running' })
-      later(at += 2200, () => { download.value = 'done' })
-    }
+    // 4. Download the Community Edition.
+    later(at += 1100, () => { step.value = 4 })
+    later(at += 300, () => pointAt('[data-point="download"]'))
+    later(at += 800, () => { pressed.value = 'download' })
+    later(at += 180, () => { pressed.value = null; download.value = 'running' })
+    later(at += 2200, () => { download.value = 'done' })
 
     return at
   },
@@ -116,7 +114,7 @@ const { pointer, instant, finished, later, pointAt, pointAtFraction, play } = us
     :eyebrow="t('pycharm.eyebrow')"
     :title="t('pycharm.title')"
     :steps="steps"
-    :stage="stage"
+    :stage="step"
     :finished="finished"
     :tip="tip"
     :replay="t('pycharm.replay')"
@@ -250,7 +248,7 @@ const { pointer, instant, finished, later, pointAt, pointAtFraction, play } = us
             </div>
 
             <Transition name="fade">
-              <span v-if="stage === 3 && !picked" class="scroll-hint">
+              <span v-if="step === 3 && !picked" class="scroll-hint">
                 <Icon name="lucide:mouse" />
                 <span class="text-trim">{{ t('pycharm.scroll') }}</span>
                 <Icon name="lucide:chevrons-down" class="scroll-chevron" />
@@ -491,7 +489,7 @@ const { pointer, instant, finished, later, pointAt, pointAtFraction, play } = us
   transform: translateY(calc(var(--scroll) * var(--depth) * -1));
   transition: transform 0.5s cubic-bezier(0.25, 0.8, 0.3, 1);
 }
-/* The opening frame is the previous stage's last one: nothing scrolls into it. */
+/* Replay jumps back to the top instead of scrolling up. */
 .is-instant .site-page {
   transition: none;
 }

@@ -2,7 +2,7 @@
 /**
  * Page for a click-through demo. Auto-imported as `<DemoWalkthrough>`.
  *
- * Steps on the left, ticking off as the stages go by, one tip per stage and an
+ * Steps on the left, ticking off as `stage` advances, one tip per step and an
  * optional `aside` at the bottom; the demo frame (default slot) on the right
  * with a replay button under it. Used by the walk-throughs in `components/pycharm/`,
  * which drive it with `useDemoPlayer`.
@@ -45,7 +45,7 @@ const isDone = (step: number) => step < props.stage || (step === props.stage && 
 
       <p v-if="tip" class="walk-tip">
         <span class="walk-rail" aria-hidden="true"></span>
-        <span class="walk-tip-text">{{ tip }}</span>
+        <span :key="tip" class="walk-tip-text">{{ tip }}</span>
       </p>
 
       <div v-if="$slots.aside" class="walk-aside">
@@ -167,7 +167,7 @@ const isDone = (step: number) => step < props.stage || (step === props.stage && 
   background: var(--coral);
 }
 
-/* Stage 1 has only the slide entrance; later tips answer the press. */
+/* Step 1 has only the slide entrance; later tips appear as their step starts. */
 .walk-tip-text {
   animation: appear 0.35s ease both;
 }
