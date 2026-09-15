@@ -3,23 +3,43 @@
  * Icebreaker question reel. Auto-imported as `<IntroSpinner />`.
  *
  * A slot-machine reel rather than a wheel, because the questions are whole
- * sentences and a wheel slice cannot hold one. Spinning draws from a shuffle
- * bag, so no question comes up twice until every one has been asked. The reel
- * eases out over about four seconds, overshoots a hair and settles.
+ * sentences and a wheel slice cannot hold one. The reel eases out over about
+ * four seconds, overshoots a hair and settles.
+ *
+ * The room spins together. Whoever's turn it is taps Spin on their own
+ * follow-along device; the server draws the question from one shuffle bag for
+ * the whole room (`server/utils/spinRoom.ts`), so no question comes up twice
+ * until every one has been asked, and every screen plays the same spin. The
+ * presenter view and the remote spin for someone without a phone.
+ *
+ * Who sees what:
+ *   - a follow-along device: the Spin button, Enter, and a tappable reel
+ *   - the projector (`?screen=projector`, set by the start page) and the peek
+ *     frames in the presenter view: no button and no Enter; who is spinning,
+ *     who spun, and who spun before
  *
  * Sound is synthesised with Web Audio, nothing is downloaded: a tick each time
  * a card passes the window, brighter while the reel races and softer as it
  * slows, then a two-note chime on landing. A mute button remembers its setting.
- *
- * Click the reel, the button, or press Enter. Reduced motion lands at once.
- * Each screen spins on its own; nothing is sent to the room.
+ * Reduced motion lands at once.
  *
  * Questions and labels come from `intro.*` in `locales/`.
  */
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useI18n } from '~/composables/useI18n'
+import { useDeckRole } from '~/composables/useDeckRole'
+import { useWebSocket } from '~/composables/useWebSocket'
+import { useSpins, type SpinRecord } from '~/composables/useSpins'
+import { avatarFor } from '~/utils/cuteNames'
+import type { SpriteName } from '~/utils/sprites'
 
 const { t, tm } = useI18n()
+const { isViewer, isPeek, isProjector } = useDeckRole()
+const ws = useWebSocket()
+const spins = useSpins()
+
+/** Only a follow-along device spins; the projector and the presenter's previews watch. */
+const canSpin = computed(() => isViewer.value && !isPeek.value && !isProjector.value)
 
 const questions = computed(() => tm<string[]>('intro.questions'))
 const count = computed(() => questions.value.length)
@@ -34,14 +54,14 @@ const position = ref(0)
 const velocity = ref(0)
 const phase = ref<Phase>('idle')
 const muted = ref(false)
+/** The spin the reel shows or plays. */
+const shown = ref<SpinRecord | null>(null)
 
 const DURATION = 4200
 const LOOPS = 3
 const OVERSHOOT = 0.18
 const MUTE_KEY = 'deck-spinner-muted'
 
-let bag: number[] = []
-let lastQuestion = -1
 let frame = 0
 
 const mod = (value: number, n: number) => ((value % n) + n) % n
@@ -61,6 +81,7 @@ const easeInOutSine = (x: number) => -(Math.cos(Math.PI * x) - 1) / 2
 /* ─── Sound ──────────────────────────────────────────────────────────── */
 let audio: AudioContext | null = null
 
+/** Browsers only start audio after a tap or key, so every screen primes on its first one. */
 const primeAudio = () => {
   if (muted.value) return
   try {
@@ -105,33 +126,24 @@ const toggleMute = () => {
 }
 
 /* ─── Reel ───────────────────────────────────────────────────────────── */
-const nextQuestion = () => {
-  if (!bag.length) {
-    bag = shuffle(range(count.value))
-    // A fresh bag never opens with the question that just closed the last one.
-    const last = bag.length - 1
-    if (last > 0 && bag[last] === lastQuestion) [bag[0], bag[last]] = [bag[last]!, bag[0]!]
-  }
-  lastQuestion = bag.pop()!
-  return lastQuestion
-}
-
 const land = () => {
   velocity.value = 0
   phase.value = 'landed'
   chime()
 }
 
-const spin = (targetQuestion?: number) => {
-  if (phase.value === 'spinning' || !order.value.length) return
+/** Play a spin the room drew. A newer spin takes over from wherever the reel is. */
+const play = (record: SpinRecord) => {
+  if (!order.value.length) return
+  cancelAnimationFrame(frame)
+  shown.value = record
+
   const n = count.value
-  const question = targetQuestion === undefined ? nextQuestion() : mod(targetQuestion, n)
-  const slot = order.value.indexOf(question)
+  const slot = order.value.indexOf(mod(record.question, n))
   const start = position.value
   const from = Math.round(start)
   const end = from + LOOPS * n + mod(slot - mod(from, n), n)
 
-  primeAudio()
   phase.value = 'spinning'
 
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
@@ -176,6 +188,27 @@ const spin = (targetQuestion?: number) => {
   frame = requestAnimationFrame(step)
 }
 
+/* ─── Asking for a spin ──────────────────────────────────────────────── */
+const busyNote = ref(false)
+let busyTimer: ReturnType<typeof setTimeout> | undefined
+
+const showBusy = () => {
+  busyNote.value = true
+  clearTimeout(busyTimer)
+  busyTimer = setTimeout(() => { busyNote.value = false }, 2200)
+}
+
+const request = () => {
+  if (!canSpin.value) return
+  primeAudio()
+  if (phase.value === 'spinning' || spins.isBusy()) {
+    showBusy()
+    return
+  }
+  ws.sendSpin()
+}
+
+/* ─── What the screen says ───────────────────────────────────────────── */
 const current = computed(() => (order.value.length ? order.value[mod(Math.round(position.value), count.value)]! : -1))
 
 /** Five rows around the window: enough to fill it at any position. */
@@ -207,23 +240,51 @@ const blur = computed(() => `blur(${Math.min(5, velocity.value * 0.09).toFixed(2
 
 const bubble = computed(() => t(`intro.momo.${phase.value}`))
 
+const shownName = computed(() => (shown.value ? spins.nameOf(shown.value) : ''))
+const avatar = computed(() => (shown.value ? avatarFor(shownName.value) : null))
+
+const who = computed(() => {
+  if (!shown.value) return t('intro.waiting')
+  return phase.value === 'spinning'
+    ? t('intro.spinningBy', { name: shownName.value })
+    : t('intro.spunBy', { name: shownName.value })
+})
+
+/** Who spun before the one on the reel, newest first. */
+const earlier = computed(() => spins.history.value.filter(record => record.sequence !== shown.value?.sequence).slice(0, 6))
+
+/* ─── Events ─────────────────────────────────────────────────────────── */
 const onKey = (event: KeyboardEvent) => {
-  if (event.key !== 'Enter') return
+  if (!canSpin.value || event.key !== 'Enter') return
   if (['INPUT', 'TEXTAREA'].includes((event.target as HTMLElement).tagName)) return
   event.preventDefault()
-  spin()
+  request()
 }
 
-const onSlideAction = (event: Event) => {
-  const detail = (event as CustomEvent).detail
-  if (detail?.slideId === 'PRE-0038' && detail.action === 'spin') spin(detail.sequence - 1)
+const onSpin = (event: Event) => play((event as CustomEvent<SpinRecord>).detail)
+
+/** Opened after a spin: show where the room is, without replaying it. */
+const adoptLatest = (latest: SpinRecord | null) => {
+  if (!latest || shown.value || phase.value !== 'idle' || !order.value.length) return
+  shown.value = latest
+  position.value = order.value.indexOf(mod(latest.question, count.value))
+  phase.value = 'landed'
 }
+
+// The room's state usually arrives just after mount. A live spin sets `shown`
+// before this runs, so it is never skipped.
+watch(() => spins.latest.value, adoptLatest)
 
 onMounted(() => {
   order.value = shuffle(range(count.value))
   try { muted.value = localStorage.getItem(MUTE_KEY) === '1' } catch { /* private mode */ }
+  adoptLatest(spins.latest.value)
+
   window.addEventListener('keydown', onKey)
-  window.addEventListener('deck:slide-action', onSlideAction)
+  window.addEventListener('deck:spin', onSpin)
+  window.addEventListener('deck:spin-busy', showBusy)
+  window.addEventListener('pointerdown', primeAudio, { once: true })
+  window.addEventListener('keydown', primeAudio, { once: true })
 })
 
 // Both dictionaries hold the same number of questions; reshuffle if that ever changes.
@@ -233,20 +294,32 @@ watch(count, (n) => {
 
 onBeforeUnmount(() => {
   cancelAnimationFrame(frame)
+  clearTimeout(busyTimer)
   window.removeEventListener('keydown', onKey)
-  window.removeEventListener('deck:slide-action', onSlideAction)
+  window.removeEventListener('deck:spin', onSpin)
+  window.removeEventListener('deck:spin-busy', showBusy)
+  window.removeEventListener('pointerdown', primeAudio)
+  window.removeEventListener('keydown', primeAudio)
   audio?.close().catch(() => {})
 })
 </script>
 
 <template>
-  <div class="spinner">
+  <div class="spinner" :class="{ 'is-screen': !canSpin }">
     <div class="spinner-momo" aria-hidden="true">
       <span :key="phase" class="spinner-bubble" :class="{ 'is-first': phase === 'idle' }">{{ bubble }}</span>
       <ArtSprite name="cat-peek" color="coral" accent="sun" :size="96" class="w-full h-full" />
     </div>
 
-    <button type="button" class="reel" :class="`is-${phase}`" :aria-label="t('intro.spin')" @click="spin()">
+    <button
+      type="button"
+      class="reel"
+      :class="`is-${phase}`"
+      :tabindex="canSpin ? 0 : -1"
+      :aria-disabled="!canSpin"
+      :aria-label="t('intro.spin')"
+      @click="request"
+    >
       <span class="reel-frame" aria-hidden="true"></span>
       <span class="reel-rows" :style="{ filter: blur }" aria-hidden="true">
         <span
@@ -261,14 +334,26 @@ onBeforeUnmount(() => {
       </span>
     </button>
 
-    <p class="sr-only" aria-live="polite">{{ phase === 'landed' && current >= 0 ? questions[current] : '' }}</p>
+    <p class="sr-only" aria-live="polite">{{ phase === 'landed' && current >= 0 ? `${who}: ${questions[current]}` : '' }}</p>
 
     <div class="spinner-controls">
-      <button type="button" class="spin-button" :disabled="phase === 'spinning'" @click="spin()">
+      <button v-if="canSpin" type="button" class="spin-button" :disabled="phase === 'spinning'" @click="request">
         <Icon name="lucide:refresh-cw" class="spin-icon" :class="{ 'is-spinning': phase === 'spinning' }" />
         <span class="text-trim">{{ phase === 'landed' ? t('intro.spinAgain') : t('intro.spin') }}</span>
       </button>
-      <span class="spin-hint">{{ t('intro.hint') }}</span>
+
+      <p class="spin-who">
+        <span v-if="avatar" class="spin-avatar" :class="{ 'has-sprite': avatar.sprite }" :style="{ '--badge': `var(--${avatar.color})` }" aria-hidden="true">
+          <ArtSprite v-if="avatar.sprite" :name="avatar.sprite as SpriteName" :color="avatar.color" accent="sun" :size="48" class="spin-avatar-art" />
+          <span v-else class="text-trim">{{ avatar.initial }}</span>
+        </span>
+        <span class="spin-who-text">
+          <span>{{ busyNote ? t('intro.busy') : who }}</span>
+          <span v-if="!canSpin && shown && phase === 'landed'" class="spin-waiting">{{ t('intro.waiting') }}</span>
+          <span v-else-if="canSpin && !busyNote && phase !== 'spinning'" class="spin-waiting">{{ t('intro.phoneHint') }}</span>
+        </span>
+      </p>
+
       <button
         type="button"
         class="sound-button"
@@ -281,6 +366,13 @@ onBeforeUnmount(() => {
         <Icon v-else name="lucide:volume-2" />
       </button>
     </div>
+
+    <p v-if="!canSpin && earlier.length" class="spin-history">
+      <span class="spin-history-label">{{ t('intro.history') }}</span>
+      <span v-for="record in earlier" :key="`${record.sequence}-${record.at}`" class="spin-chip">
+        <span class="text-trim">{{ spins.nameOf(record) }}</span>
+      </span>
+    </p>
   </div>
 </template>
 
@@ -348,6 +440,9 @@ onBeforeUnmount(() => {
   background: var(--bg-off);
   border: 2px solid var(--border);
   cursor: pointer;
+}
+.is-screen .reel {
+  cursor: default;
 }
 
 /* Rows fade out towards the top and bottom edges. */
@@ -424,6 +519,7 @@ onBeforeUnmount(() => {
 }
 
 .spin-button {
+  flex: none;
   display: inline-flex;
   align-items: center;
   gap: 1vh;
@@ -446,13 +542,51 @@ onBeforeUnmount(() => {
   animation: turn 0.6s linear infinite;
 }
 
-.spin-hint {
-  font-size: clamp(0.7rem, 1.5vh, 1rem);
+/* Who spins, who spun. */
+.spin-who {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 1.2vh;
+}
+.spin-avatar {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 5vh;
+  height: 5vh;
+  border-radius: 999px;
+  background: var(--badge);
+  border: 2px solid var(--text);
+  font-size: clamp(0.8rem, 2vh, 1.3rem);
+  font-weight: 900;
+  color: #FFFFFF;
+}
+.spin-avatar.has-sprite {
+  background: color-mix(in srgb, var(--badge) 22%, var(--bg));
+}
+.spin-avatar-art {
+  width: 4vh;
+  height: 4vh;
+}
+.spin-who-text {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4vh;
+  font-size: clamp(0.85rem, 2vh, 1.35rem);
+  font-weight: 800;
+  line-height: 1.2;
+  color: var(--text);
+}
+.spin-waiting {
+  font-size: 0.72em;
   font-weight: 600;
   color: var(--text-muted);
 }
 
 .sound-button {
+  flex: none;
   margin-left: auto;
   display: grid;
   place-items: center;
@@ -468,6 +602,76 @@ onBeforeUnmount(() => {
 .sound-button:hover {
   border-color: var(--text);
   color: var(--text);
+}
+
+/* ─── Who spun before ────────────────────────────────────────────────── */
+.spin-history {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.8vh;
+}
+.spin-history-label {
+  margin-right: 0.4vh;
+  font-size: clamp(0.6rem, 1.3vh, 0.9rem);
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+.spin-chip {
+  padding: calc(0.5vh + 0.2em) 1.2vh;
+  border-radius: 999px;
+  background: var(--bg-off);
+  border: 2px solid var(--border);
+  font-size: clamp(0.65rem, 1.45vh, 0.95rem);
+  font-weight: 700;
+  color: var(--text-dim);
+}
+
+/* A phone held upright (see pre-0038.vue): a shorter reel, rows that fit the
+   width, and a Spin button a thumb can hit. */
+@media (orientation: portrait) and (max-width: 760px) {
+  .reel {
+    height: 30vh;
+  }
+  .reel-frame {
+    left: 1.2vh;
+    right: 1.2vh;
+    height: 12vh;
+  }
+  .reel-row {
+    left: 2.4vh;
+    right: 2.4vh;
+    height: 12vh;
+    margin-top: -6vh;
+    font-size: clamp(0.95rem, 4.4vw, 1.3rem);
+  }
+  .spinner-controls {
+    flex-wrap: wrap;
+  }
+  /* Who spun sits right under the reel, the button below it. */
+  .spin-who {
+    order: -1;
+    flex: 1 1 0;
+  }
+  .sound-button {
+    order: -1;
+  }
+  .spin-button {
+    flex: 1 1 100%;
+    justify-content: center;
+    padding: 1rem;
+    font-size: 1.05rem;
+  }
+  .spin-who-text {
+    font-size: 0.95rem;
+  }
+  .spin-avatar,
+  .sound-button {
+    width: 2.6rem;
+    height: 2.6rem;
+  }
 }
 
 @keyframes bubble-pop {

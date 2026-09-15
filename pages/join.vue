@@ -24,7 +24,7 @@ definePageMeta({ layout: false })
 const router = useRouter()
 const { store } = usePresentation()
 const { getSlideById, firstSlideId } = useSlideData()
-const { setViewMode } = useDeckRole()
+const { setViewMode, setScreen } = useDeckRole()
 const { t, locale, setLocale } = useI18n()
 const { name, custom, setName } = useAudience()
 
@@ -53,6 +53,7 @@ const open = (code: Locale) => {
   if (typed.value) setName(typed.value)
   else setName(formatCuteName(anonymous.value, code), false)
   setViewMode('stage')
+  setScreen('audience')
   store.setFollowing(true)
   if (target.value) router.push({ path: target.value.route, query: { mode: 'stage' } })
 }

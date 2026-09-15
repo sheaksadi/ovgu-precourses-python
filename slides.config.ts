@@ -66,7 +66,7 @@ export const slides: SlideEntry[] = [
     subtitle: 'Name sagen, kurz vorstellen, Frage drehen',
     duration: 10,
     presenterAction: { label: 'Spin', command: 'spin' },
-    teleprompter: 'Reihum: Name sagen, kurz vorstellen – Hobbys, etwas Schräges oder Besonderes, etwas Nettes über sich. Dann Enter drücken oder auf das Rad tippen und die Frage beantworten. Keine Frage kommt doppelt, bis alle einmal dran waren. Ton an und aus unten rechts. Selbst anfangen hilft.',
+    teleprompter: 'Reihum: Name sagen, kurz vorstellen – Hobbys, etwas Schräges oder Besonderes, etwas Nettes über sich. Dann dreht die Person auf dem eigenen Handy die Frage; der Beamer zeigt, wer gedreht hat und welche Frage kam. Ohne Handy: Spin im Presenter oder auf der Fernbedienung. Keine Frage kommt doppelt, bis alle einmal dran waren. Den Beamer über den Projektor-Knopf der Startseite öffnen, sonst zeigt er selbst einen Drehen-Knopf. Selbst anfangen hilft.',
   },
   {
     id: 'PRE-0034',

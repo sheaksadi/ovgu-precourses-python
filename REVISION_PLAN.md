@@ -56,15 +56,13 @@ Tick items off as they land. Content after the APIs section is discussed later.
 
 Slide 2 (PRE-0038). Today every screen spins on its own.
 
-- [ ] Each student spins on their own follow-along device; the result is sent to
+- [x] Each student spins on their own follow-along device; the result is sent to
       the room.
-- [ ] The projector has no spin button and ignores Enter. It shows who spun
+- [x] The projector has no spin button and ignores Enter. It shows who spun
       what, and "waiting for a spin" in between.
-- [ ] The presenter view and the remote keep a spin button, for students without
+- [x] The presenter view and the remote keep a spin button, for students without
       a phone.
-- [ ] _To confirm when this phase starts:_ the review sentence moved between
-      "presenter" and "projector". The reading above (projector shows, presenter
-      and remote can spin) is the working assumption.
+- [x] Confirmed with the user: projector shows, presenter view and remote spin.
 
 ## Phase 3: problem engine
 
@@ -152,4 +150,24 @@ Written here as each phase starts.
   PRE-0136 "Notifications" under Typography, and a section in DESIGN_SYSTEM.md.
 - Later, when names are editable from a slide (not only `/join`), add a small
   name chip next to the language pill on touch devices.
+
+### Phase 2: the room spins together
+
+- `server/utils/spinRoom.ts`: one shuffle bag for the room, a history of the
+  last 12 spins, and a 4.6 s lock while a spin plays. Resets with the room.
+- A follow-along device sends `{ type: 'spin' }` over the WebSocket; the server
+  checks it has an audience identity, draws, and broadcasts `spin` to everyone
+  (or answers `spin_busy`). The presenter view and the remote go through the
+  existing `slide_action` command, which now draws on the server too.
+  New connections get `spin_state`, so a late screen shows the last result.
+- `useSpins` holds what this screen heard; `useWebSocket` fills it and fires
+  `deck:spin`, which the spinner plays.
+- `useDeckRole().isProjector`: `?screen=projector` from the start page's
+  Projector button, remembered per device; `/join` sets `audience`.
+- Spinner: phones get Spin, Enter and a tappable reel; the projector and peek
+  frames get "Mira is spinning …" / "Mira spun" with her avatar, "waiting for
+  the next spin", and chips of who spun before. Audio primes on the first tap or
+  key, since browsers block sound until then.
+- Remote gets a Spin button and the latest line; the presenter view shows the
+  latest line under its Spin button.
 

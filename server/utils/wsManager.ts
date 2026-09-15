@@ -1,3 +1,5 @@
+import { spinRoom } from './spinRoom'
+
 export type PeerRole = 'control' | 'presenter' | 'viewer' | 'dashboard' | 'peek'
 
 export interface PeerPresence {
@@ -41,6 +43,12 @@ function emptyState() {
 }
 
 let currentState = emptyState()
+
+/** Everything the room remembers goes when it resets. */
+function resetRoom() {
+  currentState = emptyState()
+  spinRoom.reset()
+}
 
 /** Roles that may move the global slide position. */
 const CONTROLLER_ROLES: PeerRole[] = ['control', 'presenter']
@@ -111,7 +119,7 @@ export const wsManager = {
    * next session starts at the first slide instead of inheriting the old one.
    */
   resetState: () => {
-    currentState = emptyState()
+    resetRoom()
   },
 
   /** Record what a peer says it is. The role decides whether it may write. */
@@ -134,7 +142,7 @@ export const wsManager = {
 
   removePeer: (peer: any) => {
     const existed = peers.delete(keyOf(peer))
-    if (existed && peers.size === 0) currentState = emptyState()
+    if (existed && peers.size === 0) resetRoom()
     return existed
   },
 
@@ -152,8 +160,15 @@ export const wsManager = {
         dropped.push(entry.peer)
       }
     }
-    if (dropped.length && peers.size === 0) currentState = emptyState()
+    if (dropped.length && peers.size === 0) resetRoom()
     return dropped
+  },
+
+  /** The audience identity of a follow-along device, or null for any other peer. */
+  getIdentity: (peer: any): { audienceId: string, name: string } | null => {
+    const entry = peers.get(keyOf(peer))
+    if (!entry || !AUDIENCE_ROLES.includes(entry.presence.role) || !entry.presence.audienceId) return null
+    return { audienceId: entry.presence.audienceId, name: entry.presence.name }
   },
 
   /** True when this peer is allowed to move the global slide position. */

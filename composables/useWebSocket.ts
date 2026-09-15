@@ -4,6 +4,7 @@ import { useInteractionStore } from '~/stores/interactionStore'
 import { useDeckRole } from '~/composables/useDeckRole'
 import { useSlideData } from '~/composables/useSlideData'
 import { useAudience } from '~/composables/useAudience'
+import { useSpins } from '~/composables/useSpins'
 import { useRoute } from 'vue-router'
 
 let ws: WebSocket | null = null
@@ -34,6 +35,7 @@ export const useWebSocket = () => {
   const { role, canControlGlobal, isViewer, viewMode } = useDeckRole()
   const { getSlideByRoute } = useSlideData()
   const audience = useAudience()
+  const spins = useSpins()
   const route = useRoute()
   const onSlideRoute = computed(() => !!getSlideByRoute(route.path))
 
@@ -148,6 +150,15 @@ export const useWebSocket = () => {
             window.dispatchEvent(new CustomEvent('deck:slide-action', { detail: data }))
           }
         }
+        else if (data.type === 'spin') {
+          if (spins.apply(data)) window.dispatchEvent(new CustomEvent('deck:spin', { detail: data }))
+        }
+        else if (data.type === 'spin_state') {
+          spins.applyState(data)
+        }
+        else if (data.type === 'spin_busy') {
+          window.dispatchEvent(new CustomEvent('deck:spin-busy'))
+        }
         else if (data.type === 'pointer') {
           store.setPointer(data.clientId, data.active, data.x, data.y, data.color)
         }
@@ -173,6 +184,11 @@ export const useWebSocket = () => {
       headers: controllerHeaders(),
       body: { name, ...payload }
     })
+  }
+
+  /** A follow-along device asks the room for the icebreaker spin. */
+  const sendSpin = () => {
+    if (isViewer.value) send({ type: 'spin' })
   }
 
   const sendPointer = (clientId: string, active: boolean, x: number, y: number, color: string) => {
@@ -212,6 +228,7 @@ export const useWebSocket = () => {
     requestState,
     sendCommand,
     sendPointer,
-    sendPresence
+    sendPresence,
+    sendSpin
   }
 }

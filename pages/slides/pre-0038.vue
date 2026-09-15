@@ -125,4 +125,53 @@ const steps = computed(() => tm<Array<{ title: string, hint?: string }>>('intro.
   right: 6vw;
   width: 50vw;
 }
+
+/* A phone held upright: the copy above the reel, one scrolling column. This is
+   where students spin, so the reel and its button get the width. */
+@media (orientation: portrait) and (max-width: 760px) {
+  .intro {
+    display: flex;
+    flex-direction: column;
+    gap: 12vh;
+    /* Room below, so the last line scrolls clear of the language pill. */
+    padding: 9vh 5vw 14vh;
+    overflow-y: auto;
+  }
+
+  .intro-copy,
+  .intro-reel {
+    position: static;
+    width: auto;
+  }
+
+  .intro-title {
+    font-size: clamp(2rem, 10vw, 3rem);
+  }
+
+  .intro-steps {
+    margin-top: 2.4vh;
+    gap: 1.4vh;
+  }
+
+  .intro-step {
+    gap: 0.8rem;
+    font-size: 1rem;
+  }
+
+  .intro-num {
+    width: 1.9rem;
+    height: 1.9rem;
+    font-size: 0.85rem;
+  }
+
+  .intro-text {
+    gap: 0.2rem;
+    padding-top: 0.2rem;
+  }
+
+  .intro-hint {
+    max-width: none;
+    font-size: 0.8rem;
+  }
+}
 </style>

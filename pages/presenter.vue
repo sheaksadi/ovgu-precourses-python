@@ -13,6 +13,7 @@ import { useSlideData } from '~/composables/useSlideData'
 import { useWebSocket } from '~/composables/useWebSocket'
 import { useKeyBindings } from '~/composables/useKeyBindings'
 import SlidePreview from '~/components/presenter/SlidePreview.vue'
+import { useSpins } from '~/composables/useSpins'
 
 definePageMeta({ layout: false })
 
@@ -111,6 +112,8 @@ const runSlideAction = () => {
   if (!action || !current.value) return
   ws.sendCommand('slide_action', { slideId: current.value.id, action: action.command })
 }
+
+const spins = useSpins()
 
 const followingCount = computed(() => Math.max(0, store.presence.viewers - store.presence.detached))
 
@@ -247,6 +250,9 @@ onUnmounted(() => {
           >
             <Icon name="lucide:refresh-cw" /> {{ current.presenterAction.label }}
           </button>
+          <p v-if="current?.presenterAction?.command === 'spin'" class="col-span-2 text-xs text-gray-400 truncate">
+            {{ spins.latestLine.value }}
+          </p>
         </div>
 
         <p class="text-[11px] text-gray-600">

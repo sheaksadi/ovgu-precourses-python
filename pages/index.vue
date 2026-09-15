@@ -26,7 +26,7 @@ const { font, fonts, setFont } = useFont()
 /** The room's slide while a talk runs, otherwise the first slide, with current language. */
 const projectorTarget = computed(() => {
   const slide = getSlideById(store.globalSlideId) || getSlideById(firstSlideId.value)
-  return slide ? { path: slide.route, query: { mode: 'stage', lang: locale.value } } : '/'
+  return slide ? { path: slide.route, query: { mode: 'stage', lang: locale.value, screen: 'projector' } } : '/'
 })
 
 const views = computed(() => [

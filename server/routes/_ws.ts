@@ -1,5 +1,6 @@
 import { wsManager } from '../utils/wsManager'
 import type { PeerRole } from '../utils/wsManager'
+import { spinRoom } from '../utils/spinRoom'
 
 /** Pointer ids per connection, keyed by `peer.id` for the same reason. */
 const peerClientIds = new Map<string, Set<string>>()
@@ -51,6 +52,7 @@ export default defineWebSocketHandler({
     peer.send(countMsg)
 
     peer.send(JSON.stringify({ type: 'state', ...wsManager.getState() }))
+    peer.send(JSON.stringify(spinRoom.state()))
     broadcastPresence(peer)
   },
   message(peer, message) {
@@ -94,6 +96,16 @@ export default defineWebSocketHandler({
       else if (data.type === 'sync_request') {
         peer.send(JSON.stringify({ type: 'state', ...wsManager.getState() }))
         peer.send(JSON.stringify({ type: 'presence_summary', ...wsManager.getPresenceSummary() }))
+        peer.send(JSON.stringify(spinRoom.state()))
+      }
+      else if (data.type === 'spin') {
+        // A follow-along device asks for the icebreaker spin. Only named audience
+        // devices may; the presenter view and the remote use POST /api/command.
+        const who = wsManager.getIdentity(peer)
+        if (!who) return
+        const spin = spinRoom.spin(who)
+        if (spin) wsManager.broadcast(spin)
+        else peer.send(JSON.stringify({ type: 'spin_busy' }))
       }
       else if (data.type === 'command') {
         // Room commands use POST /api/command. WebSocket is broadcast-only.

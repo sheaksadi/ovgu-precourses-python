@@ -5,11 +5,13 @@ import { useSlideData } from '~/composables/useSlideData'
 import { usePresentationStore } from '~/stores/presentationStore'
 import { useWebSocket } from '~/composables/useWebSocket'
 import QRCodeDisplay from '~/components/control/QRCodeDisplay.vue'
+import { useSpins } from '~/composables/useSpins'
 
 const { goToSlide, goToIndex, flatSlides } = usePresentation()
 const { firstSlideId, getSlideById } = useSlideData()
 const { sendCommand, sendPointer } = useWebSocket()
 const store = usePresentationStore()
+const spins = useSpins()
 const menuOpen = ref(false)
 const showQrModal = ref(false)
 
@@ -22,6 +24,12 @@ const nextSlide = () => {
   if (i < flatSlides.value.length - 1) goToIndex(i + 1)
   else if (i < 0) goToIndex(0)
 }
+/** The slide's room action (the icebreaker spin), for a student without a phone. */
+const runSlideAction = () => {
+  const slide = currentSlideData.value
+  if (slide?.presenterAction) sendCommand('slide_action', { slideId: slide.id, action: slide.presenterAction.command })
+}
+
 const prevSlide = () => {
   const i = currentIndex.value
   if (i > 0) goToIndex(i - 1)
@@ -172,6 +180,20 @@ definePageMeta({
 
         <!-- Fixed Controls -->
         <div class="flex-none border-t border-gray-800 bg-black">
+          <!-- Slide action: the icebreaker spin -->
+          <div v-if="currentSlideData?.presenterAction" class="px-4 pt-3">
+            <button
+              type="button"
+              @click="runSlideAction"
+              class="w-full py-4 rounded-2xl bg-amber-500 active:bg-amber-400 border border-amber-400 text-gray-950 font-bold flex items-center justify-center gap-2"
+            >
+              <Icon name="lucide:refresh-cw" class="text-xl" /> {{ currentSlideData.presenterAction.label }}
+            </button>
+            <p v-if="currentSlideData.presenterAction.command === 'spin'" class="mt-2 text-xs text-gray-400 text-center truncate">
+              {{ spins.latestLine.value }}
+            </p>
+          </div>
+
           <!-- Laser -->
           <div class="pt-3 pb-1">
             <div class="text-gray-500 text-[10px] uppercase tracking-widest text-center mb-2">Laser</div>
