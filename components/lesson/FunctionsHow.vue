@@ -93,8 +93,9 @@ const shown = (own: number) => props.stage === own || props.stage === own + 1
           <code class="line line-body"><b>3</b> print("{{ n.hi }}")</code>
         </div>
         <svg class="jump-arrows" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
-          <path class="arrow-there" d="M 40 44 C 52 44, 50 40, 60 40" />
-          <path class="arrow-back" d="M 60 54 C 50 58, 52 52, 40 52" />
+          <!-- In % of the scene: from the right edge of hallo() to line 3 and back again. -->
+          <path class="arrow-there" d="M 41 45.5 C 52 45.5, 51 37, 62 37" />
+          <path class="arrow-back" d="M 62 41 C 51 41, 52 49.5, 41 49.5" />
         </svg>
         <span class="runner"></span>
       </div>

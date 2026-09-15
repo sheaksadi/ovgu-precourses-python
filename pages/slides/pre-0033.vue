@@ -39,17 +39,6 @@ const shortUrl = (value: string) => value.replace(/^https?:\/\//, '')
       </p>
     </header>
 
-    <!-- Bottom left: who is teaching -->
-    <footer class="absolute bottom-[8vh] left-[6vw] flex flex-col gap-[2.6vh]">
-      <div class="person">
-        <span class="role">{{ t('title.instructor') }}</span>
-        <span class="name name-lead">Karim</span>
-      </div>
-      <div class="person">
-        <span class="role">{{ t('title.tutor') }}</span>
-        <span class="name name-support">Sheak Sadi</span>
-      </div>
-    </footer>
 
     <!-- Bottom right quarter: the way in -->
     <aside class="qr-dock absolute">
@@ -116,38 +105,6 @@ const shortUrl = (value: string) => value.replace(/^https?:\/\//, '')
   padding: 0 0.15em;
 }
 
-.person {
-  display: flex;
-  flex-direction: column;
-  gap: 0.4vh;
-  padding-left: 1.1vw;
-  border-left: 0.45vh solid var(--border);
-}
-.person:first-child {
-  border-left-color: var(--coral);
-}
-
-.role {
-  font-size: clamp(0.65rem, 1.3vh, 0.9rem);
-  font-weight: 700;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--text-muted);
-}
-
-.name {
-  font-weight: 800;
-  line-height: 1.05;
-  color: var(--text);
-}
-.name-lead {
-  font-size: clamp(1.6rem, 5vh, 3.6rem);
-  letter-spacing: -0.02em;
-}
-.name-support {
-  font-size: clamp(1rem, 2.7vh, 1.9rem);
-  color: var(--text-dim);
-}
 
 /* Bottom-right quarter of the screen, sized by height so it stays square. */
 .qr-dock {

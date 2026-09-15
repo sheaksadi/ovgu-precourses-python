@@ -8,7 +8,7 @@
  *      kitchen and brings the answer back
  *   2. `requests.get`: the address travels to the server, 200 comes back
  *   3. `.json()`: the answer is text in JSON, and it becomes a dictionary
- *   4. live: the slide asks the Dog API itself; Enter fetches a new dog
+ *   4. live: the slide asks The Cat API itself; Enter fetches a new cat
  *
  * Stage 4 is the only slide in the deck that goes online. Without a network it
  * shows Momo and says so. Words come from `apis.*` in `locales/`.
@@ -36,27 +36,31 @@ const stages = computed(() => tm<Stage[]>('apis.stages'))
 const current = computed(() => stages.value[props.stage - 1]!)
 const words = computed(() => tm<Record<'order' | 'kitchen' | 'request' | 'response' | 'next' | 'loading' | 'offline', string>>('apis.words'))
 
-const DOG_API = 'https://dog.ceo/api/breeds/image/random'
+const CAT_API = 'https://api.thecatapi.com/v1/images/search'
 
 /* ─── Stage 4: live ─── */
 const image = ref<string | null>(null)
 const loading = ref(false)
 const failed = ref(false)
+const imageId = ref('')
 const fetchCount = ref(0)
 
-const fetchDog = async () => {
+const fetchCat = async () => {
   loading.value = true
   failed.value = false
   try {
-    const response = await fetch(DOG_API)
-    const data = await response.json() as { message: string, status: string }
+    const response = await fetch(CAT_API)
+    // A list with one picture: [{ id, url, width, height }]
+    const [cat] = await response.json() as Array<{ id: string, url: string }>
+    if (!cat) throw new Error('empty')
     await new Promise<void>((resolve, reject) => {
       const img = new Image()
       img.onload = () => resolve()
       img.onerror = () => reject(new Error('image'))
-      img.src = data.message
+      img.src = cat.url
     })
-    image.value = data.message
+    image.value = cat.url
+    imageId.value = cat.id
     fetchCount.value++
   } catch {
     failed.value = true
@@ -69,12 +73,12 @@ const onKey = (event: KeyboardEvent) => {
   if (event.key !== 'Enter' || props.stage !== 4) return
   if (['INPUT', 'TEXTAREA'].includes((event.target as HTMLElement).tagName)) return
   event.preventDefault()
-  fetchDog()
+  fetchCat()
 }
 
 onMounted(() => {
   if (props.stage !== 4) return
-  fetchDog()
+  fetchCat()
   window.addEventListener('keydown', onKey)
 })
 onBeforeUnmount(() => window.removeEventListener('keydown', onKey))
@@ -85,7 +89,7 @@ const shorten = (url: string) => (url.length > 44 ? `${url.slice(0, 26)}…${url
 const output = computed(() => {
   if (props.stage !== 4) return current.value.output
   if (failed.value) return [words.value.offline]
-  return image.value ? ['success', shorten(image.value)] : ['…']
+  return image.value ? [imageId.value, shorten(image.value)] : ['…']
 })
 
 const outputDelays = computed(() => {
@@ -128,7 +132,7 @@ const outputDelays = computed(() => {
         <div class="waiter">
           <ArtSprite name="dog" color="sun" accent="text" :size="96" class="fill" />
           <span class="note-card"><span class="text-trim">GET</span></span>
-          <span class="plate"><ArtSprite name="dog" color="lavender" accent="text" :size="48" class="fill" /></span>
+          <span class="plate"><ArtSprite name="cat" color="lavender" accent="rose" :size="48" class="fill" /></span>
         </div>
         <div class="kitchen">
           <ArtSprite name="house" color="sky" accent="coral" :size="96" class="fill" />
@@ -144,17 +148,17 @@ const outputDelays = computed(() => {
           <span class="screen"><code>python</code></span>
           <span class="base"></span>
         </div>
-        <div class="cloud"><code>dog.ceo</code></div>
-        <code class="packet packet-url">GET /api/breeds/image/random</code>
+        <div class="cloud"><code>thecatapi.com</code></div>
+        <code class="packet packet-url">GET /v1/images/search</code>
         <code class="packet packet-ok">200 OK</code>
       </div>
 
       <!-- ═══ 3: JSON becomes a dictionary ═══ -->
       <div v-if="stage === 3 || stage === 4" class="part json" :class="{ 'is-leaving': stage === 4 }">
-        <code class="raw">{"message": "https://images.dog.ceo/…", "status": "success"}</code>
+        <code class="raw">[{"id": "95l", "url": "https://cdn2.thecatapi.com/…", "width": 500, "height": 333}]</code>
         <div class="dict">
-          <span class="dict-row row-message"><code class="key">"message"</code><code class="val">"https://images.dog.ceo/…"</code></span>
-          <span class="dict-row row-status"><code class="key">"status"</code><code class="val">"success"</code></span>
+          <span class="dict-row row-id"><code class="key">"id"</code><code class="val">"95l"</code></span>
+          <span class="dict-row row-url"><code class="key">"url"</code><code class="val">"https://cdn2.thecatapi.com/…"</code></span>
         </div>
       </div>
 
@@ -482,12 +486,12 @@ code {
   text-overflow: ellipsis;
   color: var(--text);
 }
-.stage-3 .row-status .val,
-.stage-3 .row-message .val {
+.stage-3 .row-id .val,
+.stage-3 .row-url .val {
   animation: lit 0.8s ease both;
 }
-.stage-3 .row-status .val { animation-delay: 2.5s; }
-.stage-3 .row-message .val { animation-delay: 2.9s; }
+.stage-3 .row-id .val { animation-delay: 2.5s; }
+.stage-3 .row-url .val { animation-delay: 2.9s; }
 .stage-4 .raw,
 .stage-4 .dict {
   opacity: 1;

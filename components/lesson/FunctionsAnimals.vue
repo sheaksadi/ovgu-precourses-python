@@ -99,8 +99,8 @@ const pipGone = (who: 'momo' | 'bello', pip: number) => {
         class="animal"
         :class="`animal-${who}`"
       >
-        <span class="tag tag-a"><span class="text-trim">a</span></span>
-        <span class="tag tag-b"><span class="text-trim">b</span></span>
+        <span class="param param-a"><span class="param-letter">a</span></span>
+        <span class="param param-b"><span class="param-letter">b</span></span>
         <span class="bubble"><span class="text-trim">{{ who === 'momo' ? words.momoSays : words.belloSays }}</span></span>
 
         <div class="body">
@@ -243,7 +243,8 @@ code {
   background: var(--coral);
 }
 
-.tag {
+/* Not `.tag`: the global pill class would add its padding and capitals. */
+.param {
   position: absolute;
   top: -3.4vh;
   display: grid;
@@ -259,7 +260,12 @@ code {
   color: #FFFFFF;
   opacity: 0;
 }
-.tag-b {
+/* Lower-case letters: trim to the x-height, so the letter sits in the middle. */
+.param-letter {
+  display: block;
+  text-box: trim-both ex alphabetic;
+}
+.param-b {
   background: var(--sky);
 }
 .bubble {
@@ -345,15 +351,15 @@ code {
 .stage-2 .animal-bello {
   animation: step-in-left 0.5s cubic-bezier(0.22, 1, 0.36, 1) 0.5s both;
 }
-.stage-2 .animal-momo .tag-a,
-.stage-2 .animal-bello .tag-b {
+.stage-2 .animal-momo .param-a,
+.stage-2 .animal-bello .param-b {
   left: 30%;
   animation:
     pop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) 0.8s both,
     vanish 0.2s ease 2.5s forwards;
 }
-.stage-2 .animal-bello .tag-a,
-.stage-2 .animal-momo .tag-b {
+.stage-2 .animal-bello .param-a,
+.stage-2 .animal-momo .param-b {
   left: 30%;
   animation: pop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) 2.6s both;
 }

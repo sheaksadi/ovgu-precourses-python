@@ -736,7 +736,7 @@ export const slides: SlideEntry[] = [
     title: 'APIs – Live',
     parent: 'PRE-0132',
     transition: 'none',
-    teleprompter: 'Diese Folie fragt die Hunde-API jetzt wirklich, braucht also Internet. Enter holt einen neuen Hund. Aufgabe zum Mitmachen: den Code in PyCharm ausführen und die Adresse im Browser öffnen. Wer mag: thecatapi.com ausprobieren.',
+    teleprompter: 'Diese Folie fragt The Cat API jetzt wirklich, braucht also Internet. Enter holt eine neue Katze. Aufgabe zum Mitmachen: den Code in PyCharm ausführen und die Adresse api.thecatapi.com/v1/images/search im Browser öffnen. Die Antwort ist eine Liste, darum daten[0].',
   },
   {
     id: 'PRE-0010',
@@ -840,7 +840,8 @@ export const slides: SlideEntry[] = [
 
 /** Deck-wide values that the layouts render on top of every slide. */
 export const deckConfig = {
-  title: 'Design System',
+  // Empty: no label in the top-left corner of the slides.
+  title: '',
   author: '',
   showSlideId: false,
   showPageNumber: true,

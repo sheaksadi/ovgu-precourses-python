@@ -58,7 +58,7 @@ const outputDelays = computed(() => {
     case 1: return RADII.map((_, k) => circleAt(k) + 0.6)
     case 2: return TEMPS.map((_, k) => tempAt(k) + 0.7)
     case 3: return [RACE_START + 2.6, RACE_START + 2.9]
-    case 4: return [4.7]
+    case 4: return [10.5]
     default: return undefined
   }
 })
@@ -488,6 +488,7 @@ code {
 }
 
 /* ═══ 4: call stack ════════════════════════════════════════════════════ */
+/* One beat at a time, with a pause after each: call, wait, call, return, fill in, return. */
 .stack-title {
   position: absolute;
   top: 7vh;
@@ -516,15 +517,15 @@ code {
 .frame-energy {
   top: 29vh;
   border-color: var(--lavender);
-  animation: push 0.45s cubic-bezier(0.22, 1, 0.36, 1) 0.6s both;
+  animation: push 0.6s cubic-bezier(0.22, 1, 0.36, 1) 0.8s both;
 }
 .frame-square {
   top: 15vh;
   left: 14%;
   border-color: var(--sky);
   animation:
-    push 0.45s cubic-bezier(0.22, 1, 0.36, 1) 1.6s both,
-    pop-off 0.45s ease-in 3s forwards;
+    push 0.6s cubic-bezier(0.22, 1, 0.36, 1) 3s both,
+    pop-off 0.6s ease-in 6.6s forwards;
 }
 .frame-call {
   font-size: clamp(0.6rem, 1.7vh, 1.1rem);
@@ -547,26 +548,26 @@ code {
 }
 .step-wait {
   animation:
-    appear 0.25s ease 0.9s both,
-    vanish 0.15s ease 3.2s forwards;
+    appear 0.35s ease 1.8s both,
+    vanish 0.2s ease 7.4s forwards;
 }
 .step-fill {
   opacity: 0;
   animation:
-    swap-in 0.25s ease 3.25s both,
-    vanish 0.15s ease 3.85s forwards;
+    swap-in 0.35s ease 7.5s both,
+    vanish 0.2s ease 9s forwards;
 }
 .step-return {
   opacity: 0;
   background: var(--lavender);
   color: #FFFFFF;
-  animation: swap-in 0.25s ease 3.9s both;
+  animation: swap-in 0.35s ease 9.1s both;
 }
 .step-square {
   opacity: 0;
   background: var(--sky);
   color: #FFFFFF;
-  animation: swap-in 0.25s ease 2.3s both;
+  animation: swap-in 0.35s ease 4.4s both;
 }
 .back {
   position: absolute;
@@ -584,7 +585,7 @@ code {
   font-weight: 900;
   color: var(--text);
   opacity: 0;
-  animation: fall 0.6s cubic-bezier(0.55, 0, 0.45, 1) 2.7s both;
+  animation: fall 1s cubic-bezier(0.55, 0, 0.45, 1) 5.6s both;
 }
 .result {
   position: absolute;
@@ -604,7 +605,7 @@ code {
   color: var(--text);
   translate: -50% 0;
   opacity: 0;
-  animation: pop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) 4.5s both;
+  animation: pop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) 10.3s both;
 }
 
 /* ─── Keyframes ──────────────────────────────────────────────────────── */
