@@ -1380,6 +1380,19 @@ else:
     },
   },
 
+  walks: {
+    labels: { vars: 'Variablen', output: 'Ausgabe', noOutput: 'noch keine Ausgabe' },
+    'loops-fish': {
+      eyebrow: 'Lösung · Momos Fang',
+      stages: [
+        { headline: 'Die ganze Lösung auf einen Blick.', note: 'Oben Teil 1, unten Teil 2. Wir spielen sie mit der Beispielliste durch – deine Liste läuft genauso, nur länger.' },
+        { headline: 'Teil 1: zählen, was passt.', note: '`behalten` startet bei 0. Für jeden Fisch prüft das `if`; nur bei `True` zählt der Zähler eins hoch.' },
+        { headline: 'Teil 2: aufhören, bevor es nicht mehr passt.', note: 'Hier fasst der Bauch nur 50 cm, im Rätsel 300. Passt der nächste Fisch nicht mehr, springt `break` sofort aus der Schleife.' },
+        { headline: 'Mit deiner Liste: dieselben Zeilen.', note: 'Deine Liste einfügen, `50` durch `300` ersetzen, ausführen. Die zwei Zahlen sind deine Antworten.' },
+      ],
+    },
+  },
+
   apis: {
     title: 'APIs',
     file: 'katzen.py',

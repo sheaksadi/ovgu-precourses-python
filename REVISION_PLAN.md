@@ -230,7 +230,7 @@ Written here as each phase starts.
 - Presenter view: for a problem slide, every audience name with ✓ per part,
   and the people who have not solved anything yet.
 
-**3d. Solution walkthrough**
+**3d. Solution walkthrough** — done: `utils/walks.ts` + `SolutionWalk.vue`, slides PRE-0139 to PRE-0142 for Momo's catch
 
 - `components/problems/SolutionWalk.vue`, staged over sub-slides like the
   lessons. Stage 1 shows the whole solution, the middle stages zoom into one

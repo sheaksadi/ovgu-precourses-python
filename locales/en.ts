@@ -1376,6 +1376,19 @@ else:
     },
   },
 
+  walks: {
+    labels: { vars: 'Variables', output: 'Output', noOutput: 'no output yet' },
+    'loops-fish': {
+      eyebrow: "Solution · Momo's Catch",
+      stages: [
+        { headline: 'The whole solution at a glance.', note: 'Part 1 on top, Part 2 below. We play it with the example list – your list runs the same way, just longer.' },
+        { headline: 'Part 1: count what fits.', note: '`kept` starts at 0. The `if` checks every fish; only on `True` does the counter go up by one.' },
+        { headline: 'Part 2: stop before it no longer fits.', note: 'Here the belly holds only 50 cm, in the puzzle 300. When the next fish does not fit, `break` jumps out of the loop at once.' },
+        { headline: 'With your list: the same lines.', note: 'Paste your list, replace `50` with `300`, run it. The two numbers are your answers.' },
+      ],
+    },
+  },
+
   apis: {
     title: 'APIs',
     file: 'cats.py',
