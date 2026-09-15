@@ -2,7 +2,7 @@
 
 /* ─── Design System: Minimal Pastel ─────────────────────────────────────
  *
- * White backgrounds. JetBrains Mono everywhere. Bold pastel color blocks.
+ * White backgrounds. JetBrains Mono by default (or Comic Sans, per device). Bold pastel color blocks.
  * Flat, graphic, playful. Inspired by Jet Lag The Game.
  *
  * ─────────────────────────────────────────────────────────────────────── */
@@ -41,10 +41,26 @@
   --peach:       #FAB1A0;    /* soft decorative                       */
   --sage:        #B8E994;    /* subtle positive / nature              */
 
+  /* ── type ── */
+  /* Code always stays monospace; everything you read follows the font picker. */
+  --font-code:   'JetBrains Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+  --font-text:   var(--font-code);
+
   /* ── code block ── */
   --code-bg:     #1E1E2E;
   --code-text:   #CDD6F4;
   --code-border: #313244;
+}
+
+/* Picked per device on the start page (or `?font=comic`), set as data-font on <html>. */
+:root[data-font='comic'] {
+  --font-text: 'Comic Sans MS', 'Comic Neue', 'Chalkboard SE', 'Comic Sans', cursive;
+}
+
+/* Tailwind's font utilities read the same variables: font-sans is text, font-mono is code. */
+@theme inline {
+  --font-sans: var(--font-text);
+  --font-mono: var(--font-code);
 }
 
 /* ─── Scrollbar ──────────────────────────────────────────────────────── */
@@ -59,7 +75,7 @@ body {
   padding: 0;
   overflow-x: hidden;
   background-color: var(--bg);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-text);
 }
 
 /* ─── Keyframes shared by components ─────────────────────────────────── */

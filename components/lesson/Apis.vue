@@ -186,7 +186,7 @@ const outputDelays = computed(() => {
   inset: 0;
 }
 code {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-code);
 }
 .fill {
   width: 100%;
@@ -202,7 +202,7 @@ code {
   padding: calc(0.4vh + 0.3em) 1.3vh;
   border-radius: 999px;
   background: var(--text);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-code);
   font-size: clamp(0.6rem, 1.5vh, 1rem);
   font-weight: 800;
   white-space: nowrap;
@@ -259,7 +259,7 @@ code {
   border-radius: 0.6vh;
   background: var(--bg);
   border: 2px solid var(--text);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-code);
   font-size: clamp(0.5rem, 1.3vh, 0.85rem);
   font-weight: 900;
   color: var(--text);

@@ -232,7 +232,7 @@ const columnWidth = computed(() => `${Math.max(...props.output.map(line => line.
 }
 
 .out-line {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-code);
   font-size: clamp(0.85rem, 2vh, 1.35rem);
   color: var(--text);
   white-space: pre;

@@ -14,7 +14,7 @@ const slideBg = computed(() => currentSlide.value?.backgroundColor || '')
 <template>
   <div
     :class="slideBg"
-    class="relative w-screen h-screen overflow-hidden text-ink font-mono flex flex-col"
+    class="relative w-screen h-screen overflow-hidden text-ink font-sans flex flex-col"
     :style="{ backgroundColor: slideBg ? undefined : 'var(--bg)' }"
   >
     <main class="flex-grow relative w-full h-full">

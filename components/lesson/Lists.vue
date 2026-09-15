@@ -152,7 +152,7 @@ const basketLit = computed(() => link.isActive(`word:${listName.value}`))
   padding: calc(0.4vh + 0.3em) 1.4vh;
   border-radius: 999px;
   background: var(--text);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-code);
   font-size: clamp(0.75rem, 1.9vh, 1.25rem);
   font-weight: 800;
   color: var(--bg);
@@ -161,7 +161,7 @@ const basketLit = computed(() => link.isActive(`word:${listName.value}`))
 .bracket {
   position: absolute;
   top: 50%;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-code);
   font-size: clamp(2.2rem, 11vh, 7rem);
   font-weight: 300;
   line-height: 1;
@@ -187,7 +187,7 @@ const basketLit = computed(() => link.isActive(`word:${listName.value}`))
   padding: calc(0.4vh + 0.3em) 1.2vh;
   border-radius: 999px;
   background: var(--mint);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-code);
   font-size: clamp(0.65rem, 1.6vh, 1.1rem);
   font-weight: 800;
   color: #FFFFFF;
@@ -235,7 +235,7 @@ const basketLit = computed(() => link.isActive(`word:${listName.value}`))
   border-radius: 0.9vh;
   background: var(--bg);
   border: 2px solid var(--text);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-code);
   font-size: clamp(0.7rem, 1.9vh, 1.3rem);
   font-weight: 800;
   white-space: nowrap;
@@ -250,7 +250,7 @@ const basketLit = computed(() => link.isActive(`word:${listName.value}`))
   top: 6.4vh;
   right: -1.6%;
   translate: 50% 0;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-code);
   font-size: clamp(1rem, 3.4vh, 2.2rem);
   font-weight: 800;
   color: var(--lavender);
@@ -265,7 +265,7 @@ const basketLit = computed(() => link.isActive(`word:${listName.value}`))
   translate: -50% 0;
   padding: calc(0.35vh + 0.3em) 0.9vh;
   border-radius: 999px;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-code);
   font-weight: 800;
   white-space: nowrap;
 }

@@ -189,7 +189,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="min-h-screen bg-surface text-ink font-mono overflow-x-hidden selection:bg-sky/30">
+  <div class="min-h-screen bg-surface text-ink font-sans overflow-x-hidden selection:bg-sky/30">
     <NuxtLayout :name="layoutName">
       <NuxtPage :transition="pageTransition" />
     </NuxtLayout>

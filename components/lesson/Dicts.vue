@@ -120,7 +120,7 @@ const outputDelays = computed(() => {
   inset: 0;
 }
 code {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-code);
 }
 
 .tally {
@@ -132,7 +132,7 @@ code {
   padding: calc(0.4vh + 0.3em) 1.3vh;
   border-radius: 999px;
   background: var(--text);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-code);
   font-size: clamp(0.6rem, 1.5vh, 1rem);
   font-weight: 800;
   white-space: nowrap;
@@ -171,7 +171,7 @@ code {
   position: absolute;
   top: 50%;
   translate: 0 -54%;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-code);
   font-size: clamp(2rem, 10vh, 6.4rem);
   font-weight: 300;
   line-height: 1;

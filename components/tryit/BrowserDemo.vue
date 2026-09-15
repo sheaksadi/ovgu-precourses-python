@@ -573,7 +573,7 @@ onBeforeUnmount(() => {
   flex-direction: column;
   gap: 1.4vh;
   padding: 1.2vh 2vh;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-code);
   font-size: clamp(0.8rem, 1.9vh, 1.25rem);
   color: var(--text);
   animation: appear 0.25s ease both;

@@ -13,6 +13,7 @@ import { computed } from 'vue'
 import { usePresentationStore } from '~/stores/presentationStore'
 import { useSlideData } from '~/composables/useSlideData'
 import { useI18n } from '~/composables/useI18n'
+import { useFont } from '~/composables/useFont'
 import { slideIdToRoute } from '~/utils/slideId'
 
 definePageMeta({ layout: false })
@@ -20,6 +21,7 @@ definePageMeta({ layout: false })
 const store = usePresentationStore()
 const { getSlideById, firstSlideId } = useSlideData()
 const { t, locale, locales, setLocale } = useI18n()
+const { font, fonts, setFont } = useFont()
 
 /** The room's slide while a talk runs, otherwise the first slide, with current language. */
 const projectorTarget = computed(() => {
@@ -79,6 +81,22 @@ const styleGuide = slideIdToRoute('PRE-0010')
         </span>
         <NuxtLink to="/print" class="home-link">{{ t('home.print') }}</NuxtLink>
         <NuxtLink :to="styleGuide" class="home-link">{{ t('home.styleGuide') }}</NuxtLink>
+        <span class="home-prefs">
+        <span class="home-lang" role="group" :aria-label="t('home.font')">
+          <button
+            v-for="option in fonts"
+            :key="option.id"
+            type="button"
+            class="home-lang-option home-font-option"
+            :class="{ 'is-active': option.id === font }"
+            :style="{ fontFamily: option.stack }"
+            :aria-pressed="option.id === font"
+            :title="option.label"
+            @click="setFont(option.id)"
+          >
+            <span class="text-trim">{{ option.label }}</span>
+          </button>
+        </span>
         <span class="home-lang" role="group" :aria-label="t('common.switchLanguage')">
           <button
             v-for="code in locales"
@@ -92,6 +110,7 @@ const styleGuide = slideIdToRoute('PRE-0010')
             <span class="text-trim">{{ code.toUpperCase() }}</span>
           </button>
         </span>
+        </span>
       </footer>
     </div>
   </main>
@@ -104,7 +123,7 @@ const styleGuide = slideIdToRoute('PRE-0010')
   place-items: center;
   padding: 3rem 1.25rem;
   background: var(--bg);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-text);
   color: var(--text);
 }
 
@@ -297,8 +316,15 @@ const styleGuide = slideIdToRoute('PRE-0010')
   color: var(--text);
 }
 
-.home-lang {
+/* Font and language pickers, side by side at the right. */
+.home-prefs {
   margin-left: auto;
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.home-lang {
   display: inline-flex;
   gap: 2px;
   padding: 3px;
@@ -318,6 +344,10 @@ const styleGuide = slideIdToRoute('PRE-0010')
   color: var(--text-muted);
   cursor: pointer;
 }
+.home-font-option {
+  letter-spacing: 0;
+}
+
 .home-lang-option.is-active {
   background: var(--text);
   color: var(--bg);

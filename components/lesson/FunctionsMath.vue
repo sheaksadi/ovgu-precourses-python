@@ -184,7 +184,7 @@ const shown = (own: number) => props.stage === own || props.stage === own + 1
   inset: 0;
 }
 code {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-code);
 }
 .stack {
   display: inline-grid;
@@ -579,7 +579,7 @@ code {
   border-radius: 999px;
   background: var(--sun);
   border: 3px solid var(--text);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-code);
   font-size: clamp(0.6rem, 1.7vh, 1.1rem);
   font-weight: 900;
   color: var(--text);
@@ -598,7 +598,7 @@ code {
   border-radius: 999px;
   background: var(--mint);
   border: 3px solid var(--text);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-code);
   font-size: clamp(0.7rem, 2vh, 1.3rem);
   font-weight: 900;
   color: var(--text);

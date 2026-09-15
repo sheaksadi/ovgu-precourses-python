@@ -74,7 +74,7 @@ const isLit = (index: number) => Boolean(props.focus?.length) && isFocused(index
     <div
       class="py-4"
       :class="size === 'lg' ? 'text-base md:text-lg' : 'text-sm md:text-base'"
-      style="font-family: 'JetBrains Mono', monospace;"
+      style="font-family: var(--font-code);"
     >
       <div
         v-for="(line, index) in lines"

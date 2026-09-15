@@ -235,7 +235,7 @@ const shown = (own: number) => props.stage === own || props.stage === own + 1
   padding: calc(0.4vh + 0.3em) 1.3vh;
   border-radius: 999px;
   background: var(--text);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-code);
   font-size: clamp(0.6rem, 1.5vh, 1rem);
   font-weight: 800;
   white-space: nowrap;
@@ -270,7 +270,7 @@ const shown = (own: number) => props.stage === own || props.stage === own + 1
   padding: calc(0.3vh + 0.3em) 1.1vh;
   border-radius: 999px;
   background: var(--text);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-code);
   font-size: clamp(0.55rem, 1.45vh, 0.95rem);
   font-weight: 800;
   color: var(--bg);
@@ -293,7 +293,7 @@ const shown = (own: number) => props.stage === own || props.stage === own + 1
   border-radius: 1.4vh;
   background: var(--bg);
   border: 3px solid var(--text);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-code);
   font-size: clamp(1.4rem, 5.4vh, 3.6rem);
   font-weight: 900;
   color: var(--text);
@@ -328,7 +328,7 @@ const shown = (own: number) => props.stage === own || props.stage === own + 1
   border-radius: 0.9vh;
   background: var(--bg);
   border: 2px solid var(--text);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-code);
   font-size: clamp(0.7rem, 2vh, 1.35rem);
   font-weight: 800;
   color: var(--text);
@@ -374,7 +374,7 @@ const shown = (own: number) => props.stage === own || props.stage === own + 1
   padding: 0.5vh 0.5vh 0.5vh 1.1vh;
   border-radius: 999px;
   background: var(--text);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-code);
   font-size: clamp(0.6rem, 1.6vh, 1.05rem);
   font-weight: 800;
   white-space: nowrap;
@@ -420,7 +420,7 @@ const shown = (own: number) => props.stage === own || props.stage === own + 1
   border-radius: 999px;
   background: var(--bg);
   border: 2px solid var(--border);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-code);
   font-size: clamp(0.55rem, 1.45vh, 0.95rem);
   font-weight: 700;
   color: var(--text-dim);
@@ -446,7 +446,7 @@ const shown = (own: number) => props.stage === own || props.stage === own + 1
   border-radius: 999px;
   background: var(--sun);
   border: 2px solid var(--text);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-code);
   font-size: clamp(0.6rem, 1.6vh, 1.05rem);
   font-weight: 800;
   color: var(--text);
@@ -483,7 +483,7 @@ const shown = (own: number) => props.stage === own || props.stage === own + 1
 }
 .column-value {
   margin-bottom: 0.6vh;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-code);
   font-size: clamp(0.6rem, 1.6vh, 1.05rem);
   font-weight: 800;
   color: var(--text);
@@ -492,7 +492,7 @@ const shown = (own: number) => props.stage === own || props.stage === own + 1
 .column-year {
   position: absolute;
   top: calc(100% + 0.8vh);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-code);
   font-size: clamp(0.55rem, 1.45vh, 0.95rem);
   font-weight: 700;
   color: var(--text-muted);
@@ -564,7 +564,7 @@ const shown = (own: number) => props.stage === own || props.stage === own + 1
   border-radius: 1vh;
   background: var(--bg);
   border: 2px solid var(--border);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-code);
   font-size: clamp(0.8rem, 2.3vh, 1.5rem);
   font-weight: 800;
   color: var(--text);

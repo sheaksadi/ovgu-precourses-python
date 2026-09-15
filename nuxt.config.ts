@@ -35,6 +35,11 @@ export default defineNuxtConfig({
     plugins: [
       tailwindcss(),
     ],
+    // check:deck writes screenshots (and test browsers keep profiles) in deck-shots/;
+    // watching them made the dev server reload the page every few seconds.
+    server: {
+      watch: { ignored: ['**/deck-shots/**'] },
+    },
   },
   modules: [
     '@pinia/nuxt', "@nuxt/icon"

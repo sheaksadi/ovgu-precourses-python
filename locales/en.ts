@@ -37,6 +37,7 @@ const en: Messages = {
     screens: '{n} screens following',
     print: 'Print handout',
     styleGuide: 'Style guide',
+    font: 'Font',
   },
 
   follow: {

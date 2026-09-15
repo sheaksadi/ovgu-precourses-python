@@ -213,7 +213,7 @@ const cells = computed(() => {
   border-radius: 0.8vh;
   background: var(--bg);
   border: 2px solid var(--text);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-code);
   font-size: clamp(0.65rem, 1.7vh, 1.15rem);
   font-weight: 800;
   color: var(--text);
@@ -266,7 +266,7 @@ const cells = computed(() => {
   border: 2px solid var(--border);
 }
 .check code {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-code);
   font-size: clamp(0.6rem, 1.6vh, 1.05rem);
   font-weight: 700;
   color: var(--text);
@@ -362,7 +362,7 @@ const cells = computed(() => {
   padding: 0.6vh 0.6vh 0.6vh 1.2vh;
   border-radius: 999px;
   background: var(--text);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-code);
   font-size: clamp(0.6rem, 1.5vh, 1rem);
   font-weight: 800;
   white-space: nowrap;

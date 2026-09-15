@@ -177,7 +177,7 @@ const lit = (word: string) => link.isActive(`word:${word}`)
 }
 .pass {
   min-width: 4.4em;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-code);
   color: var(--sun);
 }
 
@@ -200,7 +200,7 @@ const lit = (word: string) => link.isActive(`word:${word}`)
   padding: calc(0.3vh + 0.3em) 1.1vh;
   border-radius: 999px;
   background: var(--text);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-code);
   font-size: clamp(0.6rem, 1.5vh, 1rem);
   font-weight: 800;
   color: var(--bg);
@@ -234,7 +234,7 @@ const lit = (word: string) => link.isActive(`word:${word}`)
   border-radius: 0.8vh;
   background: var(--bg);
   border: 2px solid var(--text);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-code);
   font-size: clamp(0.65rem, 1.75vh, 1.2rem);
   font-weight: 800;
   color: var(--text);
@@ -271,7 +271,7 @@ const lit = (word: string) => link.isActive(`word:${word}`)
   padding: 0.5vh 0.5vh 0.5vh 1.1vh;
   border-radius: 999px;
   background: var(--text);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-code);
   font-size: clamp(0.6rem, 1.55vh, 1.05rem);
   font-weight: 800;
   white-space: nowrap;
@@ -331,7 +331,7 @@ const lit = (word: string) => link.isActive(`word:${word}`)
   opacity: 0;
 }
 .time code {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-code);
   font-size: clamp(0.6rem, 1.6vh, 1.05rem);
   font-weight: 700;
   color: var(--text);
@@ -383,7 +383,7 @@ const lit = (word: string) => link.isActive(`word:${word}`)
   border-radius: 1vh;
   background: var(--bg);
   border: 2px solid var(--text);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-code);
   font-size: clamp(0.7rem, 2.1vh, 1.4rem);
   font-weight: 800;
   color: var(--text);
@@ -392,7 +392,7 @@ const lit = (word: string) => link.isActive(`word:${word}`)
   padding: calc(0.35vh + 0.3em) 1.2vh;
   border-radius: 999px;
   background: var(--text);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-code);
   font-size: clamp(0.6rem, 1.55vh, 1.05rem);
   font-weight: 800;
   color: var(--bg);
@@ -405,7 +405,7 @@ const lit = (word: string) => link.isActive(`word:${word}`)
   padding: calc(0.3vh + 0.3em) 0.8vh;
   border-radius: 999px;
   background: var(--sky);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-code);
   font-size: clamp(0.6rem, 1.5vh, 1rem);
   font-weight: 800;
   color: #FFFFFF;

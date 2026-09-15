@@ -38,6 +38,7 @@ const de = {
     screens: '{n} Bildschirme folgen',
     print: 'Handout drucken',
     styleGuide: 'Style Guide',
+    font: 'Schrift',
   },
 
   follow: {

@@ -44,7 +44,7 @@ defineProps<{ title: string }>()
   border-radius: 2vh;
   background: var(--ide-bg);
   border: 2px solid var(--text);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-code);
   font-size: clamp(0.6rem, 1.45vh, 0.95rem);
   color: var(--ide-text);
 }

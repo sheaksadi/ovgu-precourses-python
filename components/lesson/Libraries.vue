@@ -173,7 +173,7 @@ const shown = (own: number) => props.stage === own || props.stage === own + 1
   inset: 0;
 }
 code {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-code);
 }
 
 .tally {
@@ -185,7 +185,7 @@ code {
   padding: calc(0.4vh + 0.3em) 1.3vh;
   border-radius: 999px;
   background: var(--text);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-code);
   font-size: clamp(0.6rem, 1.5vh, 1rem);
   font-weight: 800;
   white-space: nowrap;

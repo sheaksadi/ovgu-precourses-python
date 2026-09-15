@@ -138,7 +138,7 @@ const outputDelays = computed(() => (props.stage === 4 ? [callAt(0) + 0.6, callA
   padding: calc(0.35vh + 0.3em) 1.1vh;
   border-radius: 999px;
   background: var(--text);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-code);
   font-size: clamp(0.6rem, 1.6vh, 1.05rem);
   font-weight: 800;
   white-space: nowrap;
@@ -226,7 +226,7 @@ const outputDelays = computed(() => (props.stage === 4 ? [callAt(0) + 0.6, callA
   border-radius: 1vh;
   background: var(--bg);
   border: 2px solid var(--sky);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-code);
   font-size: clamp(0.5rem, 1.3vh, 0.9rem);
   font-weight: 700;
   white-space: normal;

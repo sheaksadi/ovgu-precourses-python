@@ -37,7 +37,7 @@ const atEnd = computed(() => currentIndex.value >= flatSlides.value.length - 1)
       <span v-if="deckConfig.title" class="text-xs font-medium tracking-wide text-gray-500">
         {{ deckConfig.title }}
       </span>
-      <span v-if="deckConfig.showSlideId && currentSlide" class="text-[10px] font-mono tracking-widest text-gray-600">
+      <span v-if="deckConfig.showSlideId && currentSlide" class="text-[10px] font-sans tracking-widest text-gray-600">
         {{ currentSlide.id }}
       </span>
     </div>
@@ -65,7 +65,7 @@ const atEnd = computed(() => currentIndex.value >= flatSlides.value.length - 1)
 
         <div class="flex-1 min-w-0 text-center">
           <div class="text-xs font-medium text-gray-300 truncate">{{ currentSlide?.title }}</div>
-          <div class="text-[11px] font-mono text-gray-500">
+          <div class="text-[11px] font-sans text-gray-500">
             <span v-if="deckConfig.showPageNumber && currentSlide">{{ currentSlide.pageLabel }} / {{ mainSlideCount }}</span>
             <span v-if="interaction && interaction.total > 1" class="text-amber-400">
               · step {{ interaction.step }} / {{ interaction.total }}

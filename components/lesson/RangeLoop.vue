@@ -170,7 +170,7 @@ const bannerChanges = computed(() => props.stage > 1 && previous.value.banner !=
   border-radius: 1.2vh;
   background: var(--bg);
   border: 2px solid var(--lavender);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-code);
   font-size: clamp(0.85rem, 2.6vh, 1.8rem);
   font-weight: 800;
   white-space: nowrap;
@@ -217,7 +217,7 @@ const bannerChanges = computed(() => props.stage > 1 && previous.value.banner !=
   padding: calc(0.4vh + 0.3em) 0.9vh;
   border-radius: 999px;
   background: var(--lavender);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-code);
   font-size: clamp(0.65rem, 1.8vh, 1.2rem);
   font-weight: 800;
   text-align: center;
@@ -259,7 +259,7 @@ const bannerChanges = computed(() => props.stage > 1 && previous.value.banner !=
   padding: calc(0.4vh + 0.3em) 0.9vh;
   border-radius: 999px;
   border: 2px dashed var(--text-muted);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-code);
   font-size: clamp(0.65rem, 1.8vh, 1.2rem);
   font-weight: 800;
   text-align: center;
@@ -304,7 +304,7 @@ const bannerChanges = computed(() => props.stage > 1 && previous.value.banner !=
   bottom: calc(100% + 0.5vh);
   left: 50%;
   translate: -50% 0;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-code);
   font-size: clamp(0.6rem, 1.6vh, 1.1rem);
   font-weight: 800;
   color: var(--text);

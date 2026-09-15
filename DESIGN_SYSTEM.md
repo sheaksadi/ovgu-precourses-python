@@ -63,7 +63,14 @@ slides.counter.json    # Next available slide ID (currently 33)
 
 ## Typography
 
-**One font**: JetBrains Mono (variable weight 100–900)
+**One font**: JetBrains Mono (variable weight 100–900) by default.
+
+A small picker on the start page (or `?font=comic` on a link) switches the reading
+font to **Comic Sans** for that device. It swaps only `--font-text`; code, values
+and variable names use `--font-code` and stay JetBrains Mono, so indentation and
+alignment never move. Tailwind follows the same split: `font-sans` is text,
+`font-mono` is code. New components: use `var(--font-text)` for prose and labels,
+`var(--font-code)` for anything that is Python.
 
 ### Type Scale
 - Display: `text-7xl font-black tracking-tight`

@@ -235,7 +235,7 @@ const shown = (own: number) => props.stage === own || props.stage === own + 1
 }
 
 code {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-code);
 }
 
 .stack {
@@ -436,7 +436,7 @@ code {
   border-radius: 999px;
   background: var(--mint);
   border: 3px solid var(--text);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-code);
   font-size: clamp(0.6rem, 1.7vh, 1.1rem);
   font-weight: 900;
   white-space: nowrap;
@@ -472,7 +472,7 @@ code {
   translate: -50% 0;
 }
 .screen-label {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-code);
   font-size: clamp(0.55rem, 1.4vh, 0.95rem);
   font-weight: 800;
   color: var(--text-muted);
@@ -482,7 +482,7 @@ code {
   padding: 0.4vh 1vh;
   border-radius: 0.8vh;
   background: var(--bg);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-code);
   font-size: clamp(0.65rem, 1.9vh, 1.25rem);
   font-weight: 800;
   white-space: nowrap;
@@ -626,7 +626,7 @@ code {
   padding: 0.6vh 1.2vh;
   border-radius: 1vh;
   background: var(--text);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-code);
   font-size: clamp(0.65rem, 1.9vh, 1.25rem);
   font-weight: 800;
   color: var(--bg);

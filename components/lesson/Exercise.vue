@@ -266,7 +266,7 @@ watch(locale, () => { revealed.value = 0 })
 }
 /* Long expected output, like a printed dictionary, wraps instead of being cut off. */
 .task-line {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-code);
   font-size: clamp(0.65rem, 1.7vh, 1.05rem);
   white-space: pre-wrap;
   overflow-wrap: anywhere;

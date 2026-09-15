@@ -210,7 +210,7 @@ const phase = (active: number) => (props.stage === active ? 'is-running' : 'is-s
   padding: calc(0.4vh + 0.3em) 1.3vh;
   border-radius: 999px;
   background: var(--text);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-code);
   font-size: clamp(0.6rem, 1.5vh, 1rem);
   font-weight: 800;
   white-space: nowrap;
@@ -260,7 +260,7 @@ const phase = (active: number) => (props.stage === active ? 'is-running' : 'is-s
   padding: calc(0.3vh + 0.3em) 1.1vh;
   border-radius: 999px;
   background: var(--text);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-code);
   font-size: clamp(0.6rem, 1.5vh, 1rem);
   font-weight: 800;
   color: var(--bg);
@@ -294,7 +294,7 @@ const phase = (active: number) => (props.stage === active ? 'is-running' : 'is-s
   border-radius: 0.8vh;
   background: var(--bg);
   border: 2px solid var(--text);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-code);
   font-size: clamp(0.6rem, 1.65vh, 1.1rem);
   font-weight: 800;
   color: var(--text);
@@ -343,7 +343,7 @@ const phase = (active: number) => (props.stage === active ? 'is-running' : 'is-s
   padding-left: 1.1vh;
   border-radius: 999px;
   background: var(--text);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-code);
   font-size: clamp(0.6rem, 1.5vh, 1rem);
   font-weight: 800;
   white-space: nowrap;
@@ -406,7 +406,7 @@ const phase = (active: number) => (props.stage === active ? 'is-running' : 'is-s
   border-radius: 0.9vh;
   background: var(--bg);
   border: 2px solid var(--text);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-code);
   font-size: clamp(0.65rem, 1.9vh, 1.25rem);
   font-weight: 800;
   color: var(--text);
@@ -415,7 +415,7 @@ const phase = (active: number) => (props.stage === active ? 'is-running' : 'is-s
   padding: calc(0.3vh + 0.3em) 1vh;
   border-radius: 999px;
   background: var(--text);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-code);
   font-size: clamp(0.55rem, 1.4vh, 0.95rem);
   font-weight: 800;
   color: var(--bg);
@@ -442,7 +442,7 @@ const phase = (active: number) => (props.stage === active ? 'is-running' : 'is-s
   padding: calc(0.3vh + 0.3em) 1vh;
   border-radius: 999px;
   background: var(--text);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-code);
   font-size: clamp(0.55rem, 1.4vh, 0.95rem);
   font-weight: 800;
   color: var(--bg);
@@ -467,7 +467,7 @@ const phase = (active: number) => (props.stage === active ? 'is-running' : 'is-s
   border-radius: 0.7vh;
   background: var(--bg);
   border: 2px solid var(--text);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-code);
   font-size: clamp(0.55rem, 1.5vh, 1rem);
   font-weight: 800;
   color: var(--text);
@@ -498,7 +498,7 @@ const phase = (active: number) => (props.stage === active ? 'is-running' : 'is-s
   border: 2px solid var(--border);
 }
 .card-title code {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-code);
   font-size: clamp(0.7rem, 1.9vh, 1.25rem);
   font-weight: 800;
   color: var(--lavender);

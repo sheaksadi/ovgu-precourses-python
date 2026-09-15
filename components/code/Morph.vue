@@ -103,7 +103,7 @@ const ink = (token: CodeToken) => codeInk(stage.value.variant ?? 'python', token
         tag="div"
         name="morph"
         class="morph-flow p-6 text-sm md:text-base leading-[2]"
-        style="font-family: 'JetBrains Mono', monospace;"
+        style="font-family: var(--font-code);"
       >
         <template v-for="item in items" :key="item.key">
           <span v-if="!item.token" class="morph-break"></span>

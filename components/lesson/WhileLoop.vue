@@ -249,7 +249,7 @@ const show = (...list: number[]) => list.includes(props.stage)
   padding: calc(0.4vh + 0.3em) 1.3vh;
   border-radius: 999px;
   background: var(--text);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-code);
   font-size: clamp(0.6rem, 1.5vh, 1rem);
   font-weight: 800;
   white-space: nowrap;
@@ -325,7 +325,7 @@ const show = (...list: number[]) => list.includes(props.stage)
   padding: calc(0.3vh + 0.3em) 1vh;
   border-radius: 999px;
   background: var(--text);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-code);
   font-size: clamp(0.55rem, 1.4vh, 0.95rem);
   font-weight: 800;
   color: var(--bg);
@@ -362,7 +362,7 @@ const show = (...list: number[]) => list.includes(props.stage)
   padding: calc(0.2vh + 0.3em) 0.7vh;
   border-radius: 999px;
   background: var(--coral);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-code);
   font-size: clamp(0.5rem, 1.3vh, 0.9rem);
   font-weight: 800;
   color: #FFFFFF;
@@ -410,7 +410,7 @@ const show = (...list: number[]) => list.includes(props.stage)
   opacity: 0;
 }
 .check code {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-code);
   font-size: clamp(0.55rem, 1.5vh, 1rem);
   font-weight: 800;
   color: var(--text);
@@ -486,7 +486,7 @@ const show = (...list: number[]) => list.includes(props.stage)
   padding: 0.25vh 0.8vh;
   border-radius: 999px;
   background: var(--coral);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-code);
   text-align: center;
   color: #FFFFFF;
   opacity: 0;
@@ -536,7 +536,7 @@ const show = (...list: number[]) => list.includes(props.stage)
   color: var(--lavender);
 }
 .ring-code {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-code);
   font-size: clamp(0.7rem, 2vh, 1.35rem);
   font-weight: 800;
   color: var(--text);
@@ -563,7 +563,7 @@ const show = (...list: number[]) => list.includes(props.stage)
   opacity: 0;
 }
 .card-number {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-code);
   font-size: clamp(1.6rem, 7vh, 4.4rem);
   font-weight: 900;
   line-height: 1;
@@ -603,7 +603,7 @@ const show = (...list: number[]) => list.includes(props.stage)
   padding: calc(0.3vh + 0.3em) 1.1vh;
   border-radius: 999px;
   background: var(--mint);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-code);
   font-size: clamp(0.65rem, 1.8vh, 1.2rem);
   font-weight: 800;
   color: #FFFFFF;
@@ -658,7 +658,7 @@ const show = (...list: number[]) => list.includes(props.stage)
   border-radius: 999px;
   background: var(--bg);
   border: 2px solid var(--text);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-code);
   font-size: clamp(0.5rem, 1.35vh, 0.9rem);
   font-weight: 800;
   white-space: nowrap;
@@ -670,7 +670,7 @@ const show = (...list: number[]) => list.includes(props.stage)
   padding: calc(0.3vh + 0.3em) 0.9vh;
   border-radius: 999px;
   background: var(--mint);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-code);
   font-size: clamp(0.5rem, 1.35vh, 0.9rem);
   font-weight: 800;
   white-space: nowrap;

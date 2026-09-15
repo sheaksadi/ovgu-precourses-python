@@ -53,7 +53,7 @@ const { locale, locales, setLocale, t } = useI18n()
   min-width: 2.6rem;
   padding: calc(0.4rem + 0.14em) 0.6rem;
   border-radius: 999px;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-text);
   font-size: 0.72rem;
   font-weight: 800;
   letter-spacing: 0.08em;

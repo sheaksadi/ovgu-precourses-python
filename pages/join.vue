@@ -78,7 +78,7 @@ const open = (code: Locale) => {
   place-items: center;
   padding: 5rem 1.25rem 2rem;
   background: var(--bg);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-text);
 }
 
 .follow-card {

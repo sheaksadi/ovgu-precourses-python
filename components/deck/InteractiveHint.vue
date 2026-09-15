@@ -50,7 +50,7 @@ const joinIn = () => {
   border-radius: 999px;
   background: var(--bg);
   border: 2px solid var(--text);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-text);
   font-size: 0.75rem;
   font-weight: 700;
   color: var(--text);

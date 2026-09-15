@@ -337,7 +337,7 @@ const segments = (text: string) => text.split('`').map((part, index) => ({ part,
   border-radius: 1vh;
   background: var(--bg);
   border: 2px solid var(--text);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-code);
   font-size: clamp(0.75rem, 1.9vh, 1.3rem);
   font-weight: 800;
   white-space: nowrap;
@@ -348,7 +348,7 @@ const segments = (text: string) => text.split('`').map((part, index) => ({ part,
   padding: calc(0.4vh + 0.3em) 1.2vh;
   border-radius: 999px;
   background: var(--text);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-code);
   font-size: clamp(0.7rem, 1.7vh, 1.15rem);
   font-weight: 800;
   color: var(--bg);
@@ -364,7 +364,7 @@ const segments = (text: string) => text.split('`').map((part, index) => ({ part,
   color: #FFFFFF;
 }
 .type-code {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-code);
   font-size: clamp(0.7rem, 1.6vh, 1.1rem);
   font-weight: 900;
 }
@@ -412,7 +412,7 @@ const segments = (text: string) => text.split('`').map((part, index) => ({ part,
   padding: calc(0.3vh + 0.3em) 0.9vh;
   border-radius: 999px;
   background: var(--mint);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-code);
   font-size: clamp(0.7rem, 1.6vh, 1.1rem);
   font-weight: 900;
   color: #FFFFFF;
@@ -466,7 +466,7 @@ const segments = (text: string) => text.split('`').map((part, index) => ({ part,
   padding: calc(0.4vh + 0.3em) 1vh;
   border-radius: 999px;
   background: var(--lavender);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-code);
   font-size: clamp(0.75rem, 1.8vh, 1.2rem);
   font-weight: 800;
   color: #FFFFFF;
@@ -491,7 +491,7 @@ const segments = (text: string) => text.split('`').map((part, index) => ({ part,
   background: var(--bg);
 }
 .check-code {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-code);
   font-size: clamp(0.8rem, 2vh, 1.35rem);
   font-weight: 700;
   color: var(--text);
@@ -556,7 +556,7 @@ const segments = (text: string) => text.split('`').map((part, index) => ({ part,
   min-width: 0;
 }
 .name-code {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-code);
   font-size: clamp(0.85rem, 2.2vh, 1.5rem);
   font-weight: 800;
   color: var(--text);
@@ -599,7 +599,7 @@ const segments = (text: string) => text.split('`').map((part, index) => ({ part,
 }
 
 .out-line {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-code);
   font-size: clamp(0.85rem, 2vh, 1.35rem);
   color: var(--text);
   white-space: pre;

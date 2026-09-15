@@ -149,7 +149,7 @@ const pipGone = (who: 'momo' | 'bello', pip: number) => {
   inset: 0;
 }
 code {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-code);
 }
 .stack {
   display: inline-grid;
@@ -164,7 +164,7 @@ code {
   padding: calc(0.4vh + 0.3em) 1.3vh;
   border-radius: 999px;
   background: var(--text);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-code);
   font-size: clamp(0.6rem, 1.5vh, 1rem);
   font-weight: 800;
   white-space: nowrap;
@@ -253,7 +253,7 @@ code {
   border-radius: 999px;
   background: var(--lavender);
   border: 2px solid var(--text);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: var(--font-code);
   font-size: clamp(0.6rem, 1.7vh, 1.1rem);
   font-weight: 900;
   color: #FFFFFF;
