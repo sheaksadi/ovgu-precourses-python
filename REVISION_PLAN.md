@@ -213,7 +213,7 @@ Written here as each phase starts.
 - One sample problem to prove the loop end to end, plus a node check script
   for generate, solve and compare.
 
-**3b. The device workspace**
+**3b. The device workspace** — done: problem slide PRE-0137, dock, solve toasts; the projector Stage already shows counts, clock and the top five
 
 - `components/problems/Workspace.vue` on a problem slide for audience devices:
   a tab per problem, the story, "your input" with a copy button, the answer

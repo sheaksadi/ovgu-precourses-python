@@ -5,6 +5,10 @@ import { useDeckRole } from '~/composables/useDeckRole'
 import { useSlideData } from '~/composables/useSlideData'
 import { useAudience } from '~/composables/useAudience'
 import { useSpins } from '~/composables/useSpins'
+import { useProblems } from '~/composables/useProblems'
+import { useToasts } from '~/composables/useToasts'
+import { useI18n } from '~/composables/useI18n'
+import { localizeName } from '~/utils/cuteNames'
 import { useRoute } from 'vue-router'
 
 let ws: WebSocket | null = null
@@ -36,6 +40,9 @@ export const useWebSocket = () => {
   const { getSlideByRoute } = useSlideData()
   const audience = useAudience()
   const spins = useSpins()
+  const problems = useProblems()
+  const toasts = useToasts()
+  const { t, locale } = useI18n()
   const route = useRoute()
   const onSlideRoute = computed(() => !!getSlideByRoute(route.path))
 
@@ -155,6 +162,17 @@ export const useWebSocket = () => {
         }
         else if (data.type === 'spin_state') {
           spins.applyState(data)
+        }
+        else if (data.type === 'problem_state') {
+          problems.applyState(data)
+        }
+        else if (data.type === 'solve') {
+          problems.applySolve(data)
+          const name = localizeName(data.name, locale.value)
+          const body = t('problems.toast.body', { title: t(`problems.${data.problemId}.title`), part: data.part, rank: data.rank })
+          toasts.push(data.first
+            ? { tone: 'sun', name, title: t('problems.toast.first', { name }), body }
+            : { tone: 'mint', name, title: t('problems.toast.solved', { name, part: data.part }), body })
         }
         else if (data.type === 'spin_busy') {
           window.dispatchEvent(new CustomEvent('deck:spin-busy'))

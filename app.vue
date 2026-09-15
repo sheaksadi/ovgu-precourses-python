@@ -200,6 +200,8 @@ onUnmounted(() => {
 
     <DeckToastStack />
 
+    <ProblemsDock />
+
     <!-- The session ended. Say so, rather than dragging the device elsewhere. -->
     <div
       v-if="onSlideRoute && isViewer && store.sessionEnded"

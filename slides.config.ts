@@ -454,6 +454,14 @@ export const slides: SlideEntry[] = [
     teleprompter: 'Drei Aufgaben. Countdown mit range rückwärts, Momo und Bello ist FizzBuzz – dafür kurz den Rest-Operator % erklären: 7 % 3 ist 1. Passwort kombiniert while, Zähler und break. Enter zeigt pro Aufgabe einen Tipp.',
   },
   {
+    id: 'PRE-0137',
+    title: 'Rätsel: Momos Fang',
+    subtitle: 'Zählen mit Schleife und if, dann Summe mit break',
+    duration: 15,
+    problem: 'loops-fish',
+    teleprompter: 'Erstes Rätsel im Advent-of-Code-Stil. Jedes Gerät bekommt eine eigene Fischliste: kopieren, in PyCharm lösen, nur die Zahl abschicken. Teil 1 zählt Fische ab 20 cm, Teil 2 öffnet sich nach Teil 1: Momo frisst der Reihe nach, bis 300 cm nicht mehr passen – break. Oben rechts erscheint, wer gelöst hat. Wer weiterblättert, findet das Rätsel unten rechts wieder.',
+  },
+  {
     id: 'PRE-0095',
     title: 'Funktionen',
     subtitle: 'Zu viel Code',

@@ -94,6 +94,12 @@ export function parseCuteName(name: string): CuteNameParts | null {
   return null
 }
 
+/** A generated name in this language; any other name as it was typed. */
+export const localizeName = (name: string, locale: Locale) => {
+  const parts = parseCuteName(name)
+  return parts ? formatCuteName(parts, locale) : name
+}
+
 export const generateCuteName = (locale: Locale, random?: () => number) => formatCuteName(rollCuteName(random), locale)
 
 /** Colours an avatar can take. */
