@@ -1,6 +1,7 @@
 import { wsManager } from '../utils/wsManager'
 import type { PeerRole } from '../utils/wsManager'
 import { spinRoom } from '../utils/spinRoom'
+import { problemRoom } from '../utils/problemRoom'
 
 /** Pointer ids per connection, keyed by `peer.id` for the same reason. */
 const peerClientIds = new Map<string, Set<string>>()
@@ -53,6 +54,7 @@ export default defineWebSocketHandler({
 
     peer.send(JSON.stringify({ type: 'state', ...wsManager.getState() }))
     peer.send(JSON.stringify(spinRoom.state()))
+    peer.send(JSON.stringify(problemRoom.state()))
     broadcastPresence(peer)
   },
   message(peer, message) {
@@ -97,6 +99,7 @@ export default defineWebSocketHandler({
         peer.send(JSON.stringify({ type: 'state', ...wsManager.getState() }))
         peer.send(JSON.stringify({ type: 'presence_summary', ...wsManager.getPresenceSummary() }))
         peer.send(JSON.stringify(spinRoom.state()))
+        peer.send(JSON.stringify(problemRoom.state()))
       }
       else if (data.type === 'spin') {
         // A follow-along device asks for the icebreaker spin. Only named audience

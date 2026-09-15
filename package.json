@@ -11,7 +11,8 @@
     "slide:new": "node scripts/new-slide.mjs",
     "slides:check": "node scripts/check-slides.mjs",
     "check:sync": "node scripts/check-sync.mjs",
-    "check:deck": "node scripts/drive-deck.mjs"
+    "check:deck": "node scripts/drive-deck.mjs",
+    "check:problems": "node scripts/check-problems.mjs"
   },
   "devDependencies": {
     "@iconify-json/lucide": "^1.2.131",

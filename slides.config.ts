@@ -16,6 +16,8 @@ export interface SlideEntry {
   interactive?: SlideInteractive
   /** Optional room-wide button shown beside presenter navigation. */
   presenterAction?: { label: string, command: string }
+  /** Advent of Code style problem this slide poses, by id from `server/problems/`. */
+  problem?: string
   teleprompter?: string
   /**
    * Every slide rises in softly. `none` skips that, for the stages of one scene

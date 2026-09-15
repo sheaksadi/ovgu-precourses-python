@@ -2,6 +2,7 @@ import { createError, defineEventHandler, getHeader, readBody } from 'h3'
 import { slides } from '../../slides.config'
 import { acceptControllerEvent } from '../utils/controllerGate'
 import { wsManager } from '../utils/wsManager'
+import { problemRoom } from '../utils/problemRoom'
 
 export default defineEventHandler(async (event) => {
   const body = await readBody<{ slideId?: string, isPresenting?: boolean }>(event)
@@ -16,6 +17,10 @@ export default defineEventHandler(async (event) => {
     slideId: body.slideId,
     isPresenting: body.isPresenting ?? wsManager.getState().isPresenting
   })
+  // The round's clock starts when the room first reaches a problem slide.
+  const problem = slides.find(slide => slide.id === body.slideId)?.problem
+  if (problem) problemRoom.markOpened(problem)
+
   const state = { type: 'state', ...wsManager.getState() }
   wsManager.broadcast(state)
   return state

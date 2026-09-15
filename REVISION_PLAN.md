@@ -201,7 +201,7 @@ Written here as each phase starts.
 - Pyodide files are copied from `node_modules/pyodide` into `public/pyodide`
   by a script on install and build, not committed.
 
-**3a. Model and server**
+**3a. Model and server** — done: `npm run check:problems` passes
 
 - `server/problems/<section>.ts`: `{ id, parts, generate(rng), solve(input, part) }`.
   Text (story, example, part 2) lives in `locales/` under `problems.<id>`.
