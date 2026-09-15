@@ -306,6 +306,8 @@ onUnmounted(() => {
           </p>
         </div>
 
+        <PresenterProblemPanel v-if="current?.problem" :problem-id="current.problem" />
+
         <div class="flex-1 min-h-0 bg-gray-900 border border-gray-800 rounded-2xl overflow-hidden flex flex-col">
           <div class="px-5 py-3 border-b border-gray-800 text-xs uppercase tracking-widest text-gray-500">
             Deck · {{ mainSlideCount }} main slide(s)

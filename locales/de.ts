@@ -1340,6 +1340,13 @@ else:
     clock: 'Zeit',
     leaders: 'Am schnellsten',
     nobodyYet: 'Noch niemand – wer ist zuerst?',
+    board: {
+      eyebrow: 'Rätsel · Rangliste',
+      title: 'Wer hat die meisten Sterne?',
+      yourPlace: 'Dein Platz: {rank}',
+      notYet: 'Du bist noch nicht dabei – die Rätsel sind noch offen.',
+      empty: 'Noch keine Lösungen.',
+    },
     howTo: ['Folien auf deinem Gerät öffnen', 'Deine Eingabe nach PyCharm kopieren', 'Nur die Antwort abschicken'],
     results: {
       first: 'Richtig – und am schnellsten!',

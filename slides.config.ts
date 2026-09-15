@@ -462,6 +462,13 @@ export const slides: SlideEntry[] = [
     teleprompter: 'Erstes Rätsel im Advent-of-Code-Stil. Jedes Gerät bekommt eine eigene Fischliste: kopieren, in PyCharm lösen, nur die Zahl abschicken. Teil 1 zählt Fische ab 20 cm, Teil 2 öffnet sich nach Teil 1: Momo frisst der Reihe nach, bis 300 cm nicht mehr passen – break. Oben rechts erscheint, wer gelöst hat. Wer weiterblättert, findet das Rätsel unten rechts wieder.',
   },
   {
+    id: 'PRE-0138',
+    title: 'Rätsel: Rangliste Schleifen',
+    subtitle: 'Wer hat die meisten Sterne?',
+    duration: 2,
+    teleprompter: 'Die Rangliste der Schleifen-Runde: ein Stern pro gelöstem Teil, bei Gleichstand zählt, wer schneller war. Auf den Handys steht der eigene Platz. Kurz feiern, dann die Lösungen zeigen.',
+  },
+  {
     id: 'PRE-0095',
     title: 'Funktionen',
     subtitle: 'Zu viel Code',

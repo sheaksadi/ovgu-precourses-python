@@ -26,6 +26,8 @@ export interface PresenceSummary {
   detached: number
   interacting: number
   bySlide: Record<string, number>
+  /** Named follow-along devices showing a slide, for the presenter view. */
+  members: AudienceMember[]
 }
 
 interface PeerEntry {
@@ -202,7 +204,7 @@ export const wsManager = {
   },
 
   getPresenceSummary: (): PresenceSummary => {
-    const summary: PresenceSummary = { viewers: 0, detached: 0, interacting: 0, bySlide: {} }
+    const summary: PresenceSummary = { viewers: 0, detached: 0, interacting: 0, bySlide: {}, members: wsManager.getAudience() }
     for (const { presence } of peers.values()) {
       // Only a client that reports a slide is a screen in the room; the landing
       // page and the handout are viewers with nothing on screen.

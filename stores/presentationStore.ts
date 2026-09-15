@@ -9,6 +9,8 @@ export interface PresenceSummary {
   interacting: number
   /** Viewer count per slide id. */
   bySlide: Record<string, number>
+  /** Named follow-along devices, for the presenter view. */
+  members: Array<{ audienceId: string, name: string, slideId: string, detached: boolean }>
 }
 
 export const usePresentationStore = defineStore('presentation', {
@@ -31,7 +33,7 @@ export const usePresentationStore = defineStore('presentation', {
      * busy with an interaction. Off by default, so drifting is deliberate.
      */
     autoFollow: false,
-    presence: { viewers: 0, detached: 0, interacting: 0, bySlide: {} } as PresenceSummary,
+    presence: { viewers: 0, detached: 0, interacting: 0, bySlide: {}, members: [] } as PresenceSummary,
     pointers: {} as Record<string, { active: boolean, x: number, y: number, color: string }>
   }),
   getters: {

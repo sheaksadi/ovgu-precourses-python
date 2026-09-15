@@ -36,7 +36,7 @@ const controllerHeaders = () => {
 export const useWebSocket = () => {
   const store = usePresentationStore()
   const interactions = useInteractionStore()
-  const { role, canControlGlobal, isViewer, viewMode } = useDeckRole()
+  const { role, canControlGlobal, isViewer, isProjector, viewMode } = useDeckRole()
   const { getSlideByRoute } = useSlideData()
   const audience = useAudience()
   const spins = useSpins()
@@ -50,13 +50,13 @@ export const useWebSocket = () => {
     if (ws && ws.readyState === WebSocket.OPEN) ws.send(JSON.stringify(payload))
   }
 
-  /** Tell the server which surface this is. It gates writes on this. A viewer also says who it is. */
+  /** Tell the server which surface this is. It gates writes on this. A follow-along device also says who it is; the projector is nobody. */
   const sendHello = () => {
     send({
       type: 'hello',
       role: role.value,
       mode: viewMode.value,
-      ...(isViewer.value ? { audienceId: audience.id.value, name: audience.name.value } : {}),
+      ...(isViewer.value && !isProjector.value ? { audienceId: audience.id.value, name: audience.name.value } : {}),
     })
   }
 
@@ -134,7 +134,8 @@ export const useWebSocket = () => {
             viewers: data.viewers,
             detached: data.detached,
             interacting: data.interacting,
-            bySlide: data.bySlide || {}
+            bySlide: data.bySlide || {},
+            members: data.members || []
           })
         }
         else if (data.type === 'state') {
@@ -217,7 +218,7 @@ export const useWebSocket = () => {
     watchersStarted = true
 
     // A new name reaches the room without reconnecting.
-    watch(() => audience.name.value, () => sendHello())
+    watch(() => [audience.name.value, isProjector.value], () => sendHello())
 
     // A viewer reports local position and explicit follow mode.
     watch(

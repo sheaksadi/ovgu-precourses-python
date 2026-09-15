@@ -222,7 +222,7 @@ Written here as each phase starts.
 - Solve toasts on every screen: mint "Mira solved Part 1", sun for the first
   solver of each part.
 
-**3c. Projector and presenter**
+**3c. Projector and presenter** — done: leaderboard slide PRE-0138, presenter panel, presence carries names
 
 - `components/problems/Stage.vue` on the projector: the story large with its
   example, a live "7 / 23 solved" per part, and the top five with times.

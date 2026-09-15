@@ -1336,6 +1336,13 @@ else:
     clock: 'Time',
     leaders: 'Fastest',
     nobodyYet: 'Nobody yet – who is first?',
+    board: {
+      eyebrow: 'Puzzles · Leaderboard',
+      title: 'Who has the most stars?',
+      yourPlace: 'Your place: {rank}',
+      notYet: 'You are not on the board yet – the puzzles are still open.',
+      empty: 'No solutions yet.',
+    },
     howTo: ['Open the slides on your device', 'Copy your input into PyCharm', 'Submit only the answer'],
     results: {
       first: 'Correct – and the fastest!',

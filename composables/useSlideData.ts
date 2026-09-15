@@ -18,6 +18,8 @@ export interface FlatSlide {
   /** Present when the slide declares an interaction. */
   interactive?: SlideInteractive
   presenterAction?: SlideEntry['presenterAction']
+  /** Problem id when the slide poses an Advent of Code style problem. */
+  problem?: string
   /** True when the entry declares a `parent`. */
   isSubSlide: boolean
   parentId?: string
@@ -86,6 +88,7 @@ export const useSlideData = () => {
         backgroundColor: entry.backgroundColor,
         interactive: entry.interactive,
         presenterAction: entry.presenterAction,
+        problem: entry.problem,
         isSubSlide,
         parentId: parent?.id,
         parentTitle: parent?.title,
