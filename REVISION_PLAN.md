@@ -76,7 +76,7 @@ The shared machinery for every practice round in phases 4 and 5.
 - [ ] **Code tasks (function building).** The device has a small editor that runs
       Python in the browser (Pyodide), runs hidden and visible tests against the
       student's function, and submits when they pass.
-      _To decide:_ Pyodide from a CDN or vendored for offline rooms.
+      Decided: Pyodide is bundled with the deck, so it works without internet.
 - [ ] **Room state.** Solves live in the WebSocket room: who solved which part,
       when. It resets with the room.
 - [ ] **Projector view of a round.** The problem description, a live count of
@@ -170,4 +170,77 @@ Written here as each phase starts.
   key, since browsers block sound until then.
 - Remote gets a Spin button and the latest line; the presenter view shows the
   latest line under its Spin button.
+
+### Phase 3: problem engine (to build, in this order)
+
+**Decisions**
+
+- Answers are checked on the server. Solvers live only in `server/problems/`,
+  so the answer is never in the client bundle. The server also generates each
+  device's puzzle input, from a seeded random generator on problem id plus
+  device id, so a reload shows the same input.
+- Inputs early in the course (lists, loops) are a Python line to paste, such as
+  `fische = [12, 7, 30, …]`, because reading files and `split` come later.
+  Later rounds can hand out plain text.
+- Advent of Code shape: Part 1, then Part 2 on the same input once Part 1 is
+  solved. A wrong answer says "too high" or "too low" for numbers and locks
+  the field for 5 seconds.
+- Numbers compare as numbers (`18.0` equals `18`); words ignore case and
+  surrounding spaces.
+- One slide per problem. The projector shows that problem; each device shows
+  every problem of the round as tabs, so students keep working while the
+  presenter moves on. A round ends on a leaderboard slide.
+- Ranking: parts solved, then who got there first. Times count from when the
+  room first reached the round.
+- Code tasks: the device runs Python in a Web Worker with Pyodide. Visible and
+  hidden tests run after the student's code; the worker stops after 3 seconds,
+  which also catches endless loops. Submitting sends the passing result, which
+  the server trusts, since it cannot run Python itself. The editor is
+  CodeMirror 6 with Python highlighting and indentation, because students write
+  on laptops next to PyCharm.
+- Pyodide files are copied from `node_modules/pyodide` into `public/pyodide`
+  by a script on install and build, not committed.
+
+**3a. Model and server**
+
+- `server/problems/<section>.ts`: `{ id, parts, generate(rng), solve(input, part) }`.
+  Text (story, example, part 2) lives in `locales/` under `problems.<id>`.
+- `server/utils/problemRoom.ts`: solves per problem (device id, name, part,
+  time), round start time, reset with the room.
+- `GET /api/problems/:id/input` and `POST /api/problems/:id/answer`, identified
+  by the `deck-audience` cookie. A correct answer broadcasts `solve` over the
+  WebSocket; connecting sends `problem_state`.
+- One sample problem to prove the loop end to end, plus a node check script
+  for generate, solve and compare.
+
+**3b. The device workspace**
+
+- `components/problems/Workspace.vue` on a problem slide for audience devices:
+  a tab per problem, the story, "your input" with a copy button, the answer
+  field, and the solved state with rank. Part 2 opens after Part 1. Works on a
+  phone (stacked) and on a laptop (story and input side by side).
+- Solve toasts on every screen: mint "Mira solved Part 1", sun for the first
+  solver of each part.
+
+**3c. Projector and presenter**
+
+- `components/problems/Stage.vue` on the projector: the story large with its
+  example, a live "7 / 23 solved" per part, and the top five with times.
+- Round leaderboard slide component.
+- Presenter view: for a problem slide, every audience name with ✓ per part,
+  and the people who have not solved anything yet.
+
+**3d. Solution walkthrough**
+
+- `components/problems/SolutionWalk.vue`, staged over sub-slides like the
+  lessons. Stage 1 shows the whole solution, the middle stages zoom into one
+  region each and trace it (variables change, output grows), the last stage
+  zooms back out with the answer.
+
+**3e. Code tasks**
+
+- Pyodide copy script, `utils/python/worker.ts` (run with timeout, capture
+  output, run tests), and `components/problems/CodeTask.vue` (CodeMirror
+  editor, Run, test list, Submit).
+- `POST /api/tasks/:id/submit` records the pass and broadcasts it like a solve.
 
