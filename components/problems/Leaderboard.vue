@@ -74,7 +74,7 @@ function clockTime(ms: number) {
         :class="[`is-rank-${Math.min(entry.rank, 4)}`, { 'is-me': onDevice && entry.audienceId === audience.id.value }]"
       >
         <span class="board-rank"><span class="text-trim">{{ entry.rank }}</span></span>
-        <span class="board-avatar" :class="{ 'has-sprite': entry.avatar.sprite }" :style="{ '--badge': `var(--${entry.avatar.color})` }" aria-hidden="true">
+        <span class="board-avatar" :class="{ 'has-sprite': entry.avatar.sprite }" :style="{ '--badge': `var(--${entry.avatar.color})`, '--badge-ink': entry.avatar.ink }" aria-hidden="true">
           <ArtSprite v-if="entry.avatar.sprite" :name="entry.avatar.sprite as SpriteName" :color="entry.avatar.color" accent="sun" :size="48" class="board-avatar-art" />
           <span v-else class="text-trim">{{ entry.avatar.initial }}</span>
         </span>
@@ -173,7 +173,7 @@ function clockTime(ms: number) {
   border: 2px solid var(--text);
   font-size: 0.75em;
   font-weight: 900;
-  color: #FFFFFF;
+  color: var(--badge-ink, #FFFFFF);
 }
 .board-avatar.has-sprite {
   background: color-mix(in srgb, var(--badge) 22%, var(--bg));

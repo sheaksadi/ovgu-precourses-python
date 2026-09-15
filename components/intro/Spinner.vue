@@ -343,7 +343,7 @@ onBeforeUnmount(() => {
       </button>
 
       <p class="spin-who">
-        <span v-if="avatar" class="spin-avatar" :class="{ 'has-sprite': avatar.sprite }" :style="{ '--badge': `var(--${avatar.color})` }" aria-hidden="true">
+        <span v-if="avatar" class="spin-avatar" :class="{ 'has-sprite': avatar.sprite }" :style="{ '--badge': `var(--${avatar.color})`, '--badge-ink': avatar.ink }" aria-hidden="true">
           <ArtSprite v-if="avatar.sprite" :name="avatar.sprite as SpriteName" :color="avatar.color" accent="sun" :size="48" class="spin-avatar-art" />
           <span v-else class="text-trim">{{ avatar.initial }}</span>
         </span>
@@ -560,7 +560,7 @@ onBeforeUnmount(() => {
   border: 2px solid var(--text);
   font-size: clamp(0.8rem, 2vh, 1.3rem);
   font-weight: 900;
-  color: #FFFFFF;
+  color: var(--badge-ink, #FFFFFF);
 }
 .spin-avatar.has-sprite {
   background: color-mix(in srgb, var(--badge) 22%, var(--bg));

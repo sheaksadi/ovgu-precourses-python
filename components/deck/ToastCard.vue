@@ -28,11 +28,12 @@ const props = withDefaults(defineProps<{
 
 const avatar = computed(() => (props.name && !props.icon ? avatarFor(props.name) : null))
 const badgeColor = computed(() => `var(--${avatar.value?.color ?? props.tone})`)
+const badgeInk = computed(() => avatar.value?.ink ?? (props.tone === 'sun' ? 'var(--text)' : '#FFFFFF'))
 </script>
 
 <template>
   <div class="toast" :class="`tone-${tone}`" role="status">
-    <span class="toast-badge" :class="{ 'has-sprite': avatar?.sprite }" :style="{ '--badge': badgeColor }" aria-hidden="true">
+    <span class="toast-badge" :class="{ 'has-sprite': avatar?.sprite }" :style="{ '--badge': badgeColor, '--badge-ink': badgeInk }" aria-hidden="true">
       <Icon v-if="icon" :name="icon" class="toast-icon" />
       <ArtSprite v-else-if="avatar?.sprite" :name="avatar.sprite as SpriteName" :color="avatar.color" accent="sun" :size="48" class="toast-sprite" />
       <span v-else class="text-trim">{{ avatar?.initial ?? '!' }}</span>
@@ -75,10 +76,7 @@ const badgeColor = computed(() => `var(--${avatar.value?.color ?? props.tone})`)
   border: 2px solid var(--text);
   font-size: 1em;
   font-weight: 900;
-  color: #FFFFFF;
-}
-.tone-sun .toast-badge:not(.has-sprite) {
-  color: var(--text);
+  color: var(--badge-ink, #FFFFFF);
 }
 .toast-badge.has-sprite {
   background: color-mix(in srgb, var(--badge) 22%, var(--bg));

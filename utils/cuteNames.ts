@@ -112,7 +112,11 @@ export interface Avatar {
   sprite?: string
   /** First letter, for names without a sprite. */
   initial: string
+  /** Colour for the initial: dark on the light pastels, white on the rest. */
+  ink: string
 }
+
+const LIGHT_COLORS: AvatarColor[] = ['sun', 'peach']
 
 const hash = (text: string) => [...text].reduce((sum, char) => (sum * 31 + char.codePointAt(0)!) >>> 0, 7)
 
@@ -123,10 +127,12 @@ export function avatarFor(name: string): Avatar {
   // A generated name gets the same colour in both languages.
   const parts = parseCuteName(clean)
   const key = parts ? `${parts.adjective}:${parts.animal}` : clean.toLowerCase()
+  const color = AVATAR_COLORS[hash(key) % AVATAR_COLORS.length]!
   return {
-    color: AVATAR_COLORS[hash(key) % AVATAR_COLORS.length]!,
+    color,
     sprite: animal?.sprite,
     initial: ([...clean][0] ?? '?').toUpperCase(),
+    ink: LIGHT_COLORS.includes(color) ? 'var(--text)' : '#FFFFFF',
   }
 }
 
