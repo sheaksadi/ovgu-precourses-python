@@ -1243,6 +1243,22 @@ else:
         example: { answer: '200', note: '`91 + 67 + 42`.' },
       },
     },
+    'data-temps': {
+      title: 'Wetterdaten',
+      story: [
+        'Deine Eingabe sind 30 Tagestemperaturen in ganzen Grad, in der Reihenfolge der Tage.',
+        'An wie vielen Tagen war es wärmer als im Durchschnitt?',
+        'Tipp: Der Durchschnitt ist `sum(temperaturen) / len(temperaturen)`. Danach läufst du ein zweites Mal durch die Liste und zählst.',
+      ],
+      example: { input: 'temperaturen = [12, 15, 9, 20]', answer: '2', note: 'Durchschnitt ist `14`; `15` und `20` liegen darüber.' },
+      part2: {
+        story: [
+          'Und wie groß war der größte Sprung von einem Tag zum nächsten?',
+          'Tipp: `abs(...)` macht aus einem Minus ein Plus, damit die Richtung egal ist. Mit `numpy` wären beide Teile je eine Zeile – probier es, wenn du magst.',
+        ],
+        example: { answer: '11', note: 'von `9` auf `20`.' },
+      },
+    },
     'dicts-shelter': {
       title: 'Das Tierheim',
       story: [

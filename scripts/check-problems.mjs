@@ -136,6 +136,16 @@ check('shelter has 14 animals', pairs.length === 14, String(pairs.length))
 check('shelter Part 1 solved', (await answer(B, 1, totalAge, 'dicts-shelter')).result === 'correct')
 check('shelter Part 2 solved', (await answer(B, 2, oldest, 'dicts-shelter')).result === 'correct')
 
+// ── data-temps: the average, then the biggest jump ──
+const weather = await getInput(A, 'de', 'data-temps')
+const temps = numbers(weather.body.input)
+const average = temps.reduce((sum, day) => sum + day, 0) / temps.length
+const warmDays = temps.filter(day => day > average).length
+const jump = temps.slice(1).reduce((biggest, day, index) => Math.max(biggest, Math.abs(day - temps[index])), 0)
+check('weather input has 30 days', temps.length === 30, String(temps.length))
+check('weather Part 1 solved', (await answer(A, 1, warmDays, 'data-temps')).result === 'correct')
+check('weather Part 2 solved', (await answer(A, 2, jump, 'data-temps')).result === 'correct')
+
 // ── code tasks: the device reports, the server records ──
 const taskState = await fetch(`${BASE}/api/tasks/functions-greet/state`, { headers: { cookie: cookie(A) } })
 check('task state served', taskState.status === 200 && (await taskState.clone().json()).parts === 1)

@@ -1239,6 +1239,22 @@ else:
         example: { answer: '200', note: '`91 + 67 + 42`.' },
       },
     },
+    'data-temps': {
+      title: 'Weather Data',
+      story: [
+        'Your input is 30 daily temperatures in whole degrees, in the order of the days.',
+        'On how many days was it warmer than the average?',
+        'Hint: the average is `sum(temps) / len(temps)`. Then you walk through the list a second time and count.',
+      ],
+      example: { input: 'temps = [12, 15, 9, 20]', answer: '2', note: 'the average is `14`; `15` and `20` are above it.' },
+      part2: {
+        story: [
+          'And how big was the largest jump from one day to the next?',
+          'Hint: `abs(...)` turns a minus into a plus, so the direction does not matter. With `numpy` both parts are one line each – try it if you like.',
+        ],
+        example: { answer: '11', note: 'from `9` to `20`.' },
+      },
+    },
     'dicts-shelter': {
       title: 'The Animal Shelter',
       story: [

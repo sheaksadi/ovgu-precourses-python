@@ -789,6 +789,14 @@ export const slides: SlideEntry[] = [
     teleprompter: 'Zum Schluss ein Blick nach vorn. Bisher haben wir Funktionen selbst geschrieben. Hier geben wir nur Beispiele, und das Modell findet die Funktion y = 2x selbst. Genau das macht maschinelles Lernen, nur mit viel mehr Daten und Parametern.',
   },
   {
+    id: 'PRE-0147',
+    title: 'Rätsel: Wetterdaten',
+    subtitle: 'Durchschnitt und größter Sprung, 30 Tage',
+    duration: 15,
+    problem: 'data-temps',
+    teleprompter: 'Letztes Rätsel: Schulmathe, aber programmiert. Teil 1 braucht den Durchschnitt – sum durch len – und dann eine zweite Runde durch die Liste. Teil 2 ist der größte Sprung von Tag zu Tag, mit abs, damit die Richtung egal ist. Wer mag, macht beides mit numpy in je einer Zeile; genau dafür sind die Bibliotheken da.',
+  },
+  {
     id: 'PRE-0132',
     title: 'APIs',
     subtitle: 'Daten aus dem Internet',
