@@ -52,9 +52,9 @@ Status markers: `[ ]` not started, `[~]` in progress, `[x]` built and checked.
 2. **`useTimeline`** (`composables/useTimeline.ts`): `useDemoPlayer` without the
    pointer. For scenes whose beat count depends on data (a loop over 5 or 8
    items), where pure CSS delays get unwieldy. `useDemoPlayer` then builds on it.
-3. `[x]` **`LessonExercise`** (`components/lesson/Exercise.vue`): "Jetzt du" for
-   exercises. Two or three tasks with difficulty dots, starter code, expected
-   output, and a hint that the presenter reveals with Enter.
+3. `[x]` **Problem rounds** (`components/problems/`): every "Jetzt du" slide
+   poses an Advent of Code style puzzle or a code task instead of printed
+   exercises. See REVISION_PLAN.md.
 4. **`LoopTrace`** (`components/lesson/LoopTrace.vue`): a row of items, the
    walking cat, the loop variable box, a pass counter, the current code line
    lit, and output lines appearing per pass. Driven by `useTimeline`.
