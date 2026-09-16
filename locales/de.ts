@@ -1104,6 +1104,7 @@ else:
     output: 'Ausgabe',
     noOutput: 'noch keine Ausgabe',
     labels: {
+      classHint: 'Bauplan – eine Klasse. Später mehr.',
       six: 'Sechs!',
       loop: 'Liste + Schleife: einer nach dem anderen',
       array: 'NumPy-Array: alle auf einmal',
@@ -1119,6 +1120,15 @@ else:
         code: '# Terminal von PyCharm (unten links):\n# pip install numpy\n# pip install pandas matplotlib\n\nimport numpy\nprint("bereit!")',
         focus: [],
         output: ['bereit!'],
+        outputFrom: 0,
+      },
+      {
+        headline: 'import, from, as.',
+        note: '`import random` holt die ganze Kiste – benutzt wird sie dann mit dem Punkt. `from random import randint` legt ein Werkzeug direkt auf den Tisch. `as np` gibt der Kiste einen kurzen Namen. Und `DataFrame(...)` ist ein Bauplan – so etwas heißt Klasse, dazu später mehr.',
+        tally: 'import · from · as',
+        code: 'import random\nprint(random.randint(1, 6))\n\nfrom random import randint\nprint(randint(1, 6))\n\nimport numpy as np\nprint(np.array([1, 2]) * 2)',
+        focus: [],
+        output: ['4', '2', '[2 4]'],
         outputFrom: 0,
       },
       {

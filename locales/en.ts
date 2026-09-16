@@ -1100,6 +1100,7 @@ else:
     output: 'Output',
     noOutput: 'no output yet',
     labels: {
+      classHint: 'A blueprint – a class. More on that later.',
       six: 'Six!',
       loop: 'list + loop: one after another',
       array: 'NumPy array: all at once',
@@ -1115,6 +1116,15 @@ else:
         code: '# PyCharm terminal (bottom left):\n# pip install numpy\n# pip install pandas matplotlib\n\nimport numpy\nprint("ready!")',
         focus: [],
         output: ['ready!'],
+        outputFrom: 0,
+      },
+      {
+        headline: 'import, from, as.',
+        note: '`import random` fetches the whole box – you then reach into it with the dot. `from random import randint` puts one tool straight on the table. `as np` gives the box a short name. And `DataFrame(...)` is a blueprint – that kind of thing is called a class, more on it later.',
+        tally: 'import · from · as',
+        code: 'import random\nprint(random.randint(1, 6))\n\nfrom random import randint\nprint(randint(1, 6))\n\nimport numpy as np\nprint(np.array([1, 2]) * 2)',
+        focus: [],
+        output: ['4', '2', '[2 4]'],
         outputFrom: 0,
       },
       {

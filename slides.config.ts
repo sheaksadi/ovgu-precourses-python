@@ -754,6 +754,13 @@ export const slides: SlideEntry[] = [
     teleprompter: 'Die großen Werkzeuge für KI und Daten sind nicht eingebaut, sondern Pakete. Installiert wird mit pip im Terminal von PyCharm: erst numpy allein, dann pandas und matplotlib in einem Befehl – mehrere Namen hintereinander gehen. Alles landet in der .venv des Projekts. Gemeinsam einmal ausführen.',
   },
   {
+    id: 'PRE-0151',
+    title: 'Bibliotheken – import, from, as',
+    parent: 'PRE-0127',
+    transition: 'none',
+    teleprompter: 'Was macht import eigentlich? Ein Modul ist eine Kiste mit Werkzeug. import random holt die Kiste, benutzt wird sie mit dem Punkt. from random import randint legt ein einzelnes Werkzeug auf den Tisch – dann ohne Punkt. as np gibt der Kiste einen kurzen Namen, deshalb heißt es überall np und pd. Und der Hinweis unten: DataFrame(...) ist ein Bauplan, so etwas heißt Klasse – das kommt später.',
+  },
+  {
     id: 'PRE-0146',
     title: 'Bibliotheken – Importieren und benutzen',
     parent: 'PRE-0127',

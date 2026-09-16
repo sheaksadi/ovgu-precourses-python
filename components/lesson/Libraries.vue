@@ -2,14 +2,16 @@
 /**
  * Libraries for AI and ML: "Werkzeuge für Daten". Auto-imported as `<LessonLibraries :stage="1" />`.
  *
- * Six slides (PRE-0127 and its five sub-slides):
+ * Seven slides (PRE-0127 and its six sub-slides):
  *
  *   1. pip install: first one package, then two more in one command
- *   2. import and use it: a die rolls until it shows a six
- *   3. NumPy: a list needs a loop, an array doubles every value at once
- *   4. pandas: a table of animals, filtered by age
- *   5. matplotlib: a bar chart draws itself in its own window
- *   6. an outlook on machine learning: a model learns y = 2 · x from four points
+ *   2. import, from, as: the module as a box of tools, one tool taken out,
+ *      a short name, and a first hint that some tools are blueprints (classes)
+ *   3. import and use it: a die rolls until it shows a six
+ *   4. NumPy: a list needs a loop, an array doubles every value at once
+ *   5. pandas: a table of animals, filtered by age
+ *   6. matplotlib: a bar chart draws itself in its own window
+ *   7. an outlook on machine learning: a model learns y = 2 · x from four points
  *
  * Scenes stay one extra stage to clear away. Words come from `libraries.*` in
  * `locales/`.
@@ -17,7 +19,7 @@
 import { computed } from 'vue'
 import { useI18n } from '~/composables/useI18n'
 
-type StageNumber = 1 | 2 | 3 | 4 | 5 | 6
+type StageNumber = 1 | 2 | 3 | 4 | 5 | 6 | 7
 
 interface Stage {
   headline: string
@@ -34,12 +36,15 @@ const { t, tm } = useI18n()
 
 const stages = computed(() => tm<Stage[]>('libraries.stages'))
 const current = computed(() => stages.value[props.stage - 1]!)
-const labels = computed(() => tm<Record<'loop' | 'array' | 'age' | 'chartTitle' | 'learned' | 'six', string>>('libraries.labels'))
+const labels = computed(() => tm<Record<'loop' | 'array' | 'age' | 'chartTitle' | 'learned' | 'six' | 'classHint', string>>('libraries.labels'))
 
 /* 1: the second command installs two at once */
 const MORE = ['pandas', 'matplotlib']
 
-/* 2: the die rolls until it shows a six */
+/* 2: what a module holds */
+const TOOLS = ['randint', 'choice', 'shuffle']
+
+/* 3: the die rolls until it shows a six */
 const ROLLS = [3, 1, 5, 6]
 const rollAt = (k: number) => 0.8 + k * 1.0
 const PIPS: Record<number, number[]> = {
@@ -63,11 +68,12 @@ const py = (y: number) => 55 - (y / 12) * 50
 const outputDelays = computed(() => {
   switch (props.stage) {
     case 1: return [5.9]
-    case 2: return [...ROLLS.map((_, k) => rollAt(k) + 0.6), rollAt(ROLLS.length - 1) + 1.1]
-    case 3: return [2.6, 3.2]
-    case 4: return [2.4, 2.6, 2.8]
-    case 5: return [3.0]
-    case 6: return [3.4]
+    case 2: return [2.2, 3.4, 5.0]
+    case 3: return [...ROLLS.map((_, k) => rollAt(k) + 0.6), rollAt(ROLLS.length - 1) + 1.1]
+    case 4: return [2.6, 3.2]
+    case 5: return [2.4, 2.6, 2.8]
+    case 6: return [3.0]
+    case 7: return [3.4]
     default: return undefined
   }
 })
@@ -89,7 +95,7 @@ const shown = (own: number) => props.stage === own || props.stage === own + 1
     :output="current.output"
     :output-from="current.outputFrom"
     :output-delays="outputDelays"
-    :stack-output="stage === 2 || stage === 4"
+    :stack-output="stage === 3 || stage === 5"
     dense
     :output-label="t('libraries.output')"
     :no-output="t('libraries.noOutput')"
@@ -118,8 +124,33 @@ const shown = (own: number) => props.stage === own || props.stage === own + 1
         </div>
       </div>
 
-      <!-- ═══ 2: import and use it ═══ -->
-      <div v-if="shown(2)" class="part dice" :class="phase(2)">
+      <!-- ═══ 2: import, from, as ═══ -->
+      <div v-if="shown(2)" class="part imports" :class="phase(2)">
+        <div class="shelf">
+          <span class="shelf-name"><span class="text-trim">random</span></span>
+          <span v-for="(tool, k) in TOOLS" :key="tool" class="tool" :class="{ 'is-taken': tool === 'randint' }" :style="{ '--k': k }">
+            <span class="text-trim">{{ tool }}</span>
+          </span>
+        </div>
+
+        <code class="reach">random<b>.</b>randint(1, 6)</code>
+
+        <span class="taken"><span class="text-trim">randint(1, 6)</span></span>
+        <code class="from-line">from random import randint</code>
+
+        <div class="alias">
+          <span class="alias-box"><span class="text-trim">numpy</span></span>
+          <span class="alias-tag"><span class="text-trim">as np</span></span>
+        </div>
+
+        <div class="blueprint">
+          <code>pd.DataFrame(…)</code>
+          <span class="blueprint-note">{{ labels.classHint }}</span>
+        </div>
+      </div>
+
+      <!-- ═══ 3: import and use it ═══ -->
+      <div v-if="shown(3)" class="part dice" :class="phase(3)">
         <div class="die-slot">
           <div
             v-for="(roll, k) in ROLLS"
@@ -146,8 +177,8 @@ const shown = (own: number) => props.stage === own || props.stage === own + 1
         </div>
       </div>
 
-      <!-- ═══ 3: NumPy ═══ -->
-      <div v-if="shown(3)" class="part numpy" :class="phase(3)">
+      <!-- ═══ 4: NumPy ═══ -->
+      <div v-if="shown(4)" class="part numpy" :class="phase(4)">
         <div v-for="row in ['loop', 'array']" :key="row" class="row" :class="`row-${row}`">
           <code class="row-label">{{ row === 'loop' ? labels.loop : labels.array }}</code>
           <div class="cells">
@@ -160,8 +191,8 @@ const shown = (own: number) => props.stage === own || props.stage === own + 1
         <code class="mean">mean() → 17.75</code>
       </div>
 
-      <!-- ═══ 4: pandas ═══ -->
-      <div v-if="shown(4)" class="part pandas" :class="phase(4)">
+      <!-- ═══ 5: pandas ═══ -->
+      <div v-if="shown(5)" class="part pandas" :class="phase(5)">
         <code class="filter">tiere["{{ labels.age }}"] &gt; 2</code>
         <div class="table">
           <code class="th"></code>
@@ -177,8 +208,8 @@ const shown = (own: number) => props.stage === own || props.stage === own + 1
         </div>
       </div>
 
-      <!-- ═══ 5: matplotlib ═══ -->
-      <div v-if="shown(5)" class="part chart" :class="phase(5)">
+      <!-- ═══ 6: matplotlib ═══ -->
+      <div v-if="shown(6)" class="part chart" :class="phase(6)">
         <div class="figure">
           <span class="figure-bar"><code>Figure 1</code></span>
           <code class="chart-title">{{ labels.chartTitle }}</code>
@@ -192,7 +223,7 @@ const shown = (own: number) => props.stage === own || props.stage === own + 1
       </div>
 
       <!-- ═══ 5: machine learning ═══ -->
-      <div v-if="stage === 6" class="part ml is-active">
+      <div v-if="stage === 7" class="part ml is-active">
         <svg class="axes" viewBox="0 0 100 60" preserveAspectRatio="none" aria-hidden="true">
           <path class="axis" d="M 10 55 H 96 M 10 55 V 3" />
           <path class="fit" :d="`M ${px(0.5)} ${py(1)} L ${px(5.6)} ${py(11.2)}`" />
@@ -358,7 +389,201 @@ code {
   transform: none;
 }
 
-/* ═══ 2: the die ═══════════════════════════════════════════════════════ */
+/* ═══ 2: import, from, as ══════════════════════════════════════════════ */
+.shelf {
+  position: absolute;
+  top: 6vh;
+  left: 50%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.9vh;
+  width: 34vh;
+  padding: 2vh 1.8vh 1.8vh;
+  border-radius: 1.8vh;
+  background: var(--bg);
+  border: 3px solid var(--text);
+  translate: -50% 0;
+  opacity: 0;
+}
+.imports.is-active .shelf {
+  animation: pop 0.35s cubic-bezier(0.22, 1, 0.36, 1) 0.3s both;
+}
+.imports.is-leaving .shelf {
+  opacity: 1;
+}
+.shelf-name {
+  position: absolute;
+  top: -1.8vh;
+  left: 1.6vh;
+  padding: calc(0.3vh + 0.25em) 1.1vh;
+  border-radius: 999px;
+  background: var(--text);
+  font-family: var(--font-code);
+  font-size: clamp(0.55rem, 1.5vh, 0.95rem);
+  font-weight: 800;
+  color: var(--bg);
+}
+.tool {
+  padding: calc(0.4vh + 0.25em) 1.2vh;
+  border-radius: 0.9vh;
+  background: var(--bg-off);
+  border: 2px solid var(--border);
+  font-family: var(--font-code);
+  font-size: clamp(0.6rem, 1.6vh, 1.05rem);
+  font-weight: 700;
+  color: var(--text-dim);
+  opacity: 0;
+}
+.imports.is-active .tool {
+  animation: appear 0.25s ease calc(0.7s + var(--k) * 0.15s) both;
+}
+.imports.is-leaving .tool {
+  opacity: 1;
+}
+/* The tool that goes on the table. It stays in the box as well: `from ... import`
+   does not take it out of the module, it only gives it a name of its own. */
+.imports.is-active .tool.is-taken {
+  animation:
+    appear 0.25s ease 0.7s both,
+    dim 0.3s ease 3.1s forwards;
+}
+@keyframes dim {
+  from { opacity: 1; }
+  to { opacity: 0.4; }
+}
+
+.reach {
+  position: absolute;
+  top: 26vh;
+  left: 50%;
+  padding: calc(0.5vh + 0.25em) 1.4vh;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--sun) 40%, var(--bg));
+  border: 2px solid var(--text);
+  translate: -50% 0;
+  font-family: var(--font-code);
+  font-size: clamp(0.6rem, 1.75vh, 1.15rem);
+  font-weight: 800;
+  white-space: nowrap;
+  opacity: 0;
+}
+.reach b {
+  color: var(--coral);
+}
+.imports.is-active .reach {
+  animation:
+    pop 0.3s cubic-bezier(0.22, 1, 0.36, 1) 1.5s both,
+    vanish 0.2s ease 3.1s forwards;
+}
+
+.taken {
+  position: absolute;
+  top: 26vh;
+  left: 50%;
+  padding: calc(0.5vh + 0.25em) 1.4vh;
+  border-radius: 999px;
+  background: var(--mint);
+  border: 2px solid var(--text);
+  translate: -50% 0;
+  font-family: var(--font-code);
+  font-size: clamp(0.6rem, 1.75vh, 1.15rem);
+  font-weight: 800;
+  color: #FFFFFF;
+  white-space: nowrap;
+  opacity: 0;
+}
+.from-line {
+  position: absolute;
+  top: 32vh;
+  left: 50%;
+  translate: -50% 0;
+  font-family: var(--font-code);
+  font-size: clamp(0.55rem, 1.5vh, 0.95rem);
+  font-weight: 700;
+  color: var(--text-dim);
+  white-space: nowrap;
+  opacity: 0;
+}
+.imports.is-active .taken {
+  animation: pop 0.3s cubic-bezier(0.22, 1, 0.36, 1) 3.3s both;
+}
+.imports.is-active .from-line {
+  animation: appear 0.25s ease 3.3s both;
+}
+.imports.is-leaving .taken,
+.imports.is-leaving .from-line {
+  opacity: 1;
+}
+
+.alias {
+  position: absolute;
+  top: 36vh;
+  left: 50%;
+  display: flex;
+  align-items: center;
+  gap: 1vh;
+  translate: -50% 0;
+  opacity: 0;
+}
+.imports.is-active .alias {
+  animation: appear 0.3s ease 4.6s both;
+}
+.imports.is-leaving .alias {
+  opacity: 1;
+}
+.alias-box {
+  padding: calc(0.4vh + 0.25em) 1.2vh;
+  border-radius: 0.9vh;
+  background: var(--bg);
+  border: 2px solid var(--text);
+  font-family: var(--font-code);
+  font-size: clamp(0.6rem, 1.6vh, 1.05rem);
+  font-weight: 800;
+}
+.alias-tag {
+  padding: calc(0.35vh + 0.25em) 1vh;
+  border-radius: 999px;
+  background: var(--sky);
+  font-family: var(--font-code);
+  font-size: clamp(0.55rem, 1.45vh, 0.95rem);
+  font-weight: 800;
+  color: #FFFFFF;
+}
+
+.blueprint {
+  position: absolute;
+  top: 42vh;
+  left: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6vh;
+  padding: 1.2vh 1.6vh;
+  border-radius: 1.4vh;
+  background: color-mix(in srgb, var(--lavender) 16%, var(--bg));
+  border: 2px dashed var(--lavender);
+  translate: -50% 0;
+  opacity: 0;
+}
+.imports.is-active .blueprint {
+  animation: appear 0.35s ease 5.8s both;
+}
+.imports.is-leaving .blueprint {
+  opacity: 1;
+}
+.blueprint code {
+  font-family: var(--font-code);
+  font-size: clamp(0.6rem, 1.7vh, 1.1rem);
+  font-weight: 800;
+  color: var(--text);
+}
+.blueprint-note {
+  font-size: clamp(0.5rem, 1.35vh, 0.9rem);
+  font-weight: 700;
+  color: var(--text-dim);
+}
+
+/* ═══ 3: the die ═══════════════════════════════════════════════════════ */
 .die-slot {
   position: absolute;
   top: 8vh;

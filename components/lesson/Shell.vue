@@ -289,9 +289,81 @@ const columnWidth = computed(() => `${Math.max(...props.output.map(line => line.
   animation: none;
 }
 
+/* ─── A phone held upright ───────────────────────────────────────────── */
+/* Students follow the slides on their own devices, so a lesson stacks into one
+   scrolling column instead of the projector's two. The scene card keeps its
+   height in vh, because the scenes inside are drawn in vh. */
+@media (orientation: portrait) and (max-width: 760px) {
+  .shell {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    padding: 3.5rem 1rem 5rem;
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+
+  .shell-head,
+  .shell-code,
+  .shell-note {
+    position: static;
+    inset: auto;
+    width: auto;
+  }
+
+  /* Eyebrow, dots and count need two rows at this width. */
+  .shell-progress {
+    flex-wrap: wrap;
+    gap: 0.5rem 1rem;
+    margin-bottom: 0.9rem;
+  }
+
+  .shell-headline {
+    font-size: clamp(1.5rem, 7vw, 2.2rem);
+  }
+
+  /* No zoom here: it shifts every scene that centres itself with
+     translate(-50%), which cuts labels off at the left edge. A projector-shaped
+     scene may crop on a phone instead, which reads far better. */
+
+  /* A long line scrolls sideways in its panel instead of being cut off. */
+  .shell-code :deep(.code-panel) {
+    overflow-x: auto;
+  }
+
+  /* Relative, not static: the scenes inside are drawn absolutely against this
+     card, and would otherwise anchor to the whole slide. */
+  .shell-scene {
+    position: relative;
+    inset: auto;
+    flex: none;
+    width: auto;
+    height: 46vh;
+  }
+
+  .shell-code :deep(.py-4),
+  .shell-code.is-dense :deep(.py-4) {
+    font-size: 0.82rem;
+  }
+
+  .out-line {
+    font-size: 0.9rem;
+  }
+
+  .shell-note {
+    gap: 0.75rem;
+    font-size: 0.95rem;
+  }
+  .note-rail {
+    width: 0.25rem;
+  }
+}
+
 /* ─── 4:3 projectors ─────────────────────────────────────────────────── */
-/* Code lines need more room than the picture, and tall code reaches further down. */
-@media (max-aspect-ratio: 3/2) {
+/* Code lines need more room than the picture, and tall code reaches further down.
+   Only wide screens: a phone held upright is also taller than 3/2, and it has
+   its own layout above. */
+@media (max-aspect-ratio: 3/2) and (min-width: 761px) {
   .shell-scene {
     width: 40vw;
   }
