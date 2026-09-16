@@ -52,8 +52,10 @@ const belowPill = computed(() => isViewer.value && !!getSlideByRoute(route.path)
   gap: 0.5rem;
   pointer-events: none;
 }
+/* On a slide the corner is busy: the sync pill on a device, Momo's bubble on the
+   projector. The stack starts below either. */
 .toast-stack.is-below-pill {
-  top: 3.6rem;
+  top: 5.5rem;
 }
 .toast-live {
   pointer-events: auto;

@@ -15,12 +15,12 @@ import { useDeckRole } from '~/composables/useDeckRole'
 import { useI18n } from '~/composables/useI18n'
 
 const { slide } = useCurrentSlide()
-const { isViewer, isPeek, isInteractive, setViewMode } = useDeckRole()
+const { isViewer, isPeek, isProjector, isInteractive, setViewMode } = useDeckRole()
 const { t } = useI18n()
 const route = useRoute()
 const router = useRouter()
 
-const show = computed(() => isViewer.value && !isPeek.value && !isInteractive.value && !!slide.value?.interactive)
+const show = computed(() => isViewer.value && !isPeek.value && !isProjector.value && !isInteractive.value && !!slide.value?.interactive)
 
 const joinIn = () => {
   setViewMode('interactive')

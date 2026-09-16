@@ -15,8 +15,9 @@
  * Who sees what:
  *   - a follow-along device: the Spin button, Enter, and a tappable reel
  *   - the projector (`?screen=projector`, set by the start page) and the peek
- *     frames in the presenter view: no button and no Enter; who is spinning,
- *     who spun, and who spun before
+ *     frames in the presenter view: no buttons at all; who is spinning, who
+ *     spun, and who spun before. Sound is toggled with the `m` key there, and a
+ *     spin raises a notification like any other room event.
  *
  * Sound is synthesised with Web Audio, nothing is downloaded: a tick each time
  * a card passes the window, brighter while the reel races and softer as it
@@ -238,13 +239,15 @@ const rowStyle = (offset: number) => {
 
 const blur = computed(() => `blur(${Math.min(5, velocity.value * 0.09).toFixed(2)}px)`)
 
-const bubble = computed(() => t(`intro.momo.${phase.value}`))
+// A screen that cannot spin does not ask to be spun.
+const bubble = computed(() => (!canSpin.value && phase.value === 'idle' ? t('intro.momo.screen') : t(`intro.momo.${phase.value}`)))
 
 const shownName = computed(() => (shown.value ? spins.nameOf(shown.value) : ''))
 const avatar = computed(() => (shown.value ? avatarFor(shownName.value) : null))
 
 const who = computed(() => {
-  if (!shown.value) return t('intro.waiting')
+  // Nothing spun yet: the reel says it is ready, no waiting message needed.
+  if (!shown.value) return ''
   return phase.value === 'spinning'
     ? t('intro.spinningBy', { name: shownName.value })
     : t('intro.spunBy', { name: shownName.value })
@@ -255,8 +258,14 @@ const earlier = computed(() => spins.history.value.filter(record => record.seque
 
 /* ─── Events ─────────────────────────────────────────────────────────── */
 const onKey = (event: KeyboardEvent) => {
-  if (!canSpin.value || event.key !== 'Enter') return
   if (['INPUT', 'TEXTAREA'].includes((event.target as HTMLElement).tagName)) return
+  // `m` mutes on any screen, including the projector, which carries no button.
+  if (event.key === 'm' || event.key === 'M') {
+    event.preventDefault()
+    toggleMute()
+    return
+  }
+  if (!canSpin.value || event.key !== 'Enter') return
   event.preventDefault()
   request()
 }
@@ -349,12 +358,12 @@ onBeforeUnmount(() => {
         </span>
         <span class="spin-who-text">
           <span>{{ busyNote ? t('intro.busy') : who }}</span>
-          <span v-if="!canSpin && shown && phase === 'landed'" class="spin-waiting">{{ t('intro.waiting') }}</span>
-          <span v-else-if="canSpin && !busyNote && phase !== 'spinning'" class="spin-waiting">{{ t('intro.phoneHint') }}</span>
+          <span v-if="canSpin && !busyNote && phase !== 'spinning'" class="spin-waiting">{{ t('intro.phoneHint') }}</span>
         </span>
       </p>
 
       <button
+        v-if="canSpin"
         type="button"
         class="sound-button"
         :aria-pressed="!muted"

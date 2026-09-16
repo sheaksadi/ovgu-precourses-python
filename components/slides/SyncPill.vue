@@ -12,9 +12,10 @@ import { usePresentation } from '~/composables/usePresentation'
 import { useDeckRole } from '~/composables/useDeckRole'
 
 const { store, globalSlide, currentIndex, globalIndex, isViewer, syncToGlobal } = usePresentation()
-const { isPeek } = useDeckRole()
+const { isPeek, isProjector } = useDeckRole()
 
-const showPill = computed(() => isViewer.value && !isPeek.value)
+// The projector follows the room silently: no sync control, no auto-sync box.
+const showPill = computed(() => isViewer.value && !isPeek.value && !isProjector.value)
 const detached = computed(() => showPill.value && store.detached)
 const showFollowing = computed(() => showPill.value && !detached.value)
 const target = computed(() => globalSlide.value)

@@ -44,7 +44,7 @@ export const useWebSocket = () => {
   const problems = useProblems()
   const cats = useCats()
   const toasts = useToasts()
-  const { t, locale } = useI18n()
+  const { t, tm, locale } = useI18n()
   const route = useRoute()
   const onSlideRoute = computed(() => !!getSlideByRoute(route.path))
 
@@ -161,7 +161,17 @@ export const useWebSocket = () => {
           }
         }
         else if (data.type === 'spin') {
-          if (spins.apply(data)) window.dispatchEvent(new CustomEvent('deck:spin', { detail: data }))
+          if (spins.apply(data)) {
+            window.dispatchEvent(new CustomEvent('deck:spin', { detail: data }))
+            const who = data.by ? localizeName(data.by.name, locale.value) : t('intro.presenter')
+            toasts.push({
+              tone: 'lavender',
+              name: data.by ? who : undefined,
+              icon: data.by ? undefined : 'lucide:refresh-cw',
+              title: t('intro.toast', { name: who }),
+              body: tm<string[]>('intro.questions')[data.question] ?? '',
+            })
+          }
         }
         else if (data.type === 'spin_state') {
           spins.applyState(data)

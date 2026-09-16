@@ -67,6 +67,7 @@ const en: Messages = {
     hint: 'or press Enter',
     phoneHint: 'When it is your turn: tap Spin.',
     waiting: 'Waiting for the next spin …',
+    toast: '{name} spun',
     spinningBy: '{name} is spinning …',
     spunBy: '{name} spun',
     presenter: 'Presenter',
@@ -76,6 +77,7 @@ const en: Messages = {
     soundOn: 'Sound on',
     soundOff: 'Sound off',
     momo: {
+      screen: 'Whose turn?',
       idle: 'Spin me!',
       spinning: 'Wheee …',
       landed: 'Well?',

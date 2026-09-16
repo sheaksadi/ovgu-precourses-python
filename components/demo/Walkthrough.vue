@@ -7,6 +7,8 @@
  * with a replay button under it. Used by the walk-throughs in `components/pycharm/`,
  * which drive it with `useDemoPlayer`.
  */
+import { useDeckRole } from '~/composables/useDeckRole'
+
 const props = defineProps<{
   eyebrow: string
   title: string
@@ -19,6 +21,9 @@ const props = defineProps<{
 }>()
 
 const emit = defineEmits<{ replay: [] }>()
+
+// The projector carries no buttons; Enter on its own keyboard still replays.
+const { isProjector } = useDeckRole()
 
 const isDone = (step: number) => step < props.stage || (step === props.stage && props.finished)
 </script>
@@ -56,7 +61,7 @@ const isDone = (step: number) => step < props.stage || (step === props.stage && 
     <section class="walk-demo">
       <slot />
 
-      <div class="walk-controls">
+      <div v-if="!isProjector" class="walk-controls">
         <button type="button" class="walk-replay" @click="emit('replay')">
           <Icon name="lucide:rotate-ccw" />
           <span class="text-trim">{{ replay }}</span>

@@ -68,6 +68,7 @@ const de = {
     hint: 'oder Enter drücken',
     phoneHint: 'Wenn du dran bist: Drehen tippen.',
     waiting: 'Warte auf den nächsten Dreh …',
+    toast: '{name} hat gedreht',
     spinningBy: '{name} dreht …',
     spunBy: '{name} hat gedreht',
     presenter: 'Präsentation',
@@ -77,6 +78,7 @@ const de = {
     soundOn: 'Ton an',
     soundOff: 'Ton aus',
     momo: {
+      screen: 'Wer ist dran?',
       idle: 'Dreh mich!',
       spinning: 'Wuiii …',
       landed: 'Na?',

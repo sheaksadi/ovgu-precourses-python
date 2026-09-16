@@ -9,11 +9,12 @@
  *
  * Text lives in `home.*` in `locales/`.
  */
-import { computed } from 'vue'
+import { computed, onMounted } from 'vue'
 import { usePresentationStore } from '~/stores/presentationStore'
 import { useSlideData } from '~/composables/useSlideData'
 import { useI18n } from '~/composables/useI18n'
 import { useFont } from '~/composables/useFont'
+import { useDebug } from '~/composables/useDebug'
 import { slideIdToRoute } from '~/utils/slideId'
 
 definePageMeta({ layout: false })
@@ -22,6 +23,9 @@ const store = usePresentationStore()
 const { getSlideById, firstSlideId } = useSlideData()
 const { t, locale, locales, setLocale } = useI18n()
 const { font, fonts, setFont } = useFont()
+// A switcher for trying the deck out alone; off for everyone else.
+const debug = useDebug()
+onMounted(() => debug.adopt())
 
 /** The room's slide while a talk runs, otherwise the first slide, with current language. */
 const projectorTarget = computed(() => {
@@ -97,6 +101,16 @@ const styleGuide = slideIdToRoute('PRE-0010')
             <span class="text-trim">{{ option.label }}</span>
           </button>
         </span>
+        <button
+          type="button"
+          class="home-lang-option home-debug"
+          :class="{ 'is-active': debug.enabled.value }"
+          :aria-pressed="debug.enabled.value"
+          title="Switcher for trying the deck out: views, room navigation"
+          @click="debug.toggle()"
+        >
+          <span class="text-trim">debug</span>
+        </button>
         <span class="home-lang" role="group" :aria-label="t('common.switchLanguage')">
           <button
             v-for="code in locales"
@@ -317,6 +331,17 @@ const styleGuide = slideIdToRoute('PRE-0010')
 }
 
 /* Font and language pickers, side by side at the right. */
+/* The debug toggle is a tool, not part of the talk: it stays quiet until it is on. */
+.home-debug {
+  border: 2px solid var(--border);
+  border-radius: 999px;
+}
+.home-debug.is-active {
+  background: var(--text);
+  border-color: var(--text);
+  color: var(--bg);
+}
+
 .home-prefs {
   margin-left: auto;
   display: inline-flex;

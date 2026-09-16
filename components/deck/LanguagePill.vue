@@ -4,17 +4,18 @@
  *
  * Only touch screens show it, so the projector never displays a control; a
  * screen with a keyboard switches with the `l` key. Controllers and peek frames
- * never show it.
+ * never show it, and neither does the projector: its language comes from the
+ * link the start page opens.
  */
 import { useDeckRole } from '~/composables/useDeckRole'
 import { useI18n } from '~/composables/useI18n'
 
-const { isViewer, isPeek } = useDeckRole()
+const { isViewer, isPeek, isProjector } = useDeckRole()
 const { locale, locales, setLocale, t } = useI18n()
 </script>
 
 <template>
-  <div v-if="isViewer && !isPeek" class="lang-pill" role="group" :aria-label="t('common.switchLanguage')">
+  <div v-if="isViewer && !isPeek && !isProjector" class="lang-pill" role="group" :aria-label="t('common.switchLanguage')">
     <button
       v-for="code in locales"
       :key="code"
