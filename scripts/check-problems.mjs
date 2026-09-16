@@ -5,10 +5,11 @@
  *   npm run dev
  *   npm run check:problems
  *
- * Two made-up devices fetch their input for `loops-fish`, answer wrong, hit the
- * cooldown, then answer right with an independent JavaScript solution, and the
- * script checks ranks, Part 2 locking and the `solve` broadcast. The solves stay
- * in the room until every client has left, under the names "Check A" and "Check B".
+ * Two made-up devices fetch their inputs for `loops-fish` and `lists-basket`,
+ * answer wrong, hit the cooldown, then answer right with an independent
+ * JavaScript solution, and the script checks ranks, Part 2 locking and the
+ * `solve` broadcast. The solves stay in the room until every client has left,
+ * under the names "Check A" and "Check B".
  *
  * Environment: DECK_URL (default http://localhost:3000).
  */
@@ -23,12 +24,12 @@ const A = device('a')
 const B = device('b')
 
 const cookie = (who, lang = 'de') => `deck-audience=${who.id}; deck-lang=${lang}`
-const getInput = async (who, lang) => {
-  const res = await fetch(`${BASE}/api/problems/loops-fish/input`, { headers: { cookie: cookie(who, lang) } })
+const getInput = async (who, lang, problem = 'loops-fish') => {
+  const res = await fetch(`${BASE}/api/problems/${problem}/input`, { headers: { cookie: cookie(who, lang) } })
   return { status: res.status, body: res.ok ? await res.json() : null }
 }
-const answer = async (who, part, value) => {
-  const res = await fetch(`${BASE}/api/problems/loops-fish/answer`, {
+const answer = async (who, part, value, problem = 'loops-fish') => {
+  const res = await fetch(`${BASE}/api/problems/${problem}/answer`, {
     method: 'POST',
     headers: { cookie: cookie(who), 'content-type': 'application/json' },
     body: JSON.stringify({ part, answer: String(value), name: who.name }),
@@ -99,6 +100,24 @@ check('room heard three solves', solves.length === 3, solves.map(s => `${s.name}
 const last = solves.at(-1)
 const top = last?.standings.filter(s => s.audienceId.endsWith(run))
 check('standings put A (2 parts) above B (1 part)', top?.[0]?.name === 'Check A' && top[0].points === 2 && top?.[1]?.name === 'Check B', JSON.stringify(top?.map(s => [s.name, s.points])))
+
+// ── lists-basket: the warm-up round ──
+const basket = await getInput(A, 'de', 'lists-basket')
+const basketEn = await getInput(A, 'en', 'lists-basket')
+check('lists input served', basket.status === 200 && basket.body.input.startsWith('preise = ['), basket.body?.input.slice(0, 40))
+check('lists input is English on demand', basketEn.body.input.startsWith('prices = ['))
+const prices = numbers(basket.body.input)
+const first3 = prices.slice(0, 3).reduce((sum, price) => sum + price, 0)
+const last3 = prices.slice(-3).reduce((sum, price) => sum + price, 0)
+check('25 prices', prices.length === 25, String(prices.length))
+const basketWrong = await answer(A, 1, first3 - 10, 'lists-basket')
+check('lists says too low', basketWrong.result === 'low', JSON.stringify(basketWrong))
+await wait(5200)
+const basket1 = await answer(A, 1, first3, 'lists-basket')
+check('lists Part 1 solved', basket1.result === 'correct' && basket1.rank === 1, JSON.stringify(basket1))
+const basket2 = await answer(A, 2, last3, 'lists-basket')
+check('lists Part 2 solved', basket2.result === 'correct', JSON.stringify(basket2))
+check('every problem keeps its own room', solves.filter(s => s.problemId === 'lists-basket').length === 2)
 
 socket.close()
 console.log(results.join('\n'))

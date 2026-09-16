@@ -1387,6 +1387,21 @@ else:
       ],
       example: { input: 'flaeche(3, 4)', answer: '12', note: '3 mal 4.' },
     },
+    'lists-basket': {
+      title: 'Momos Einkaufskorb',
+      story: [
+        'Momo war einkaufen. Deine Eingabe ist ihr Kassenzettel: der Preis jedes Dings in Cent, in der Reihenfolge, in der sie eingepackt hat.',
+        'Die ersten drei Dinge sind für Bello. Was kosten sie zusammen?',
+      ],
+      example: { input: 'preise = [120, 95, 250, 40, 310]', answer: '465', note: '`120 + 95 + 250`.' },
+      part2: {
+        story: [
+          'Die letzten drei Dinge sind für Momo selbst. Was kosten die zusammen?',
+          'Tipp: `preise[-1]` ist das letzte Ding, `preise[-2]` das davor. So musst du nicht zählen.',
+        ],
+        example: { answer: '600', note: '`250 + 40 + 310`.' },
+      },
+    },
     'loops-fish': {
       title: 'Momos Fang',
       story: [

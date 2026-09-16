@@ -7,6 +7,7 @@
  * `locales/` under `problems.<id>`.
  */
 export const PROBLEM_ROUNDS: Record<string, string[]> = {
+  lists: ['lists-basket'],
   loops: ['loops-fish'],
   functions: ['functions-area'],
 }

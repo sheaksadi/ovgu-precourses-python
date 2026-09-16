@@ -244,3 +244,20 @@ Written here as each phase starts.
   editor, Run, test list, Submit).
 - `POST /api/tasks/:id/submit` records the pass and broadcasts it like a solve.
 
+### Phase 4: practice rounds, one round at a time
+
+- The "Jetzt du" slides keep their ids: their pages are repointed at a problem
+  instead of `LessonExercise`, so nothing is retired and the order stays put.
+  A round that needs a second problem gets one new slide, and a leaderboard
+  slide where it is worth celebrating.
+- Each round only uses what the deck has taught by then. Lists (slide 11) come
+  before loops, so that round is index arithmetic; the loops round is the first
+  with counting and `break`.
+- Solution walkthroughs only where they teach the most: the loops round (done)
+  and the functions round.
+- `components/lesson/Exercise.vue` and `exercises.*` in the locales go once the
+  last round has replaced them.
+- Order of work: lists (11) → loops (18, with PRE-0137/0138 already) →
+  maths and physics (new, after 21) → functions (23, code tasks) →
+  built-ins (25) → dictionaries (27).
+

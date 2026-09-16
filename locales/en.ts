@@ -1383,6 +1383,21 @@ else:
       ],
       example: { input: 'area(3, 4)', answer: '12', note: '3 times 4.' },
     },
+    'lists-basket': {
+      title: "Momo's Basket",
+      story: [
+        'Momo went shopping. Your input is her receipt: the price of every item in cents, in the order she packed them.',
+        'The first three items are for Bello. What do they cost together?',
+      ],
+      example: { input: 'prices = [120, 95, 250, 40, 310]', answer: '465', note: '`120 + 95 + 250`.' },
+      part2: {
+        story: [
+          'The last three items are for Momo herself. What do those cost together?',
+          'Hint: `prices[-1]` is the last item, `prices[-2]` the one before. That way you do not have to count.',
+        ],
+        example: { answer: '600', note: '`250 + 40 + 310`.' },
+      },
+    },
     'loops-fish': {
       title: "Momo's Catch",
       story: [

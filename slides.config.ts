@@ -246,9 +246,11 @@ export const slides: SlideEntry[] = [
   {
     id: 'PRE-0070',
     title: 'Jetzt du: Listen',
+    subtitle: 'Erstes Rätsel: rechnen mit Stellen',
+    problem: 'lists-basket',
     subtitle: 'Einkaufsliste, append, tauschen',
     duration: 10,
-    teleprompter: 'Drei Aufgaben in PyCharm, von leicht nach knifflig. Erst allein probieren, dann mit der Person daneben vergleichen. Enter zeigt nacheinander einen Tipp pro Aufgabe, nochmal Enter nach dem letzten blendet alle wieder aus. Aufgabe 3 hat einen Trick: Wer direkt überschreibt, verliert den ersten Wert.',
+    teleprompter: 'Erstes Rätsel, und gleich im Advent-of-Code-Stil: Jedes Gerät bekommt eine eigene Preisliste. Kopieren, in PyCharm die drei ersten Preise addieren, die Zahl hier abschicken. Teil 2 sind die letzten drei – da lohnt sich preise[-1]. Oben rechts erscheint, wer fertig ist; wer weiterblättert, findet das Rätsel unten rechts wieder.',
   },
   {
     id: 'PRE-0065',
