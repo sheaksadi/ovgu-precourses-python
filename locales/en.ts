@@ -700,7 +700,6 @@ else:
       file: 'everywhere.py',
       output: 'Output',
       noOutput: 'no output yet',
-      six: 'Six!',
       names: { letter: 'letter', row: 'row', col: 'col', money: 'money' },
       stages: [
         {
@@ -737,15 +736,6 @@ else:
           code: 'money = 100\nfor year in range(1, 6):\n    money = money * 1.1\n    print(year, round(money))',
           focus: [],
           output: ['1 110', '2 121', '3 133', '4 146', '5 161'],
-          outputFrom: 0,
-        },
-        {
-          headline: 'Chance: roll until a six.',
-          note: '`random.randint(1, 6)` rolls a die. `!=` means “not equal”. Every run looks different – this is one of them.',
-          tally: 'roll != 6 ?',
-          code: 'import random\nroll = 0\nwhile roll != 6:\n    roll = random.randint(1, 6)\n    print("Roll:", roll)',
-          focus: [],
-          output: ['Roll: 3', 'Roll: 1', 'Roll: 5', 'Roll: 6'],
           outputFrom: 0,
         },
       ],

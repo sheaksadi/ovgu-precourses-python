@@ -704,7 +704,6 @@ else:
       file: 'ueberall.py',
       output: 'Ausgabe',
       noOutput: 'noch keine Ausgabe',
-      six: 'Sechs!',
       names: { letter: 'buchstabe', row: 'zeile', col: 'spalte', money: 'geld' },
       stages: [
         {
@@ -741,15 +740,6 @@ else:
           code: 'geld = 100\nfor jahr in range(1, 6):\n    geld = geld * 1.1\n    print(jahr, round(geld))',
           focus: [],
           output: ['1 110', '2 121', '3 133', '4 146', '5 161'],
-          outputFrom: 0,
-        },
-        {
-          headline: 'Zufall: würfeln bis zur Sechs.',
-          note: '`random.randint(1, 6)` würfelt. `!=` heißt „ungleich“. Jeder Lauf sieht anders aus – so könnte einer aussehen.',
-          tally: 'wurf != 6 ?',
-          code: 'import random\nwurf = 0\nwhile wurf != 6:\n    wurf = random.randint(1, 6)\n    print("Wurf:", wurf)',
-          focus: [],
-          output: ['Wurf: 3', 'Wurf: 1', 'Wurf: 5', 'Wurf: 6'],
           outputFrom: 0,
         },
       ],

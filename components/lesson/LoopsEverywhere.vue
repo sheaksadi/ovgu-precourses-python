@@ -2,13 +2,12 @@
 /**
  * "Schleifen überall": loops beyond lists. Auto-imported as `<LessonLoopsEverywhere :stage="1" />`.
  *
- * Five small scenes, one per slide (PRE-0090 and its four sub-slides):
+ * Four small scenes, one per slide (PRE-0090 and its three sub-slides):
  *
  *   1. letters: `for buchstabe in "Momo":` — the cursor walks the word
  *   2. nested: a 3 × 4 grid of tiles fills row by row
  *   3. patterns: a triangle of stars grows one line per pass
  *   4. simulation: savings with 10 % interest, one bar per year
- *   5. chance: roll a die until it shows a six
  *
  * Every scene stays one extra stage so it can clear away while the next one
  * arrives. Beats are computed here and handed to CSS as `--t`. Words come from
@@ -17,7 +16,7 @@
 import { computed } from 'vue'
 import { useI18n } from '~/composables/useI18n'
 
-type StageNumber = 1 | 2 | 3 | 4 | 5
+type StageNumber = 1 | 2 | 3 | 4
 
 interface Stage {
   headline: string
@@ -53,23 +52,12 @@ const starRowAt = (i: number) => 0.6 + (i - 1) * 0.55
 const years = [1, 2, 3, 4, 5].map(year => ({ year, money: Math.round(100 * 1.1 ** year) }))
 const yearAt = (y: number) => 0.7 + (y - 1) * 0.7
 
-/* 5: dice */
-const ROLLS = [3, 1, 5, 6]
-const rollAt = (k: number) => 0.8 + k * 1.0
-const PIPS: Record<number, number[]> = {
-  1: [4],
-  3: [0, 4, 8],
-  5: [0, 2, 4, 6, 8],
-  6: [0, 2, 3, 5, 6, 8],
-}
-
 const outputDelays = computed(() => {
   switch (props.stage) {
     case 1: return [...WORD].map((_, k) => letterAt(k) + 0.25)
     case 2: return [0, 1, 2].map(r => tileAt(r, COLS - 1) + 0.25)
     case 3: return [1, 2, 3, 4, 5].map(i => starRowAt(i) + 0.3)
     case 4: return years.map(y => yearAt(y.year) + 0.35)
-    case 5: return ROLLS.map((_, k) => rollAt(k) + 0.6)
     default: return []
   }
 })
@@ -180,34 +168,6 @@ const shown = (own: number) => props.stage === own || props.stage === own + 1
             <span class="column-bar"></span>
             <span class="column-year"><span class="text-trim">{{ y.year }}</span></span>
           </div>
-        </div>
-      </div>
-
-      <!-- ═══ 5: dice ═══ -->
-      <div v-if="stage === 5" class="part dice is-active">
-        <div class="die-slot">
-          <div
-            v-for="(roll, k) in ROLLS"
-            :key="k"
-            class="die"
-            :class="{ 'is-six': roll === 6 }"
-            :style="{ '--t': `${rollAt(k)}s`, '--u': `${k < ROLLS.length - 1 ? rollAt(k + 1) : 999}s` }"
-          >
-            <span v-for="p in 9" :key="p" class="pip" :class="{ 'is-on': PIPS[roll]!.includes(p - 1) }"></span>
-          </div>
-        </div>
-        <div class="history">
-          <span
-            v-for="(roll, k) in ROLLS"
-            :key="k"
-            class="roll"
-            :class="{ 'is-six': roll === 6 }"
-            :style="{ '--t': `${rollAt(k) + 0.5}s` }"
-          ><span class="text-trim">{{ roll }}</span></span>
-        </div>
-        <div class="six">
-          <ArtSprite name="cat-peek" color="coral" accent="sun" :size="96" class="six-cat" />
-          <span class="six-label"><span class="text-trim">{{ t('loops.everywhere.six') }}</span></span>
         </div>
       </div>
     </div>
@@ -510,96 +470,6 @@ const shown = (own: number) => props.stage === own || props.stage === own + 1
   opacity: 1;
 }
 
-/* ═══ 5: dice ══════════════════════════════════════════════════════════ */
-.die-slot {
-  position: absolute;
-  top: 8vh;
-  left: 50%;
-  width: 16vh;
-  height: 16vh;
-  translate: -50% 0;
-}
-.die {
-  position: absolute;
-  inset: 0;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  grid-template-rows: repeat(3, 1fr);
-  padding: 2vh;
-  border-radius: 2.4vh;
-  background: var(--bg);
-  border: 3px solid var(--text);
-  opacity: 0;
-  animation:
-    tumble 0.5s cubic-bezier(0.22, 1, 0.36, 1) var(--t) both,
-    vanish 0.1s ease var(--u) forwards;
-}
-.die.is-six {
-  border-color: var(--mint);
-  box-shadow: 0 0 0 0.6vh color-mix(in srgb, var(--mint) 30%, transparent);
-}
-.pip {
-  place-self: center;
-  width: 2.4vh;
-  height: 2.4vh;
-  border-radius: 999px;
-}
-.pip.is-on {
-  background: var(--text);
-}
-
-.history {
-  position: absolute;
-  top: 29vh;
-  left: 50%;
-  display: flex;
-  gap: 1.2vh;
-  translate: -50% 0;
-}
-.roll {
-  display: grid;
-  place-items: center;
-  width: 5vh;
-  height: 5vh;
-  border-radius: 1vh;
-  background: var(--bg);
-  border: 2px solid var(--border);
-  font-family: var(--font-code);
-  font-size: clamp(0.8rem, 2.3vh, 1.5rem);
-  font-weight: 800;
-  color: var(--text);
-  opacity: 0;
-  animation: pop 0.3s cubic-bezier(0.22, 1, 0.36, 1) var(--t) both;
-}
-.roll.is-six {
-  background: var(--mint);
-  border-color: var(--text);
-  color: #FFFFFF;
-}
-
-.six {
-  position: absolute;
-  right: 8%;
-  bottom: 2vh;
-  display: flex;
-  align-items: center;
-  gap: 1vh;
-  opacity: 0;
-  animation: rise 0.4s cubic-bezier(0.22, 1, 0.36, 1) 4.5s both;
-}
-.six-cat {
-  width: 10vh;
-  height: 10vh;
-}
-.six-label {
-  padding: calc(0.5vh + 0.3em) 1.4vh;
-  border-radius: 999px;
-  background: var(--mint);
-  font-size: clamp(0.7rem, 1.9vh, 1.3rem);
-  font-weight: 900;
-  color: #FFFFFF;
-}
-
 /* ─── Keyframes ──────────────────────────────────────────────────────── */
 @keyframes appear {
   from { opacity: 0; }
@@ -633,9 +503,5 @@ const shown = (own: number) => props.stage === own || props.stage === own + 1
 @keyframes grow {
   from { transform: scaleY(0); }
   to { transform: scaleY(1); }
-}
-@keyframes tumble {
-  from { opacity: 0; transform: rotate(-200deg) scale(0.5); }
-  to { opacity: 1; transform: none; }
 }
 </style>

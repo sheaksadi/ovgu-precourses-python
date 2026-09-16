@@ -91,19 +91,19 @@ The shared machinery for every practice round in phases 4 and 5.
 Every "Jetzt du" slide changes. Rounds use the puzzle format unless the task is
 building a function.
 
-- [ ] **Slide 11** (PRE-0070, lists): convert to a puzzle round.
-- [ ] **Slide 17.4** (PRE-0094, loops everywhere, randomness): drop
-      `random.randint` from the loops section. The dice scene moves to the
-      package slide (phase 5, slide 29).
-- [ ] **Slide 18** (PRE-0089, loops): puzzle round of simple logic problems,
+- [x] **Slide 11** (PRE-0070, lists): convert to a puzzle round.
+- [x] **Slide 17.4** (PRE-0094, loops everywhere, randomness): dropped, and
+      with it `random` from the loops section. The dice scene itself is built
+      fresh on the package slide in phase 5.
+- [x] **Slide 18** (PRE-0089, loops): puzzle round of simple logic problems,
       then one solution walkthrough slide per problem.
-- [ ] **New round after slide 21** (maths and physics functions): problems that
+- [x] **New round after slide 21** (maths and physics functions): problems that
       can be solved without functions but get easier with a few small ones.
       The device offers hint functions to copy.
-- [ ] **Slide 23** (PRE-0112, functions): code tasks. The projector keeps the
+- [x] **Slide 23** (PRE-0112, functions): code tasks. The projector keeps the
       Python examples; the devices get the editor, tests and submit.
-- [ ] **Slide 25** (PRE-0118, built-ins): convert to a puzzle round.
-- [ ] **Slide 27** (PRE-0123, dictionaries): convert to a puzzle round.
+- [x] **Slide 25** (PRE-0118, built-ins): convert to a puzzle round.
+- [x] **Slide 27** (PRE-0123, dictionaries): convert to a puzzle round.
 
 ## Phase 5: libraries, documentation, APIs
 

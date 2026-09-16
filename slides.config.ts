@@ -442,13 +442,6 @@ export const slides: SlideEntry[] = [
     teleprompter: 'Simulation heißt: Wir rechnen Schritt für Schritt aus, wie sich etwas entwickelt. Hier Geld mit 10 Prozent Zinsen. Das gleiche Muster steckt in Wettermodellen, Physik und beim Training von KI-Modellen – Runde für Runde.',
   },
   {
-    id: 'PRE-0094',
-    title: 'Schleifen überall – Zufall',
-    parent: 'PRE-0090',
-    transition: 'none',
-    teleprompter: 'import random holt ein Modul mit Zufallsfunktionen, dazu später mehr. Die Schleife läuft, bis eine Sechs kommt – vorher weiß niemand, wie oft. Das ist wieder ein Fall für while.',
-  },
-  {
     id: 'PRE-0089',
     title: 'Jetzt du: Schleifen',
     subtitle: 'Zählen, und der längste Lauf am Stück',
