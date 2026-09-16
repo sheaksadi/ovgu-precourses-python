@@ -689,9 +689,11 @@ export const slides: SlideEntry[] = [
   {
     id: 'PRE-0118',
     title: 'Jetzt du: Eingebautes',
+    subtitle: 'Wer gewinnt, und die drei Besten',
+    problem: 'builtins-scores',
     subtitle: 'Noten, Einkaufszettel, Rangliste',
     duration: 15,
-    teleprompter: 'Drei Aufgaben mit eingebauten Funktionen. Noten: min, max, Durchschnitt. Einkaufszettel: split, sorted, len. Rangliste: zip und enumerate zusammen – das ist knifflig, dafür gibt es den Tipp mit Enter.',
+    teleprompter: 'Rätsel zu den eingebauten Funktionen. Zwei Listen, die zusammengehören: Namen und Punkte. Teil 1 will den Namen mit den meisten Punkten – zip oder eine Schleife über die Stellen. Teil 2 die drei besten Punktzahlen zusammen, dafür ist sorted da. Die Antwort auf Teil 1 ist ein Name, Groß- und Kleinschreibung egal.',
   },
   {
     id: 'PRE-0119',
@@ -724,9 +726,11 @@ export const slides: SlideEntry[] = [
   {
     id: 'PRE-0123',
     title: 'Jetzt du: Dictionaries',
+    subtitle: 'Alter zusammenzählen, ältestes Tier finden',
+    problem: 'dicts-shelter',
     subtitle: 'Steckbrief, Geburtstag, Futterplan',
     duration: 12,
-    teleprompter: 'Drei Aufgaben zu Dictionaries. Beim Geburtstag zeigt sich, dass neue Schlüssel einfach durch Zuweisen entstehen. Beim Futterplan kommt items() neu dazu – Tipp mit Enter.',
+    teleprompter: 'Rätsel zu Dictionaries. Die Eingabe ist ein Dictionary: Name als Schlüssel, Alter als Wert. Teil 1 zählt alle Alter zusammen, Teil 2 sucht das älteste Tier – der Wert entscheidet, die Antwort ist der Schlüssel. Das älteste Tier ist immer eindeutig.',
   },
   {
     id: 'PRE-0124',

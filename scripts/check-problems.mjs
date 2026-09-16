@@ -115,6 +115,27 @@ check('steps Part 1 solved', steps1.result === 'correct', JSON.stringify(steps1)
 const steps2 = await answer(B, 2, longestRun, 'loops-steps')
 check('steps Part 2 solved', steps2.result === 'correct', JSON.stringify(steps2))
 
+// ── builtins-scores and dicts-shelter: answers that are names ──
+const table = await getInput(B, 'de', 'builtins-scores')
+const [nameLine, pointLine] = table.body.input.split('\n')
+const tableNames = [...nameLine.matchAll(/"([^"]+)"/g)].map(match => match[1])
+const tablePoints = numbers(pointLine)
+const winner = tableNames[tablePoints.indexOf(Math.max(...tablePoints))]
+const bestThree = [...tablePoints].sort((a, b) => b - a).slice(0, 3).reduce((sum, score) => sum + score, 0)
+check('score table has 12 entries', tableNames.length === 12 && tablePoints.length === 12)
+check('the winner is alone at the top', tablePoints.filter(score => score === Math.max(...tablePoints)).length === 1)
+const scores1 = await answer(B, 1, winner.toLowerCase(), 'builtins-scores')
+check('a name answers, whatever the case', scores1.result === 'correct', JSON.stringify(scores1))
+check('scores Part 2 solved', (await answer(B, 2, bestThree, 'builtins-scores')).result === 'correct')
+
+const shelter = await getInput(B, 'de', 'dicts-shelter')
+const pairs = [...shelter.body.input.matchAll(/"([^"]+)":\s*(\d+)/g)].map(match => [match[1], Number(match[2])])
+const totalAge = pairs.reduce((sum, [, age]) => sum + age, 0)
+const oldest = pairs.reduce((best, animal) => (animal[1] > best[1] ? animal : best))[0]
+check('shelter has 14 animals', pairs.length === 14, String(pairs.length))
+check('shelter Part 1 solved', (await answer(B, 1, totalAge, 'dicts-shelter')).result === 'correct')
+check('shelter Part 2 solved', (await answer(B, 2, oldest, 'dicts-shelter')).result === 'correct')
+
 // ── code tasks: the device reports, the server records ──
 const taskState = await fetch(`${BASE}/api/tasks/functions-greet/state`, { headers: { cookie: cookie(A) } })
 check('task state served', taskState.status === 200 && (await taskState.clone().json()).parts === 1)

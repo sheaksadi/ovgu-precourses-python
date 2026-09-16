@@ -1375,6 +1375,37 @@ else:
       first: '{name} was the fastest!',
       body: '{title} · Part {part} · place {rank}',
     },
+    'builtins-scores': {
+      title: 'Score Table',
+      story: [
+        'Twelve animals played. Your input is two lists: the names and the points, the same animal at the same position.',
+        'Who has the most points? Submit the name.',
+        'Hint: `max(points)` gives you the score. The name that goes with it comes from `points.index(...)` or from `zip(names, points)`.',
+      ],
+      example: { input: 'names = ["Momo", "Bello", "Kiki"]\npoints = [42, 91, 67]', answer: 'Bello', note: '`91` is the highest score.' },
+      part2: {
+        story: [
+          'How many points do the best three have together?',
+          'Hint: `sorted(points, reverse=True)` puts the highest first.',
+        ],
+        example: { answer: '200', note: '`91 + 67 + 42`.' },
+      },
+    },
+    'dicts-shelter': {
+      title: 'The Animal Shelter',
+      story: [
+        'Fourteen animals live in the shelter. Your input is a dictionary: the name is the key, the age in years is the value.',
+        'How old are all the animals together?',
+      ],
+      example: { input: 'animals = {"Momo": 3, "Bello": 7, "Kiki": 2}', answer: '12', note: '`3 + 7 + 2`.' },
+      part2: {
+        story: [
+          'Which animal is the oldest? Submit its name.',
+          'Hint: walk through it with `for name, age in animals.items():` and remember the oldest so far.',
+        ],
+        example: { answer: 'Bello', note: 'at 7 years.' },
+      },
+    },
     'functions-greet': {
       title: 'Greeting',
       story: [

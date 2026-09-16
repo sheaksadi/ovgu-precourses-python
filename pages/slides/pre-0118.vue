@@ -1,7 +1,7 @@
 <script setup lang="ts">
-/** PRE-0118 — built-ins exercises. The slide lives in components/lesson/Exercise.vue. */
+/** PRE-0118 — built-ins round: the tournament table. The slide lives in components/problems/Slide.vue. */
 </script>
 
 <template>
-  <LessonExercise section="builtins" />
+  <ProblemsSlide problem="builtins-scores" round="builtins" />
 </template>

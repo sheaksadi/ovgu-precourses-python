@@ -1379,6 +1379,37 @@ else:
       first: '{name} war am schnellsten!',
       body: '{title} · Teil {part} · Platz {rank}',
     },
+    'builtins-scores': {
+      title: 'Turniertabelle',
+      story: [
+        'Zwölf Tiere haben gespielt. Deine Eingabe sind zwei Listen: die Namen und die Punkte, an derselben Stelle jeweils dasselbe Tier.',
+        'Wer hat die meisten Punkte? Schick den Namen ab.',
+        'Tipp: `max(punkte)` gibt dir die Punktzahl. Den Namen dazu findest du mit `punkte.index(...)` oder mit `zip(namen, punkte)`.',
+      ],
+      example: { input: 'namen = ["Momo", "Bello", "Kiki"]\npunkte = [42, 91, 67]', answer: 'Bello', note: '`91` ist die höchste Punktzahl.' },
+      part2: {
+        story: [
+          'Wie viele Punkte haben die drei Besten zusammen?',
+          'Tipp: `sorted(punkte, reverse=True)` legt die höchste nach vorne.',
+        ],
+        example: { answer: '200', note: '`91 + 67 + 42`.' },
+      },
+    },
+    'dicts-shelter': {
+      title: 'Das Tierheim',
+      story: [
+        'Im Tierheim wohnen 14 Tiere. Deine Eingabe ist ein Dictionary: der Name ist der Schlüssel, das Alter in Jahren der Wert.',
+        'Wie alt sind alle Tiere zusammen?',
+      ],
+      example: { input: 'tiere = {"Momo": 3, "Bello": 7, "Kiki": 2}', answer: '12', note: '`3 + 7 + 2`.' },
+      part2: {
+        story: [
+          'Welches Tier ist das älteste? Schick seinen Namen ab.',
+          'Tipp: Lauf mit `for name, alter in tiere.items():` durch und merk dir das bisher älteste.',
+        ],
+        example: { answer: 'Bello', note: 'mit 7 Jahren.' },
+      },
+    },
     'functions-greet': {
       title: 'Begrüßung',
       story: [

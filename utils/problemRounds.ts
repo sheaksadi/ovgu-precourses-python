@@ -11,4 +11,6 @@ export const PROBLEM_ROUNDS: Record<string, string[]> = {
   loops: ['loops-steps', 'loops-fish'],
   physics: ['physics-race'],
   functions: ['functions-greet', 'functions-area'],
+  builtins: ['builtins-scores'],
+  dicts: ['dicts-shelter'],
 }
