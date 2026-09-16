@@ -115,6 +115,19 @@ check('steps Part 1 solved', steps1.result === 'correct', JSON.stringify(steps1)
 const steps2 = await answer(B, 2, longestRun, 'loops-steps')
 check('steps Part 2 solved', steps2.result === 'correct', JSON.stringify(steps2))
 
+// ── physics-race: two lists that belong together ──
+const race = await getInput(A, 'de', 'physics-race')
+const [distanceLine, timeLine] = race.body.input.split('\n')
+const distances = numbers(distanceLine)
+const times = numbers(timeLine)
+const fast = distances.filter((distance, index) => distance / times[index] > 5)
+check('race input has two lists of 30', distances.length === 30 && times.length === 30 && timeLine.startsWith('zeiten = ['))
+check('no run sits exactly on 5 m/s', distances.every((distance, index) => distance / times[index] !== 5))
+const race1 = await answer(A, 1, fast.length, 'physics-race')
+check('race Part 1 solved', race1.result === 'correct', JSON.stringify(race1))
+const race2 = await answer(A, 2, fast.reduce((sum, distance) => sum + distance, 0), 'physics-race')
+check('race Part 2 solved', race2.result === 'correct', JSON.stringify(race2))
+
 // ── lists-basket: the warm-up round ──
 const basket = await getInput(A, 'de', 'lists-basket')
 const basketEn = await getInput(A, 'en', 'lists-basket')

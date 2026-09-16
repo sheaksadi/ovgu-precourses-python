@@ -592,6 +592,14 @@ export const slides: SlideEntry[] = [
     teleprompter: 'Funktionen dürfen andere Funktionen benutzen. kinetische_energie ruft quadrat, wartet auf die 9 und rechnet dann weiter. Der Stapel zeigt, dass Python sich merkt, wo es weitermachen muss. So baut man große Programme aus kleinen Teilen.',
   },
   {
+    id: 'PRE-0144',
+    title: 'Rätsel: Bellos Sprints',
+    subtitle: 'Geschwindigkeit ausrechnen, 30 Läufe',
+    duration: 15,
+    problem: 'physics-race',
+    teleprompter: 'Rätsel zu Mathe und Physik. Zwei Listen: Strecke und Zeit für 30 Läufe. Teil 1 zählt die Läufe über 5 m/s, Teil 2 addiert deren Strecken. Geht ohne Funktion, mit range(len(strecken)) – aber wer sich tempo(strecke, zeit) schreibt, liest die Schleife wie einen Satz. Genau das ist der Punkt: Funktionen machen die eigene Lösung lesbar.',
+  },
+  {
     id: 'PRE-0108',
     title: 'Tiere, die miteinander reden',
     subtitle: 'Funktionen mit Daten',

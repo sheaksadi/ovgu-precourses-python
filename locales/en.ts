@@ -1398,6 +1398,21 @@ else:
         example: { answer: '600', note: '`250 + 40 + 310`.' },
       },
     },
+    'physics-race': {
+      title: "Bello's Sprints",
+      story: [
+        'Bello ran 30 times. Your input is two lists: the distance in metres and the time in seconds, run by run at the same position.',
+        'A run was fast above 5 metres per second. How many runs were fast?',
+        'Hint: this works without a function. With your own `tempo(distance, time)` the loop reads like a sentence – and Part 2 then costs one line.',
+      ],
+      example: { input: 'distances = [100, 400, 60, 200]\ntimes = [12, 90, 15, 25]', answer: '2', note: '100/12 ≈ 8.3 and 200/25 = 8.0 are above 5; 400/90 ≈ 4.4 and 60/15 = 4.0 are not.' },
+      part2: {
+        story: [
+          'How many metres did Bello run in the fast runs together?',
+        ],
+        example: { answer: '300', note: '`100 + 200`.' },
+      },
+    },
     'loops-steps': {
       title: "Bello's Step Counter",
       story: [

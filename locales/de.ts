@@ -1402,6 +1402,21 @@ else:
         example: { answer: '600', note: '`250 + 40 + 310`.' },
       },
     },
+    'physics-race': {
+      title: 'Bellos Sprints',
+      story: [
+        'Bello ist 30-mal gerannt. Deine Eingabe sind zwei Listen: die Strecke in Metern und die Zeit in Sekunden, Lauf für Lauf an derselben Stelle.',
+        'Schnell war ein Lauf über 5 Metern pro Sekunde. Wie viele Läufe waren schnell?',
+        'Tipp: Das geht ohne Funktion. Mit einer eigenen `tempo(strecke, zeit)` liest sich deine Schleife aber wie ein Satz – und Teil 2 kostet dann nur noch eine Zeile.',
+      ],
+      example: { input: 'strecken = [100, 400, 60, 200]\nzeiten = [12, 90, 15, 25]', answer: '2', note: '100/12 ≈ 8.3 und 200/25 = 8.0 sind über 5; 400/90 ≈ 4.4 und 60/15 = 4.0 nicht.' },
+      part2: {
+        story: [
+          'Wie viele Meter ist Bello in den schnellen Läufen zusammen gerannt?',
+        ],
+        example: { answer: '300', note: '`100 + 200`.' },
+      },
+    },
     'loops-steps': {
       title: 'Bellos Schrittzähler',
       story: [
