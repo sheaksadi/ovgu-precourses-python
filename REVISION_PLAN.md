@@ -237,7 +237,7 @@ Written here as each phase starts.
   region each and trace it (variables change, output grows), the last stage
   zooms back out with the answer.
 
-**3e. Code tasks**
+**3e. Code tasks** — done: bundled Pyodide in a module worker, CodeMirror editor, slide PRE-0143
 
 - Pyodide copy script, `utils/python/worker.ts` (run with timeout, capture
   output, run tests), and `components/problems/CodeTask.vue` (CodeMirror

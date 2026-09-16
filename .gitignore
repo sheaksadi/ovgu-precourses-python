@@ -1,0 +1,18 @@
+# Dependencies and build output
+node_modules
+.nuxt
+.output
+dist
+
+# Generated: the Pyodide runtime for code tasks, copied from node_modules
+# by scripts/copy-pyodide.mjs (see postinstall).
+public/pyodide
+
+# Screenshots from npm run check:deck
+deck-shots
+
+# Editors and local tools
+.idea
+.vscode
+.cortexkit
+.DS_Store

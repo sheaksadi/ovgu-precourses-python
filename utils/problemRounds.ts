@@ -8,4 +8,5 @@
  */
 export const PROBLEM_ROUNDS: Record<string, string[]> = {
   loops: ['loops-fish'],
+  functions: ['functions-area'],
 }

@@ -1348,6 +1348,22 @@ else:
       empty: 'Noch keine Lösungen.',
     },
     howTo: ['Folien auf deinem Gerät öffnen', 'Deine Eingabe nach PyCharm kopieren', 'Nur die Antwort abschicken'],
+    howToCode: ['Folien auf deinem Gerät öffnen', 'Funktion im Editor schreiben', 'Ausführen, dann abschicken'],
+    code: {
+      yourCode: 'Dein Code',
+      reset: 'Startcode',
+      run: 'Ausführen',
+      running: 'Läuft …',
+      output: 'Ausgabe',
+      tests: 'Das muss stimmen',
+      hidden: 'Beim Abschicken laufen noch {n} versteckte Tests.',
+      passed: '{n} von {total} Tests bestanden.',
+      notYet: 'Noch nicht alle Tests bestanden – schau dir die roten Zeilen an.',
+      errorTitle: 'Fehler',
+      timeout: 'Das lief zu lange. Läuft da eine Endlosschleife?',
+      loadingPython: 'Python wird geladen …',
+      noPython: 'Python startet auf diesem Gerät nicht. Schreib den Code in PyCharm.',
+    },
     results: {
       first: 'Richtig – und am schnellsten!',
       high: 'Zu hoch. Gleich nochmal versuchen.',
@@ -1362,6 +1378,14 @@ else:
       solved: '{name} hat Teil {part} gelöst',
       first: '{name} war am schnellsten!',
       body: '{title} · Teil {part} · Platz {rank}',
+    },
+    'functions-area': {
+      title: 'Rechteck-Funktion',
+      story: [
+        'Schreib die Funktion `flaeche(breite, hoehe)`, die den Flächeninhalt eines Rechtecks zurückgibt.',
+        '`return`, nicht `print`: das Ergebnis soll herauskommen, damit man damit weiterrechnen kann.',
+      ],
+      example: { input: 'flaeche(3, 4)', answer: '12', note: '3 mal 4.' },
     },
     'loops-fish': {
       title: 'Momos Fang',

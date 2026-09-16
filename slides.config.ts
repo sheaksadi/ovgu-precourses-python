@@ -623,6 +623,14 @@ export const slides: SlideEntry[] = [
     teleprompter: 'Drei Aufgaben: eine Funktion mit print, eine mit return, eine mit Schleife und return. Bei Aufgabe 2 auf das None achten, wenn jemand print statt return schreibt. Enter zeigt pro Aufgabe einen Tipp.',
   },
   {
+    id: 'PRE-0143',
+    title: 'Code-Aufgabe: Rechteck',
+    subtitle: 'Funktion schreiben, testen, abschicken',
+    duration: 12,
+    problem: 'functions-area',
+    teleprompter: 'Erste Code-Aufgabe: Hier gibt es keine Zahl zum Abschicken, sondern eine Funktion. Auf dem eigenen Gerät steht ein Editor; Ausführen prüft die sichtbaren Tests, Abschicken zusätzlich zwei versteckte. Python läuft im Browser, ohne Internet. Wer lieber in PyCharm schreibt: Code hinüberkopieren und dann hier einfügen.',
+  },
+  {
     id: 'PRE-0113',
     title: 'Eingebaute Funktionen',
     subtitle: 'max, min, sum, len und mehr',

@@ -7,7 +7,7 @@
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "postinstall": "nuxt prepare",
+    "postinstall": "nuxt prepare && node scripts/copy-pyodide.mjs",
     "slide:new": "node scripts/new-slide.mjs",
     "slides:check": "node scripts/check-slides.mjs",
     "check:sync": "node scripts/check-sync.mjs",
@@ -26,8 +26,11 @@
     "vue-router": "^4.5.0"
   },
   "dependencies": {
+    "@codemirror/lang-python": "^6.2.1",
     "@tailwindcss/postcss": "^4.0.0",
     "@tailwindcss/vite": "^4.0.0",
+    "codemirror": "^6.0.2",
+    "pyodide": "^314.0.7",
     "qrcode": "^1.5.4",
     "tailwindcss": "^4.0.0"
   }

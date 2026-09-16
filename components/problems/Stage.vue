@@ -13,6 +13,7 @@ import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import { useI18n } from '~/composables/useI18n'
 import { useProblems } from '~/composables/useProblems'
 import { localizeName } from '~/utils/cuteNames'
+import { isCodeTask } from '~/utils/codeTasks'
 
 interface ProblemText {
   title: string
@@ -30,6 +31,8 @@ const room = computed(() => problems.room.value[props.problem])
 const partOne = computed(() => problems.solvedCount(props.problem, 1))
 const partTwo = computed(() => problems.solvedCount(props.problem, 2))
 const showPartTwo = computed(() => !!text.value.part2 && partOne.value > 0)
+/** Writing a function needs other steps than copying an input. */
+const howTo = computed(() => tm<string[]>(isCodeTask(props.problem) ? 'problems.howToCode' : 'problems.howTo'))
 
 const now = ref(Date.now())
 let clock: ReturnType<typeof setInterval> | undefined
@@ -94,7 +97,7 @@ const segments = (line: string) => line.split('`').map((part, index) => ({ part,
 
     <aside class="stage-room">
       <ol class="stage-how">
-        <li v-for="(step, index) in tm<string[]>('problems.howTo')" :key="index">
+        <li v-for="(step, index) in howTo" :key="index">
           <span class="stage-how-num"><span class="text-trim">{{ index + 1 }}</span></span>
           <span>{{ step }}</span>
         </li>

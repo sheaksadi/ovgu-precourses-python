@@ -15,6 +15,7 @@ import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useI18n } from '~/composables/useI18n'
 import { useProblems, type AnswerResult, type Part } from '~/composables/useProblems'
 import { copyText } from '~/utils/copyText'
+import { CODE_TASKS } from '~/utils/codeTasks'
 
 interface ProblemText {
   title: string
@@ -38,6 +39,8 @@ watch(() => props.initial, (id) => { if (id) active.value = pickTab(id) })
 
 const text = computed(() => tm<ProblemText>(`problems.${active.value}`))
 const mine = computed(() => store.mine.value[active.value])
+/** A code task is written and run here instead of answered with a number. */
+const codeTask = computed(() => CODE_TASKS[active.value])
 const parts = computed<Part[]>(() => ((mine.value?.parts ?? (text.value.part2 ? 2 : 1)) === 2 ? [1, 2] : [1]))
 
 /* ─── Input ──────────────────────────────────────────────────────────── */
@@ -203,7 +206,9 @@ const segments = (line: string) => line.split('`').map((part, index) => ({ part,
 
       <!-- The work -->
       <section class="ws-work">
-        <div class="ws-card">
+        <ProblemsCodeTask v-if="codeTask" :task-id="active" />
+
+        <div v-if="!codeTask" class="ws-card">
           <div class="ws-card-head">
             <span class="ws-label">{{ t('problems.yourInput') }}</span>
             <button type="button" class="ws-copy" :disabled="!mine" @click="copy">
@@ -216,7 +221,7 @@ const segments = (line: string) => line.split('`').map((part, index) => ({ part,
         </div>
 
         <form
-          v-for="part in parts"
+          v-for="part in (codeTask ? [] : parts)"
           :key="`${active}-${part}`"
           class="ws-card ws-answer"
           :class="{ 'is-solved': solvedAt(part), 'is-locked': !isOpen(part) }"

@@ -17,6 +17,7 @@ import { useState } from '#app'
 import { useI18n } from '~/composables/useI18n'
 import { useAudience } from '~/composables/useAudience'
 import { storageKey } from '~/composables/useDeckRole'
+import { isCodeTask } from '~/utils/codeTasks'
 
 export type Part = 1 | 2
 export type Verdict = 'correct' | 'high' | 'low' | 'wrong' | 'cooldown' | 'locked' | 'already' | 'empty'
@@ -88,10 +89,13 @@ export function useProblems() {
   }
 
   const load = async (id: string) => {
-    const data = await $fetch<{ input: string, parts: Part, solved: MyProblem['solved'], cooldownMs: number }>(
-      `/api/problems/${id}/input`,
-      { query: { lang: locale.value } },
-    )
+    // A code task has no puzzle input: the device only asks what it has solved.
+    const data = isCodeTask(id)
+      ? { input: '', ...await $fetch<{ parts: Part, solved: MyProblem['solved'], cooldownMs: number }>(`/api/tasks/${id}/state`) }
+      : await $fetch<{ input: string, parts: Part, solved: MyProblem['solved'], cooldownMs: number }>(
+        `/api/problems/${id}/input`,
+        { query: { lang: locale.value } },
+      )
     mine.value = {
       ...mine.value,
       [id]: { input: data.input, parts: data.parts, solved: data.solved, cooldownUntil: Date.now() + data.cooldownMs, locale: locale.value },
@@ -111,6 +115,19 @@ export function useProblems() {
       if (result.result === 'correct' || result.result === 'already') next.solved[part] ??= Date.now()
       if (result.cooldownMs) next.cooldownUntil = Date.now() + result.cooldownMs
       mine.value = { ...mine.value, [id]: next }
+    }
+    return result
+  }
+
+  /** A code task passed its tests here; the room records it like a solved puzzle. */
+  const submitCode = async (id: string, passed: number, total: number) => {
+    const result = await $fetch<AnswerResult>(`/api/tasks/${id}/submit`, {
+      method: 'POST',
+      body: { passed, total, name: audience.name.value },
+    })
+    const current = mine.value[id]
+    if (current && (result.result === 'correct' || result.result === 'already')) {
+      mine.value = { ...mine.value, [id]: { ...current, solved: { ...current.solved, 1: current.solved[1] ?? Date.now() } } }
     }
     return result
   }
@@ -150,6 +167,7 @@ export function useProblems() {
     sheetOpen,
     load,
     submit,
+    submitCode,
     applyState,
     applySolve,
     restoreOpened,

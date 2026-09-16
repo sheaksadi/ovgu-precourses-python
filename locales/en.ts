@@ -1344,6 +1344,22 @@ else:
       empty: 'No solutions yet.',
     },
     howTo: ['Open the slides on your device', 'Copy your input into PyCharm', 'Submit only the answer'],
+    howToCode: ['Open the slides on your device', 'Write the function in the editor', 'Run it, then submit'],
+    code: {
+      yourCode: 'Your code',
+      reset: 'Starter code',
+      run: 'Run',
+      running: 'Running …',
+      output: 'Output',
+      tests: 'This has to be true',
+      hidden: 'Submitting also runs {n} hidden tests.',
+      passed: '{n} of {total} tests passed.',
+      notYet: 'Not every test passes yet – look at the red lines.',
+      errorTitle: 'Error',
+      timeout: 'That took too long. Is there an endless loop?',
+      loadingPython: 'Loading Python …',
+      noPython: 'Python will not start on this device. Write the code in PyCharm.',
+    },
     results: {
       first: 'Correct – and the fastest!',
       high: 'Too high. Try again in a moment.',
@@ -1358,6 +1374,14 @@ else:
       solved: '{name} solved Part {part}',
       first: '{name} was the fastest!',
       body: '{title} · Part {part} · place {rank}',
+    },
+    'functions-area': {
+      title: 'Rectangle function',
+      story: [
+        'Write the function `area(width, height)` that returns the area of a rectangle.',
+        '`return`, not `print`: the result has to come out, so it can be used in another calculation.',
+      ],
+      example: { input: 'area(3, 4)', answer: '12', note: '3 times 4.' },
     },
     'loops-fish': {
       title: "Momo's Catch",
