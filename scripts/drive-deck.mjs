@@ -134,6 +134,14 @@ const check = (name, pass, detail = '') =>
 
 const browser = await connect(await browserWs())
 
+// The deck this drives: the first slides in order, and the loops round, which is
+// where a device has something of its own to keep.
+const FIRST = { route: '/slides/pre-0033' }
+const SECOND = { route: '/slides/pre-0038', title: 'Vorstellungsrunde' }
+const DRIFTED = { route: '/slides/pre-0034' }
+const PUZZLE = { route: '/slides/pre-0137', title: 'Rätsel: Momos Fang' }
+const BOARD = { route: '/slides/pre-0138' }
+
 // --- Surfaces -----------------------------------------------------------
 const dashboard = await openPage(browser, `${BASE}/dashboard`, 1440, 1400)
 const presenter = await openPage(browser, `${BASE}/presenter`, 1600, 1000)
@@ -148,29 +156,27 @@ const reset = await openPage(browser, `${BASE}/`, 800, 600)
 await wait(1200)
 await evaluate(reset, 'localStorage.clear()')
 
-const viewer = await openPage(browser, `${BASE}/pre-0001`, 1280, 720)
+const viewer = await openPage(browser, `${BASE}${FIRST.route}`, 1280, 720)
 const control = await openPage(browser, `${BASE}/control`, 430, 860)
 await wait(3000)
 
-await clickText(control, 'button', 'Resume Presentation')
-await wait(600)
 await clickSelector(control, 'button[aria-label="Open menu"]')
 await wait(400)
 await clickText(control, 'button', 'Restart Presentation')
-check('remote resets the room', (await waitForPath(viewer, '/pre-0001')) === '/pre-0001',
+check('remote resets the room', (await waitForPath(viewer, FIRST.route)) === FIRST.route,
   `viewer at ${await path(viewer)}`)
 
 await clickText(control, 'button', 'Next')
-check('viewer follows the remote', (await waitForPath(viewer, '/pre-0002')) === '/pre-0002',
+check('viewer follows the remote', (await waitForPath(viewer, SECOND.route)) === SECOND.route,
   `viewer at ${await path(viewer)}`)
 await shot(viewer, '04-viewer-following', 1280, 720)
 await shot(control, '05-remote', 430, 860)
 
 // --- The slide screen drifts on its own, the room stays put -------------
 await pressKey(viewer, 'ArrowRight', 'ArrowRight', 39)
-check('viewer key moves only itself', (await waitForPath(viewer, '/pre-0003')) === '/pre-0003',
+check('viewer key moves only itself', (await waitForPath(viewer, DRIFTED.route)) === DRIFTED.route,
   `viewer at ${await path(viewer)}`)
-check('room stayed put', (await text(control, 'header span.truncate')) === 'About the Tech',
+check('room stayed put', (await text(control, 'header span.truncate')) === SECOND.title,
   `remote shows ${JSON.stringify(await text(control, 'header span.truncate'))}`)
 
 const pill = await waitForText(viewer, 'button[aria-label^="Sync"]')
@@ -179,56 +185,49 @@ await shot(viewer, '06-viewer-off-sync', 1280, 720)
 
 // The `s` key is the same as tapping the pill.
 await pressKey(viewer, 's', 'KeyS', 83)
-check('the s key rejoins the room', (await waitForPath(viewer, '/pre-0002')) === '/pre-0002',
+check('the s key rejoins the room', (await waitForPath(viewer, SECOND.route)) === SECOND.route,
   `viewer at ${await path(viewer)}`)
 
-// --- The room moves to the interactive slide ----------------------------
+// --- The room jumps to the puzzle slide ---------------------------------
 await clickSelector(control, 'button[aria-label="Open menu"]')
 await wait(500)
-await clickText(control, 'button', 'Try It Yourself')
-check('remote can jump to a slide', (await waitForPath(viewer, '/pre-0009')) === '/pre-0009',
+await clickText(control, 'button', PUZZLE.title)
+check('remote can jump to a slide', (await waitForPath(viewer, PUZZLE.route)) === PUZZLE.route,
   `viewer at ${await path(viewer)}`)
 
-// --- An audience device, in interactive mode ----------------------------
-const audience = await openPage(browser, `${BASE}/join?mode=interactive`, 430, 900)
+// --- An audience device joins and gets its own puzzle -------------------
+const audience = await openPage(browser, `${BASE}/join`, 430, 900)
 await wait(3000)
-await clickText(audience, 'button', 'Join the deck')
-check('join lands on the room slide', (await waitForPath(audience, '/pre-0009')) === '/pre-0009',
+await evaluate(audience, `(() => {
+  const field = document.querySelector('#follow-name')
+  if (!field) return 'no field'
+  field.value = 'Check Phone'
+  field.dispatchEvent(new Event('input', { bubbles: true }))
+  return 'typed'
+})()`)
+await clickText(audience, '.follow-language', 'Deutsch')
+check('join lands on the room slide', (await waitForPath(audience, PUZZLE.route)) === PUZZLE.route,
   `device at ${await path(audience)}`)
-check('interactive chrome is on', (await text(audience, 'button[aria-label="Next slide on this device"]')) !== null)
-await shot(audience, '07-interactive', 430, 900)
 
-await clickText(audience, 'button', 'Start')
-await wait(700)
-check('interaction reports its step',
-  !!(await evaluate(audience, `document.body.innerText.match(/step \\d+ \\/ \\d+/)?.[0] ?? null`)),
-  JSON.stringify(await evaluate(audience, `document.body.innerText.match(/step \\d+ \\/ \\d+/)?.[0] ?? null`)))
-await shot(audience, '08-interaction-started', 430, 900)
+const puzzleInput = await waitForText(audience, '.ws-input')
+check('the device gets its own puzzle input', !!puzzleInput && puzzleInput.includes('['),
+  JSON.stringify(puzzleInput?.slice(0, 40)))
+check('no dock on the puzzle slide itself', (await evaluate(audience, '!!document.querySelector(".dock")')) === false)
+await shot(audience, '07-puzzle-workspace', 430, 900)
 
-// --- The presenter moves on: the guard must ask -------------------------
+// --- The room moves on; the device keeps its puzzle ---------------------
 await clickText(control, 'button', 'Next')
-await waitForText(audience, '#interaction-guard-title')
-check('guard modal asks before leaving',
-  (await text(audience, '#interaction-guard-title')) === 'Move on to the next interaction?',
-  JSON.stringify(await text(audience, '#interaction-guard-title')))
-check('guard focuses the safe choice',
-  (await evaluate(audience, 'document.activeElement?.innerText?.trim() ?? null')) === 'Stay here',
-  JSON.stringify(await evaluate(audience, 'document.activeElement?.innerText?.trim() ?? null')))
-await shot(audience, '09-guard-modal', 430, 900)
+check('the device follows to the leaderboard', (await waitForPath(audience, BOARD.route)) === BOARD.route,
+  `device at ${await path(audience)}`)
+const dock = await waitForText(audience, '.dock')
+check('the dock offers the puzzle on any other slide', !!dock, JSON.stringify(dock))
 
-await clickText(audience, 'button', 'Stay here')
-await wait(1000)
-check('stay here keeps the slide', (await path(audience)) === '/pre-0009', `device at ${await path(audience)}`)
-check('stay here leaves the sync pill', !!(await text(audience, 'button[aria-label^="Sync"]')))
-await shot(audience, '10-stayed-off-sync', 430, 900)
-
-// --- Its own tap asks as well, and skipping goes through ----------------
-await clickSelector(audience, 'button[aria-label="Next slide on this device"]')
-await wait(900)
-check('own tap asks as well', !!(await text(audience, '#interaction-guard-title')))
-await clickText(audience, 'button', 'Skip now')
-await waitForPath(audience, '/pre-0008')
-check('skip now moves on', (await path(audience)) !== '/pre-0009', `device at ${await path(audience)}`)
+await clickSelector(audience, '.dock')
+const sheetTitle = await waitForText(audience, '.sheet .ws-title')
+check('the dock opens the workspace again', !!sheetTitle, JSON.stringify(sheetTitle))
+await shot(audience, '08-puzzle-dock', 430, 900)
+await clickSelector(audience, '.sheet-close')
+await wait(500)
 
 // --- The presenter's previews track the room ----------------------------
 // They are same-origin frames, so the check can read where each one sits.
@@ -236,9 +235,9 @@ const framePath = (title) => evaluate(presenter, `(() => {
   const f = document.querySelector('iframe[title=${JSON.stringify(title)}]');
   try { return f?.contentWindow?.location?.pathname ?? null } catch { return 'cross-origin' }
 })()`)
-await wait(1200)
+await wait(1500)
 const livePath = await framePath('Live slide')
-check('live preview shows the room slide', livePath === (await path(viewer)) || livePath === '/pre-0008',
+check('live preview shows the room slide', livePath === (await path(viewer)),
   `preview at ${livePath}, room at ${await path(viewer)}`)
 
 // --- The presenter view sees the room -----------------------------------
@@ -246,17 +245,16 @@ await wait(800)
 const counters = await evaluate(presenter, `[...document.querySelectorAll('aside dd')].map(d => d.innerText).join(' / ')`)
 check('presenter view reports the audience', /\d/.test(counters || ''),
   `following / off-sync / working = ${counters}`)
-await shot(presenter, '11-presenter-live', 1600, 1000)
-await shot(dashboard, '12-dashboard-live', 1440, 1500)
+await shot(presenter, '09-presenter-live', 1600, 1000)
+await shot(dashboard, '10-dashboard-live', 1440, 1500)
 
 // --- The handout renders every slide ------------------------------------
 const print = await openPage(browser, `${BASE}/print`, 1100, 1400)
 // The handout boots one preview per slide, so give it room to settle.
-await wait(9000)
-check('handout lists every slide',
-  (await evaluate(print, 'document.querySelectorAll("section").length')) >= 9,
-  `${await evaluate(print, 'document.querySelectorAll("section").length')} section(s)`)
-await shot(print, '13-handout', 1100, 1600)
+await wait(12000)
+const sections = await evaluate(print, 'document.querySelectorAll("section").length')
+check('handout lists every slide', sections >= 50, `${sections} section(s)`)
+await shot(print, '11-handout', 1100, 1600)
 
 console.log(results.join('\n'))
 console.log(`\nscreenshots in ${OUT}`)
