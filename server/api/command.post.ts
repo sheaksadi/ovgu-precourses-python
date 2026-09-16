@@ -3,6 +3,7 @@ import { slides } from '../../slides.config'
 import { acceptControllerEvent } from '../utils/controllerGate'
 import { wsManager } from '../utils/wsManager'
 import { spinRoom } from '../utils/spinRoom'
+import { catRoom } from '../utils/catRoom'
 
 let sequence = 0
 
@@ -24,6 +25,13 @@ export default defineEventHandler(async (event) => {
     const spin = spinRoom.spin(null)
     if (spin) wsManager.broadcast(spin)
     return spin ?? { type: 'spin_busy' }
+  }
+
+  // The live cat is fetched here too, so every screen shows the same one.
+  if (isSlideAction && body.action === 'cat') {
+    const cat = await catRoom.next(null)
+    if (cat) wsManager.broadcast(cat)
+    return cat ?? { type: 'cat_busy' }
   }
 
   const command = { type: 'command', name: body.name, slideId: body.slideId, action: body.action, sequence: ++sequence }

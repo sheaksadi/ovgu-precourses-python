@@ -1,5 +1,6 @@
 import { spinRoom } from './spinRoom'
 import { problemRoom } from './problemRoom'
+import { catRoom } from './catRoom'
 
 export type PeerRole = 'control' | 'presenter' | 'viewer' | 'dashboard' | 'peek'
 
@@ -52,6 +53,7 @@ function resetRoom() {
   currentState = emptyState()
   spinRoom.reset()
   problemRoom.reset()
+  catRoom.reset()
 }
 
 /** Roles that may move the global slide position. */

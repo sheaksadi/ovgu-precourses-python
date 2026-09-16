@@ -2,6 +2,7 @@ import { wsManager } from '../utils/wsManager'
 import type { PeerRole } from '../utils/wsManager'
 import { spinRoom } from '../utils/spinRoom'
 import { problemRoom } from '../utils/problemRoom'
+import { catRoom } from '../utils/catRoom'
 
 /** Pointer ids per connection, keyed by `peer.id` for the same reason. */
 const peerClientIds = new Map<string, Set<string>>()
@@ -55,9 +56,10 @@ export default defineWebSocketHandler({
     peer.send(JSON.stringify({ type: 'state', ...wsManager.getState() }))
     peer.send(JSON.stringify(spinRoom.state()))
     peer.send(JSON.stringify(problemRoom.state()))
+    peer.send(JSON.stringify(catRoom.state()))
     broadcastPresence(peer)
   },
-  message(peer, message) {
+  async message(peer, message) {
     wsManager.touch(peer) // Refresh liveness on ANY message
     try {
       const text = message.text()
@@ -100,6 +102,7 @@ export default defineWebSocketHandler({
         peer.send(JSON.stringify({ type: 'presence_summary', ...wsManager.getPresenceSummary() }))
         peer.send(JSON.stringify(spinRoom.state()))
         peer.send(JSON.stringify(problemRoom.state()))
+        peer.send(JSON.stringify(catRoom.state()))
       }
       else if (data.type === 'spin') {
         // A follow-along device asks for the icebreaker spin. Only named audience
@@ -109,6 +112,14 @@ export default defineWebSocketHandler({
         const spin = spinRoom.spin(who)
         if (spin) wsManager.broadcast(spin)
         else peer.send(JSON.stringify({ type: 'spin_busy' }))
+      }
+      else if (data.type === 'cat') {
+        // A follow-along device asks the room for a new cat; the server fetches it.
+        const who = wsManager.getIdentity(peer)
+        if (!who) return
+        const cat = await catRoom.next(who)
+        if (cat) wsManager.broadcast(cat)
+        else peer.send(JSON.stringify({ type: 'cat_busy' }))
       }
       else if (data.type === 'command') {
         // Room commands use POST /api/command. WebSocket is broadcast-only.

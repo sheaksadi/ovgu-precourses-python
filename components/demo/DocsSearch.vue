@@ -460,6 +460,8 @@ const { pointer, instant, finished, later, pointAt, pointAtFraction, play } = us
   background: var(--code-bg);
 }
 .entry-example code {
+  /* JSON is indented; without this the browser eats the leading spaces. */
+  white-space: pre;
   font-family: var(--font-code);
   font-size: clamp(0.55rem, 1.5vh, 0.95rem);
   color: var(--code-text);

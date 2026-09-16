@@ -80,4 +80,33 @@ const pandas: DocsDemo = {
   example: ['>>> tiere.groupby("art")["alter"].mean()', 'art', 'Hund     5.0', 'Katze    3.0'],
 }
 
-export const DOCS_DEMOS: Record<string, DocsDemo> = { builtins, pandas }
+const catapi: DocsDemo = {
+  query: { de: 'cat api zufälliges bild', en: 'cat api random image' },
+  address: 'docs.thecatapi.com/api-reference/images/images-search',
+  crumbs: 'docs.thecatapi.com › api-reference › images',
+  result: { de: 'Images Search — The Cat API', en: 'Images Search — The Cat API' },
+  snippet: {
+    de: 'Ein zufälliges Katzenbild als JSON. Ohne Schlüssel, direkt im Browser.',
+    en: 'A random cat image as JSON. No key needed, straight from the browser.',
+  },
+  pageTitle: { de: 'GET /v1/images/search', en: 'GET /v1/images/search' },
+  entries: [
+    { name: 'GET /v1/images/search', de: 'ein zufälliges Bild holen', en: 'get one random image' },
+    { name: 'limit=10', de: 'mehrere Bilder auf einmal', en: 'several images at once' },
+    { name: 'x-api-key', de: 'Schlüssel für mehr Anfragen – für uns nicht nötig', en: 'key for more requests – not needed here' },
+    { name: 'Response: [ { id, url, width, height } ]', de: 'eine Liste mit einem Dictionary darin', en: 'a list with one dictionary inside' },
+  ],
+  // The response shape: exactly what the next slide reads in Python.
+  pick: 3,
+  example: [
+    '[',
+    '  {',
+    '    "id": "95l",',
+    '    "url": "https://cdn2.thecatapi.com/images/95l.jpg",',
+    '    "width": 500, "height": 333',
+    '  }',
+    ']',
+  ],
+}
+
+export const DOCS_DEMOS: Record<string, DocsDemo> = { builtins, pandas, catapi }

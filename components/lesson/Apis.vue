@@ -8,13 +8,18 @@
  *      kitchen and brings the answer back
  *   2. `requests.get`: the address travels to the server, 200 comes back
  *   3. `.json()`: the answer is text in JSON, and it becomes a dictionary
- *   4. live: the slide asks The Cat API itself; Enter fetches a new cat
+ *   4. live: the room's cat. A student taps "new cat" on their own device, the
+ *      server fetches one and every screen shows the same picture
  *
  * Stage 4 is the only slide in the deck that goes online. Without a network it
  * shows Momo and says so. Words come from `apis.*` in `locales/`.
  */
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import { useI18n } from '~/composables/useI18n'
+import { useDeckRole } from '~/composables/useDeckRole'
+import { useWebSocket } from '~/composables/useWebSocket'
+import { useCats } from '~/composables/useCats'
+import { localizeName } from '~/utils/cuteNames'
 
 type StageNumber = 1 | 2 | 3 | 4
 
@@ -30,55 +35,41 @@ interface Stage {
 }
 
 const props = defineProps<{ stage: StageNumber }>()
-const { t, tm } = useI18n()
+const { t, tm, locale } = useI18n()
 
 const stages = computed(() => tm<Stage[]>('apis.stages'))
 const current = computed(() => stages.value[props.stage - 1]!)
-const words = computed(() => tm<Record<'order' | 'kitchen' | 'request' | 'response' | 'next' | 'loading' | 'offline', string>>('apis.words'))
+const words = computed(() => tm<Record<'order' | 'kitchen' | 'request' | 'response' | 'next' | 'ask' | 'asked' | 'loading' | 'offline', string>>('apis.words'))
 
-const CAT_API = 'https://api.thecatapi.com/v1/images/search'
+/* ─── Stage 4: the room's cat ─── */
+const { isViewer, isPeek, isProjector } = useDeckRole()
+const ws = useWebSocket()
+const cats = useCats()
 
-/* ─── Stage 4: live ─── */
-const image = ref<string | null>(null)
-const loading = ref(false)
-const failed = ref(false)
-const imageId = ref('')
-const fetchCount = ref(0)
+/** Students ask; the projector and the presenter's previews only watch. */
+const canAsk = computed(() => props.stage === 4 && isViewer.value && !isPeek.value && !isProjector.value)
 
-const fetchCat = async () => {
-  loading.value = true
-  failed.value = false
-  try {
-    const response = await fetch(CAT_API)
-    // A list with one picture: [{ id, url, width, height }]
-    const [cat] = await response.json() as Array<{ id: string, url: string }>
-    if (!cat) throw new Error('empty')
-    await new Promise<void>((resolve, reject) => {
-      const img = new Image()
-      img.onload = () => resolve()
-      img.onerror = () => reject(new Error('image'))
-      img.src = cat.url
-    })
-    image.value = cat.url
-    imageId.value = cat.id
-    fetchCount.value++
-  } catch {
-    failed.value = true
-  } finally {
-    loading.value = false
-  }
+const image = computed(() => cats.current.value?.url ?? null)
+const imageId = computed(() => cats.current.value?.id ?? '')
+const failed = computed(() => cats.failed.value)
+const loading = computed(() => cats.waiting.value)
+const fetchCount = computed(() => cats.count.value)
+const askedBy = computed(() => (cats.current.value?.by ? localizeName(cats.current.value.by, locale.value) : ''))
+
+const ask = () => {
+  if (!canAsk.value) return
+  ws.sendCat()
 }
 
 const onKey = (event: KeyboardEvent) => {
-  if (event.key !== 'Enter' || props.stage !== 4) return
+  if (event.key !== 'Enter' || !canAsk.value) return
   if (['INPUT', 'TEXTAREA'].includes((event.target as HTMLElement).tagName)) return
   event.preventDefault()
-  fetchCat()
+  ask()
 }
 
 onMounted(() => {
   if (props.stage !== 4) return
-  fetchCat()
   window.addEventListener('keydown', onKey)
 })
 onBeforeUnmount(() => window.removeEventListener('keydown', onKey))
@@ -88,7 +79,7 @@ const shorten = (url: string) => (url.length > 44 ? `${url.slice(0, 26)}…${url
 
 const output = computed(() => {
   if (props.stage !== 4) return current.value.output
-  if (failed.value) return [words.value.offline]
+  if (failed.value && !image.value) return [words.value.offline]
   return image.value ? [imageId.value, shorten(image.value)] : ['…']
 })
 
@@ -174,10 +165,16 @@ const outputDelays = computed(() => {
           </div>
           <span v-if="loading" class="spinner"></span>
         </div>
-        <span class="next">
-          <code>{{ fetchCount }}</code>
-          <span>{{ words.next }}</span>
-        </span>
+        <div class="live-bar">
+          <button v-if="canAsk" type="button" class="cat-button" :disabled="loading" @click="ask">
+            <Icon name="lucide:refresh-cw" class="cat-icon" :class="{ 'is-spinning': loading }" />
+            <span class="text-trim">{{ words.ask }}</span>
+          </button>
+          <span class="next">
+            <code>{{ fetchCount }}</code>
+            <span>{{ askedBy ? t('apis.words.asked', { name: askedBy }) : words.next }}</span>
+          </span>
+        </div>
       </div>
     </div>
   </LessonShell>
@@ -552,21 +549,39 @@ code {
   width: 12vh;
   height: 12vh;
 }
-.next {
+.live-bar {
   position: absolute;
-  left: 50%;
-  bottom: 2.4vh;
+  left: 0;
+  right: 0;
+  bottom: 2vh;
   display: flex;
   align-items: center;
+  justify-content: center;
+  gap: 1.6vh;
+}
+.cat-button {
+  display: inline-flex;
+  align-items: center;
   gap: 1vh;
-  padding: 0.5vh 1.2vh 0.5vh 0.5vh;
-  border-radius: 999px;
-  background: var(--text);
-  font-size: clamp(0.55rem, 1.5vh, 1rem);
+  padding: calc(1vh + 0.25em) 2vh;
+  border-radius: 1.4vh;
+  background: var(--coral);
+  font-size: clamp(0.75rem, 1.9vh, 1.25rem);
   font-weight: 800;
-  white-space: nowrap;
-  color: var(--bg);
-  translate: -50% 0;
+  color: #FFFFFF;
+  transition: opacity 0.2s ease;
+}
+.cat-button:disabled {
+  opacity: 0.55;
+}
+.cat-icon.is-spinning {
+  animation: turn 0.8s linear infinite;
+}
+@keyframes turn {
+  to { transform: rotate(360deg); }
+}
+
+.next {
 }
 .next code {
   min-width: 3vh;

@@ -818,6 +818,13 @@ export const slides: SlideEntry[] = [
     teleprompter: 'Letztes Kapitel: Programme, die mit anderen Programmen reden. Eine API ist wie ein Kellner: Wir bestellen, er bringt die Bestellung in die Küche und kommt mit der Antwort zurück. Wie die Küche arbeitet, ist uns egal.',
   },
   {
+    id: 'PRE-0150',
+    title: 'Nachschlagen: die Katzen-API',
+    subtitle: 'Doku finden, bevor der Code kommt',
+    duration: 4,
+    teleprompter: 'Bevor wir Code schreiben: Woher weiß man die Adresse? Nach der API suchen, die Doku öffnen. Dort steht die Adresse, welche Optionen es gibt – und ganz wichtig, wie die Antwort aussieht. Genau dieses Format lesen wir gleich in Python aus: eine Liste mit einem Dictionary darin.',
+  },
+  {
     id: 'PRE-0133',
     title: 'APIs – requests',
     parent: 'PRE-0132',
@@ -836,7 +843,8 @@ export const slides: SlideEntry[] = [
     title: 'APIs – Live',
     parent: 'PRE-0132',
     transition: 'none',
-    teleprompter: 'Diese Folie fragt The Cat API jetzt wirklich, braucht also Internet. Enter holt eine neue Katze. Aufgabe zum Mitmachen: den Code in PyCharm ausführen und die Adresse api.thecatapi.com/v1/images/search im Browser öffnen. Die Antwort ist eine Liste, darum daten[0].',
+    presenterAction: { label: 'New cat', command: 'cat' },
+    teleprompter: 'Die Folie fragt The Cat API wirklich. Neu ist: Die Studierenden holen die Katze selbst – auf dem eigenen Gerät steht ein Knopf, und alle Bildschirme zeigen dieselbe Katze und dieselbe Ausgabe. Ohne Handy geht es über den Knopf hier im Presenter oder auf der Fernbedienung. Braucht Internet am Laptop; ohne Netz bleibt die letzte Katze stehen.',
   },
   {
     id: 'PRE-0010',

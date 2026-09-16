@@ -6,6 +6,7 @@ import { useSlideData } from '~/composables/useSlideData'
 import { useAudience } from '~/composables/useAudience'
 import { useSpins } from '~/composables/useSpins'
 import { useProblems } from '~/composables/useProblems'
+import { useCats } from '~/composables/useCats'
 import { useToasts } from '~/composables/useToasts'
 import { useI18n } from '~/composables/useI18n'
 import { localizeName } from '~/utils/cuteNames'
@@ -41,6 +42,7 @@ export const useWebSocket = () => {
   const audience = useAudience()
   const spins = useSpins()
   const problems = useProblems()
+  const cats = useCats()
   const toasts = useToasts()
   const { t, locale } = useI18n()
   const route = useRoute()
@@ -175,6 +177,15 @@ export const useWebSocket = () => {
             ? { tone: 'sun', name, title: t('problems.toast.first', { name }), body }
             : { tone: 'mint', name, title: t('problems.toast.solved', { name, part: data.part }), body })
         }
+        else if (data.type === 'cat') {
+          cats.apply(data)
+        }
+        else if (data.type === 'cat_state') {
+          cats.applyState(data)
+        }
+        else if (data.type === 'cat_busy') {
+          cats.clearWaiting()
+        }
         else if (data.type === 'spin_busy') {
           window.dispatchEvent(new CustomEvent('deck:spin-busy'))
         }
@@ -208,6 +219,13 @@ export const useWebSocket = () => {
   /** A follow-along device asks the room for the icebreaker spin. */
   const sendSpin = () => {
     if (isViewer.value) send({ type: 'spin' })
+  }
+
+  /** A follow-along device asks the room for a new cat. */
+  const sendCat = () => {
+    if (!isViewer.value || isProjector.value) return
+    cats.markWaiting()
+    send({ type: 'cat' })
   }
 
   const sendPointer = (clientId: string, active: boolean, x: number, y: number, color: string) => {
@@ -248,6 +266,7 @@ export const useWebSocket = () => {
     sendCommand,
     sendPointer,
     sendPresence,
-    sendSpin
+    sendSpin,
+    sendCat
   }
 }

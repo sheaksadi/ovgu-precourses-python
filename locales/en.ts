@@ -1368,6 +1368,11 @@ else:
     replay: 'Play again',
     hint: 'or press Enter',
     demoLabel: 'Demo: looking something up in the documentation',
+    catapi: {
+      title: 'How do you know the address?',
+      steps: ['Search for the API', 'Open the documentation', 'Read the response shape'],
+      tip: 'Every API has a page like this: the address, the options, and what the answer looks like. The shape below is exactly what arrives in Python next.',
+    },
     builtins: {
       title: 'How do you know what exists?',
       steps: ['Type what you are looking for', 'Open the official documentation', 'Read the entry and its example'],
@@ -1390,7 +1395,9 @@ else:
       kitchen: 'Server',
       request: 'request',
       response: 'response',
-      next: 'Enter: new cat',
+      next: 'On your device: fetch a new cat',
+      ask: 'Fetch a new cat',
+      asked: '{name} fetched it',
       loading: 'loading …',
       offline: 'No internet – the request did not get through.',
     },
@@ -1425,7 +1432,7 @@ else:
       },
       {
         headline: 'Live: this slide is asking The Cat API.',
-        note: 'What the Python code does, the slide does now. Every Enter is a new request – and a new cat. A dog API works the same way.',
+        note: 'What the Python code does, the slide does now. Every cat comes from a real request – fetch one on your device and everyone sees the same one.',
         tally: 'thecatapi.com',
         code: 'import requests\n\nurl = "https://api.thecatapi.com/v1/images/search"\ndata = requests.get(url).json()\nprint(data[0]["id"])\nprint(data[0]["url"])',
         focus: [],

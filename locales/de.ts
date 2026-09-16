@@ -1372,6 +1372,11 @@ else:
     replay: 'Nochmal zeigen',
     hint: 'oder Enter drücken',
     demoLabel: 'Vorführung: etwas in der Dokumentation nachschlagen',
+    catapi: {
+      title: 'Woher kennst du die Adresse?',
+      steps: ['Nach der API suchen', 'Die Doku öffnen', 'Antwortformat lesen'],
+      tip: 'Jede API hat so eine Seite: die Adresse, die Optionen, und wie die Antwort aussieht. Das Format unten ist genau das, was gleich in Python ankommt.',
+    },
     builtins: {
       title: 'Woher weißt du, was es gibt?',
       steps: ['Eintippen, was du suchst', 'Die offizielle Doku öffnen', 'Funktion mit Beispiel lesen'],
@@ -1394,7 +1399,9 @@ else:
       kitchen: 'Server',
       request: 'Anfrage',
       response: 'Antwort',
-      next: 'Enter: neue Katze',
+      next: 'Auf deinem Gerät: neue Katze holen',
+      ask: 'Neue Katze holen',
+      asked: '{name} hat sie geholt',
       loading: 'lädt …',
       offline: 'Kein Internet – die Anfrage kam nicht durch.',
     },
@@ -1429,7 +1436,7 @@ else:
       },
       {
         headline: 'Live: Diese Folie fragt gerade die Katzen-API.',
-        note: 'Dasselbe, was der Python-Code macht, macht jetzt die Folie. Jedes Enter ist eine neue Anfrage – und eine neue Katze. Eine Hunde-API funktioniert genauso.',
+        note: 'Dasselbe, was der Python-Code macht, macht jetzt die Folie. Jede Katze kommt aus einer echten Anfrage – hol dir eine auf deinem Gerät, alle sehen dieselbe.',
         tally: 'thecatapi.com',
         code: 'import requests\n\nurl = "https://api.thecatapi.com/v1/images/search"\ndaten = requests.get(url).json()\nprint(daten[0]["id"])\nprint(daten[0]["url"])',
         focus: [],
