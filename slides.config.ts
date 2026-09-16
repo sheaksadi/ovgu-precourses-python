@@ -630,9 +630,11 @@ export const slides: SlideEntry[] = [
   {
     id: 'PRE-0112',
     title: 'Jetzt du: Funktionen',
+    subtitle: 'Erste Code-Aufgabe: eine Funktion schreiben',
+    problem: 'functions-greet',
     subtitle: 'Begrüßung, Rechteck, längster Fisch',
     duration: 20,
-    teleprompter: 'Drei Aufgaben: eine Funktion mit print, eine mit return, eine mit Schleife und return. Bei Aufgabe 2 auf das None achten, wenn jemand print statt return schreibt. Enter zeigt pro Aufgabe einen Tipp.',
+    teleprompter: 'Erste Code-Aufgabe: keine Zahl abschicken, sondern eine Funktion schreiben. Auf dem eigenen Gerät steht ein Editor, Python läuft direkt im Browser. Ausführen prüft die sichtbaren Tests, Abschicken zusätzlich einen versteckten. Achtung auf return statt print – genau daran scheitern die ersten Versuche. Danach die Rechteck-Funktion, dann die Rangliste.',
   },
   {
     id: 'PRE-0143',
@@ -641,6 +643,13 @@ export const slides: SlideEntry[] = [
     duration: 12,
     problem: 'functions-area',
     teleprompter: 'Erste Code-Aufgabe: Hier gibt es keine Zahl zum Abschicken, sondern eine Funktion. Auf dem eigenen Gerät steht ein Editor; Ausführen prüft die sichtbaren Tests, Abschicken zusätzlich zwei versteckte. Python läuft im Browser, ohne Internet. Wer lieber in PyCharm schreibt: Code hinüberkopieren und dann hier einfügen.',
+  },
+  {
+    id: 'PRE-0145',
+    title: 'Rätsel: Rangliste Funktionen',
+    subtitle: 'Zwei Funktionen, zwei Sterne',
+    duration: 2,
+    teleprompter: 'Rangliste der Funktionen-Runde: ein Stern pro bestandener Aufgabe. Auf den Handys steht der eigene Platz. Wer noch mitten drin ist, findet beide Aufgaben unten rechts weiter offen.',
   },
   {
     id: 'PRE-0113',

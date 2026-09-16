@@ -1379,6 +1379,14 @@ else:
       first: '{name} war am schnellsten!',
       body: '{title} · Teil {part} · Platz {rank}',
     },
+    'functions-greet': {
+      title: 'Begrüßung',
+      story: [
+        'Schreib die Funktion `hallo(name)`, die einen Gruß zurückgibt: aus `"Momo"` wird `Hallo, Momo!`.',
+        'Zurückgeben, nicht ausgeben: `return`, kein `print`. Sonst kommt beim Aufruf `None` heraus.',
+      ],
+      example: { input: 'hallo("Momo")', answer: "'Hallo, Momo!'", note: 'Die Anführungszeichen gehören zum Text, den Python zeigt.' },
+    },
     'functions-area': {
       title: 'Rechteck-Funktion',
       story: [

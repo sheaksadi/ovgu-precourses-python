@@ -30,6 +30,26 @@ export interface CodeTask {
   tests: (names: Record<string, string>) => CodeTest[]
 }
 
+const functionsGreet: CodeTask = {
+  id: 'functions-greet',
+  names: {
+    de: { fn: 'hallo', a: 'name', greeting: 'Hallo', todo: 'dein Code' },
+    en: { fn: 'hello', a: 'name', greeting: 'Hello', todo: 'your code' },
+  },
+  starter: n => [
+    `def ${n.fn}(${n.a}):`,
+    `    # ${n.todo}`,
+    '    return ""',
+    '',
+  ].join('\n'),
+  // Python shows a string with its quotes, so that is what the tests compare.
+  tests: n => [
+    { call: `${n.fn}("Momo")`, expect: `'${n.greeting}, Momo!'` },
+    { call: `${n.fn}("Bello")`, expect: `'${n.greeting}, Bello!'` },
+    { call: `${n.fn}("")`, expect: `'${n.greeting}, !'`, hidden: true },
+  ],
+}
+
 const functionsArea: CodeTask = {
   id: 'functions-area',
   names: {
@@ -51,6 +71,7 @@ const functionsArea: CodeTask = {
 }
 
 export const CODE_TASKS: Record<string, CodeTask> = {
+  [functionsGreet.id]: functionsGreet,
   [functionsArea.id]: functionsArea,
 }
 

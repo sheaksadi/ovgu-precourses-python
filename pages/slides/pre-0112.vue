@@ -1,7 +1,7 @@
 <script setup lang="ts">
-/** PRE-0112 — functions exercises. The slide lives in components/lesson/Exercise.vue. */
+/** PRE-0112 — functions round, code task 1: the greeting. The slide lives in components/problems/Slide.vue. */
 </script>
 
 <template>
-  <LessonExercise section="functions" />
+  <ProblemsSlide problem="functions-greet" round="functions" />
 </template>

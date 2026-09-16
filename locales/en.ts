@@ -1375,6 +1375,14 @@ else:
       first: '{name} was the fastest!',
       body: '{title} · Part {part} · place {rank}',
     },
+    'functions-greet': {
+      title: 'Greeting',
+      story: [
+        'Write the function `hello(name)` that returns a greeting: `"Momo"` becomes `Hello, Momo!`.',
+        'Return it, do not print it: `return`, no `print`. Otherwise the call comes back as `None`.',
+      ],
+      example: { input: 'hello("Momo")', answer: "'Hello, Momo!'", note: 'The quotes belong to the text as Python shows it.' },
+    },
     'functions-area': {
       title: 'Rectangle function',
       story: [

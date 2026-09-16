@@ -115,6 +115,20 @@ check('steps Part 1 solved', steps1.result === 'correct', JSON.stringify(steps1)
 const steps2 = await answer(B, 2, longestRun, 'loops-steps')
 check('steps Part 2 solved', steps2.result === 'correct', JSON.stringify(steps2))
 
+// ── code tasks: the device reports, the server records ──
+const taskState = await fetch(`${BASE}/api/tasks/functions-greet/state`, { headers: { cookie: cookie(A) } })
+check('task state served', taskState.status === 200 && (await taskState.clone().json()).parts === 1)
+check('unknown task is 404', (await fetch(`${BASE}/api/tasks/nope/state`, { headers: { cookie: cookie(A) } })).status === 404)
+const taskSubmit = (who, passed, total) => fetch(`${BASE}/api/tasks/functions-greet/submit`, {
+  method: 'POST',
+  headers: { cookie: cookie(who), 'content-type': 'application/json' },
+  body: JSON.stringify({ passed, total, name: who.name }),
+}).then(res => res.json())
+check('half-passed submit is refused', (await taskSubmit(A, 2, 3)).result === 'failed')
+const taskDone = await taskSubmit(A, 3, 3)
+check('passing submit counts like a solve', taskDone.result === 'correct' && taskDone.rank === 1, JSON.stringify(taskDone))
+check('a second submit says already', (await taskSubmit(A, 3, 3)).result === 'already')
+
 // ── physics-race: two lists that belong together ──
 const race = await getInput(A, 'de', 'physics-race')
 const [distanceLine, timeLine] = race.body.input.split('\n')
