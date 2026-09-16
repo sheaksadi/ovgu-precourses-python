@@ -797,6 +797,20 @@ export const slides: SlideEntry[] = [
     teleprompter: 'Letztes Rätsel: Schulmathe, aber programmiert. Teil 1 braucht den Durchschnitt – sum durch len – und dann eine zweite Runde durch die Liste. Teil 2 ist der größte Sprung von Tag zu Tag, mit abs, damit die Richtung egal ist. Wer mag, macht beides mit numpy in je einer Zeile; genau dafür sind die Bibliotheken da.',
   },
   {
+    id: 'PRE-0148',
+    title: 'Nachschlagen: eingebaute Funktionen',
+    subtitle: 'Suchen, offizielle Doku, Beispiel lesen',
+    duration: 4,
+    teleprompter: 'Niemand kennt alle Funktionen auswendig – nachschlagen gehört zum Handwerk. Eintippen, was man will, und das Ergebnis von docs.python.org nehmen, nicht das erste Blog. Dort stehen alle eingebauten Funktionen mit Beispiel. Enter zeigt die Vorführung nochmal.',
+  },
+  {
+    id: 'PRE-0149',
+    title: 'Nachschlagen: fremde Bibliothek',
+    subtitle: 'Paketname plus Vorhaben, dann die Projektseite',
+    duration: 4,
+    teleprompter: 'Dasselbe für Pakete, die nicht von Python kommen: Name des Pakets, dann was man vorhat. Die offizielle Doku steht fast immer oben, und unten auf der Seite steht ein Beispiel zum Kopieren. Genau so arbeitet man sich in pandas, NumPy oder jede andere Bibliothek ein.',
+  },
+  {
     id: 'PRE-0132',
     title: 'APIs',
     subtitle: 'Daten aus dem Internet',

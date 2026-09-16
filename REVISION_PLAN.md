@@ -107,19 +107,19 @@ building a function.
 
 ## Phase 5: libraries, documentation, APIs
 
-- [ ] **Slide 29** (PRE-0127, libraries for AI and ML): the install part shows
+- [x] **Slide 29** (PRE-0127, libraries for AI and ML): the install part shows
       installing one package first, then several one after another, then an
       animated step that imports one and uses it. The dice scene from 17.4 lands
       here as the example. The rest of the libraries scene stays; it was liked.
-- [ ] **New problem round after slide 29:** school maths and physics the students
+- [x] **New problem round after slide 29:** school maths and physics the students
       already know, now solved in code, easier with built-ins and libraries.
       Puzzle format, not too hard.
-- [ ] **New slide: "But how do you know what exists?"** An animated browser demo
+- [x] **New slide: "But how do you know what exists?"** An animated browser demo
       (like the PyCharm install): search "python built-in functions", open
       docs.python.org, scroll through the functions and a use case or two.
-- [ ] **New slide: finding a third-party library.** Same demo style: search for
+- [x] **New slide: finding a third-party library.** Same demo style: search for
       pandas, open its documentation, find a function the course uses.
-- [ ] **Slide 30** (APIs): cat API, see phase 0.
+- [x] **Slide 30** (APIs): cat API, see phase 0.
 
 ## Later
 

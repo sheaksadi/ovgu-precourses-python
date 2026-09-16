@@ -1361,6 +1361,25 @@ else:
     },
   },
 
+  docs: {
+    eyebrow: 'Looking things up',
+    search: 'Search',
+    scroll: 'Keep scrolling down',
+    replay: 'Play again',
+    hint: 'or press Enter',
+    demoLabel: 'Demo: looking something up in the documentation',
+    builtins: {
+      title: 'How do you know what exists?',
+      steps: ['Type what you are looking for', 'Open the official documentation', 'Read the entry and its example'],
+      tip: 'docs.python.org lists every built-in function, each with an example. Nobody knows them by heart – looking them up is part of the job.',
+    },
+    pandas: {
+      title: 'Finding the docs of a library',
+      steps: ['Package name plus what you want', 'Open the project page', 'Copy the example'],
+      tip: 'For libraries that are not part of Python: the package name first, then what you are after. The official page is almost always at the top, with an example to copy.',
+    },
+  },
+
   apis: {
     title: 'APIs',
     file: 'cats.py',

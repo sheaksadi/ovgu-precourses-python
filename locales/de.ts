@@ -1365,6 +1365,25 @@ else:
     },
   },
 
+  docs: {
+    eyebrow: 'Nachschlagen',
+    search: 'Suchen',
+    scroll: 'Weiter nach unten scrollen',
+    replay: 'Nochmal zeigen',
+    hint: 'oder Enter drücken',
+    demoLabel: 'Vorführung: etwas in der Dokumentation nachschlagen',
+    builtins: {
+      title: 'Woher weißt du, was es gibt?',
+      steps: ['Eintippen, was du suchst', 'Die offizielle Doku öffnen', 'Funktion mit Beispiel lesen'],
+      tip: 'docs.python.org listet alle eingebauten Funktionen, jede mit Beispiel. Niemand kennt sie auswendig – nachschlagen gehört dazu.',
+    },
+    pandas: {
+      title: 'Die Doku einer Bibliothek finden',
+      steps: ['Paketname plus dein Vorhaben', 'Die Seite des Projekts öffnen', 'Beispiel kopieren'],
+      tip: 'Bei fremden Bibliotheken: erst der Name des Pakets, dann was du vorhast. Die offizielle Seite steht fast immer oben – und hat ein Beispiel zum Kopieren.',
+    },
+  },
+
   apis: {
     title: 'APIs',
     file: 'katzen.py',
