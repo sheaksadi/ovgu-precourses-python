@@ -1402,6 +1402,21 @@ else:
         example: { answer: '600', note: '`250 + 40 + 310`.' },
       },
     },
+    'loops-steps': {
+      title: 'Bellos Schrittzähler',
+      story: [
+        'Bello trägt seit 40 Tagen einen Schrittzähler. Deine Eingabe ist eine Zahl pro Tag.',
+        'Ab 10000 Schritten war der Tag gut. An wie vielen Tagen hat Bello das geschafft?',
+      ],
+      example: { input: 'schritte = [12000, 9000, 15000, 10000, 4000]', answer: '3', note: '`12000`, `15000` und `10000` sind mindestens 10000.' },
+      part2: {
+        story: [
+          'Jetzt zählt die Serie: Wie viele gute Tage hatte Bello am Stück, im längsten Lauf?',
+          'Tipp: ein Zähler, der bei einem schwachen Tag wieder auf 0 springt – und ein zweiter, der sich das beste Ergebnis merkt.',
+        ],
+        example: { answer: '2', note: '`15000` und `10000` liegen nebeneinander, `12000` steht allein.' },
+      },
+    },
     'loops-fish': {
       title: 'Momos Fang',
       story: [

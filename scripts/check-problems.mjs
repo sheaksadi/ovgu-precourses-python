@@ -101,6 +101,20 @@ const last = solves.at(-1)
 const top = last?.standings.filter(s => s.audienceId.endsWith(run))
 check('standings put A (2 parts) above B (1 part)', top?.[0]?.name === 'Check A' && top[0].points === 2 && top?.[1]?.name === 'Check B', JSON.stringify(top?.map(s => [s.name, s.points])))
 
+// ── loops-steps: counting and the longest run ──
+const stepsInput = await getInput(B, 'de', 'loops-steps')
+const days = numbers(stepsInput.body.input)
+const goodDays = days.filter(day => day >= 10000).length
+const longestRun = days.reduce((state, day) => {
+  const run = day >= 10000 ? state.run + 1 : 0
+  return { run, best: Math.max(state.best, run) }
+}, { run: 0, best: 0 }).best
+check('steps input has 40 days', days.length === 40, String(days.length))
+const steps1 = await answer(B, 1, goodDays, 'loops-steps')
+check('steps Part 1 solved', steps1.result === 'correct', JSON.stringify(steps1))
+const steps2 = await answer(B, 2, longestRun, 'loops-steps')
+check('steps Part 2 solved', steps2.result === 'correct', JSON.stringify(steps2))
+
 // ── lists-basket: the warm-up round ──
 const basket = await getInput(A, 'de', 'lists-basket')
 const basketEn = await getInput(A, 'en', 'lists-basket')

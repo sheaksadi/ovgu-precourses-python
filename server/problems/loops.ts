@@ -2,7 +2,12 @@ import { randomInt } from '../utils/seeded'
 import { defineProblem } from './types'
 
 /**
- * Loops round (after "Schleifen überall").
+ * Loops round (slide 18).
+ *
+ * loops-steps: Bello's step counter, one number per day.
+ *   Part 1: how many days did he pass 10000? (loop, if, counter)
+ *   Part 2: the longest run of such days in a row, which forces a counter that
+ *           goes back to zero — the first problem where the order matters.
  *
  * loops-fish: Momo's catch of the day, 60 fish sizes in cm.
  *   Part 1: how many fish are at least 20 cm? (loop, if, counter)
@@ -10,6 +15,23 @@ import { defineProblem } from './types'
  *           before the first one that no longer fits. How many does she eat?
  *           (loop, running sum, break)
  */
+export const loopsSteps = defineProblem<number[]>({
+  id: 'loops-steps',
+  parts: 2,
+  generate: rng => Array.from({ length: 40 }, () => randomInt(rng, 2000, 18000)),
+  format: (steps, locale) => `${locale === 'de' ? 'schritte' : 'steps'} = [${steps.join(', ')}]`,
+  solve: (steps, part) => {
+    if (part === 1) return steps.filter(day => day >= 10000).length
+    let best = 0
+    let run = 0
+    for (const day of steps) {
+      run = day >= 10000 ? run + 1 : 0
+      if (run > best) best = run
+    }
+    return best
+  },
+})
+
 export const loopsFish = defineProblem<number[]>({
   id: 'loops-fish',
   parts: 2,

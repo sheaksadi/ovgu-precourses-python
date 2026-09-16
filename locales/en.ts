@@ -1398,6 +1398,21 @@ else:
         example: { answer: '600', note: '`250 + 40 + 310`.' },
       },
     },
+    'loops-steps': {
+      title: "Bello's Step Counter",
+      story: [
+        'Bello has worn a step counter for 40 days. Your input is one number per day.',
+        'From 10000 steps on, the day was a good one. On how many days did Bello manage that?',
+      ],
+      example: { input: 'steps = [12000, 9000, 15000, 10000, 4000]', answer: '3', note: '`12000`, `15000` and `10000` are at least 10000.' },
+      part2: {
+        story: [
+          'Now the streak counts: how many good days in a row did Bello have, in his longest run?',
+          'Hint: one counter that goes back to 0 on a weak day – and a second one that remembers the best result.',
+        ],
+        example: { answer: '2', note: '`15000` and `10000` sit next to each other, `12000` stands alone.' },
+      },
+    },
     'loops-fish': {
       title: "Momo's Catch",
       story: [

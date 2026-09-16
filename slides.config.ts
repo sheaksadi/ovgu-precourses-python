@@ -451,9 +451,11 @@ export const slides: SlideEntry[] = [
   {
     id: 'PRE-0089',
     title: 'Jetzt du: Schleifen',
+    subtitle: 'Zählen, und der längste Lauf am Stück',
+    problem: 'loops-steps',
     subtitle: 'Countdown, Momo und Bello, Passwort',
     duration: 20,
-    teleprompter: 'Drei Aufgaben. Countdown mit range rückwärts, Momo und Bello ist FizzBuzz – dafür kurz den Rest-Operator % erklären: 7 % 3 ist 1. Passwort kombiniert while, Zähler und break. Enter zeigt pro Aufgabe einen Tipp.',
+    teleprompter: 'Rätsel-Runde zu Schleifen, zwei Aufgaben. Hier: Bellos Schrittzähler, 40 Tage. Teil 1 zählt die Tage über 10000 – Schleife, if, Zähler. Teil 2 will den längsten Lauf am Stück: der Zähler muss bei einem schwachen Tag wieder auf 0. Danach kommt Momos Fang, dann die Rangliste und die Lösung.',
   },
   {
     id: 'PRE-0137',
