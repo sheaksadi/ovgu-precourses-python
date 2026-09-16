@@ -2,13 +2,14 @@
 /**
  * Libraries for AI and ML: "Werkzeuge für Daten". Auto-imported as `<LessonLibraries :stage="1" />`.
  *
- * Five slides (PRE-0127 and its four sub-slides):
+ * Six slides (PRE-0127 and its five sub-slides):
  *
- *   1. pip install: the packages download in PyCharm's terminal
- *   2. NumPy: a list needs a loop, an array doubles every value at once
- *   3. pandas: a table of animals, filtered by age
- *   4. matplotlib: a bar chart draws itself in its own window
- *   5. an outlook on machine learning: a model learns y = 2 · x from four points
+ *   1. pip install: first one package, then two more in one command
+ *   2. import and use it: a die rolls until it shows a six
+ *   3. NumPy: a list needs a loop, an array doubles every value at once
+ *   4. pandas: a table of animals, filtered by age
+ *   5. matplotlib: a bar chart draws itself in its own window
+ *   6. an outlook on machine learning: a model learns y = 2 · x from four points
  *
  * Scenes stay one extra stage to clear away. Words come from `libraries.*` in
  * `locales/`.
@@ -16,7 +17,7 @@
 import { computed } from 'vue'
 import { useI18n } from '~/composables/useI18n'
 
-type StageNumber = 1 | 2 | 3 | 4 | 5
+type StageNumber = 1 | 2 | 3 | 4 | 5 | 6
 
 interface Stage {
   headline: string
@@ -33,9 +34,20 @@ const { t, tm } = useI18n()
 
 const stages = computed(() => tm<Stage[]>('libraries.stages'))
 const current = computed(() => stages.value[props.stage - 1]!)
-const labels = computed(() => tm<Record<'loop' | 'array' | 'age' | 'chartTitle' | 'learned', string>>('libraries.labels'))
+const labels = computed(() => tm<Record<'loop' | 'array' | 'age' | 'chartTitle' | 'learned' | 'six', string>>('libraries.labels'))
 
-const PACKAGES = ['numpy', 'pandas', 'matplotlib']
+/* 1: the second command installs two at once */
+const MORE = ['pandas', 'matplotlib']
+
+/* 2: the die rolls until it shows a six */
+const ROLLS = [3, 1, 5, 6]
+const rollAt = (k: number) => 0.8 + k * 1.0
+const PIPS: Record<number, number[]> = {
+  1: [4],
+  3: [0, 4, 8],
+  5: [0, 2, 4, 6, 8],
+  6: [0, 2, 3, 5, 6, 8],
+}
 const WEIGHTS = [12, 30, 8, 21]
 const ANIMALS = [
   { name: 'Momo', age: 3 },
@@ -50,11 +62,12 @@ const py = (y: number) => 55 - (y / 12) * 50
 
 const outputDelays = computed(() => {
   switch (props.stage) {
-    case 1: return [3.6]
-    case 2: return [2.6, 3.2]
-    case 3: return [2.4, 2.6, 2.8]
-    case 4: return [3.0]
-    case 5: return [3.4]
+    case 1: return [5.9]
+    case 2: return [...ROLLS.map((_, k) => rollAt(k) + 0.6), rollAt(ROLLS.length - 1) + 1.1]
+    case 3: return [2.6, 3.2]
+    case 4: return [2.4, 2.6, 2.8]
+    case 5: return [3.0]
+    case 6: return [3.4]
     default: return undefined
   }
 })
@@ -76,7 +89,7 @@ const shown = (own: number) => props.stage === own || props.stage === own + 1
     :output="current.output"
     :output-from="current.outputFrom"
     :output-delays="outputDelays"
-    :stack-output="stage === 3"
+    :stack-output="stage === 2 || stage === 4"
     dense
     :output-label="t('libraries.output')"
     :no-output="t('libraries.noOutput')"
@@ -88,17 +101,53 @@ const shown = (own: number) => props.stage === own || props.stage === own + 1
       <div v-if="shown(1)" class="part install" :class="phase(1)">
         <div class="terminal">
           <span class="terminal-bar"><i></i><i></i><i></i><code>Terminal</code></span>
-          <code class="prompt">$ <span class="typed">pip install numpy pandas matplotlib</span></code>
-          <div v-for="(pkg, k) in PACKAGES" :key="pkg" class="download" :style="{ '--k': k }">
+
+          <code class="prompt">$ <span class="typed" :style="{ '--t': '0.4s', '--dur': '0.9s', '--w': '17ch' }">pip install numpy</span></code>
+          <div class="download" :style="{ '--d': '1.6s' }">
+            <code class="pkg">numpy</code>
+            <span class="bar"><i></i></span>
+          </div>
+          <code class="done" :style="{ '--d': '2.5s' }">Successfully installed numpy</code>
+
+          <code class="prompt is-later" :style="{ '--d': '3.2s' }">$ <span class="typed" :style="{ '--t': '3.2s', '--dur': '1s', '--w': '29ch' }">pip install pandas matplotlib</span></code>
+          <div v-for="(pkg, k) in MORE" :key="pkg" class="download" :style="{ '--d': `${4.4 + k * 0.45}s` }">
             <code class="pkg">{{ pkg }}</code>
             <span class="bar"><i></i></span>
           </div>
-          <code class="done">Successfully installed numpy pandas matplotlib</code>
+          <code class="done" :style="{ '--d': '5.6s' }">Successfully installed pandas matplotlib</code>
         </div>
       </div>
 
-      <!-- ═══ 2: NumPy ═══ -->
-      <div v-if="shown(2)" class="part numpy" :class="phase(2)">
+      <!-- ═══ 2: import and use it ═══ -->
+      <div v-if="shown(2)" class="part dice" :class="phase(2)">
+        <div class="die-slot">
+          <div
+            v-for="(roll, k) in ROLLS"
+            :key="k"
+            class="die"
+            :class="{ 'is-six': roll === 6 }"
+            :style="{ '--t': `${rollAt(k)}s`, '--u': `${k < ROLLS.length - 1 ? rollAt(k + 1) : 999}s` }"
+          >
+            <span v-for="p in 9" :key="p" class="pip" :class="{ 'is-on': PIPS[roll]!.includes(p - 1) }"></span>
+          </div>
+        </div>
+        <div class="history">
+          <span
+            v-for="(roll, k) in ROLLS"
+            :key="k"
+            class="roll"
+            :class="{ 'is-six': roll === 6 }"
+            :style="{ '--t': `${rollAt(k) + 0.5}s` }"
+          ><span class="text-trim">{{ roll }}</span></span>
+        </div>
+        <div class="six">
+          <ArtSprite name="cat-peek" color="coral" accent="sun" :size="96" class="six-cat" />
+          <span class="six-label"><span class="text-trim">{{ labels.six }}</span></span>
+        </div>
+      </div>
+
+      <!-- ═══ 3: NumPy ═══ -->
+      <div v-if="shown(3)" class="part numpy" :class="phase(3)">
         <div v-for="row in ['loop', 'array']" :key="row" class="row" :class="`row-${row}`">
           <code class="row-label">{{ row === 'loop' ? labels.loop : labels.array }}</code>
           <div class="cells">
@@ -111,8 +160,8 @@ const shown = (own: number) => props.stage === own || props.stage === own + 1
         <code class="mean">mean() → 17.75</code>
       </div>
 
-      <!-- ═══ 3: pandas ═══ -->
-      <div v-if="shown(3)" class="part pandas" :class="phase(3)">
+      <!-- ═══ 4: pandas ═══ -->
+      <div v-if="shown(4)" class="part pandas" :class="phase(4)">
         <code class="filter">tiere["{{ labels.age }}"] &gt; 2</code>
         <div class="table">
           <code class="th"></code>
@@ -128,8 +177,8 @@ const shown = (own: number) => props.stage === own || props.stage === own + 1
         </div>
       </div>
 
-      <!-- ═══ 4: matplotlib ═══ -->
-      <div v-if="shown(4)" class="part chart" :class="phase(4)">
+      <!-- ═══ 5: matplotlib ═══ -->
+      <div v-if="shown(5)" class="part chart" :class="phase(5)">
         <div class="figure">
           <span class="figure-bar"><code>Figure 1</code></span>
           <code class="chart-title">{{ labels.chartTitle }}</code>
@@ -143,7 +192,7 @@ const shown = (own: number) => props.stage === own || props.stage === own + 1
       </div>
 
       <!-- ═══ 5: machine learning ═══ -->
-      <div v-if="stage === 5" class="part ml is-active">
+      <div v-if="stage === 6" class="part ml is-active">
         <svg class="axes" viewBox="0 0 100 60" preserveAspectRatio="none" aria-hidden="true">
           <path class="axis" d="M 10 55 H 96 M 10 55 V 3" />
           <path class="fit" :d="`M ${px(0.5)} ${py(1)} L ${px(5.6)} ${py(11.2)}`" />
@@ -248,10 +297,20 @@ code {
   white-space: nowrap;
 }
 .install.is-active .typed {
-  animation: type 1.2s steps(36) 0.5s both;
+  animation: type var(--dur) linear var(--t) both;
 }
 .install.is-leaving .typed {
-  width: 36ch;
+  width: var(--w);
+}
+/* The second command waits until the first install has finished. */
+.prompt.is-later {
+  opacity: 0;
+}
+.install.is-active .prompt.is-later {
+  animation: appear 0.25s ease var(--d) both;
+}
+.install.is-leaving .prompt.is-later {
+  opacity: 1;
 }
 .download {
   display: grid;
@@ -278,10 +337,10 @@ code {
   transform: scaleX(0);
 }
 .install.is-active .download {
-  animation: appear 0.2s ease calc(1.9s + var(--k) * 0.5s) both;
+  animation: appear 0.2s ease var(--d) both;
 }
 .install.is-active .bar i {
-  animation: grow-x 0.45s ease-out calc(1.95s + var(--k) * 0.5s) both;
+  animation: grow-x 0.5s ease-out calc(var(--d) + 0.05s) both;
 }
 .done {
   font-size: clamp(0.5rem, 1.45vh, 0.95rem);
@@ -289,7 +348,7 @@ code {
   opacity: 0;
 }
 .install.is-active .done {
-  animation: appear 0.3s ease 3.5s both;
+  animation: appear 0.3s ease var(--d) both;
 }
 .install.is-leaving .download,
 .install.is-leaving .done {
@@ -299,7 +358,111 @@ code {
   transform: none;
 }
 
-/* ═══ 2: NumPy ═════════════════════════════════════════════════════════ */
+/* ═══ 2: the die ═══════════════════════════════════════════════════════ */
+.die-slot {
+  position: absolute;
+  top: 8vh;
+  left: 50%;
+  width: 16vh;
+  height: 16vh;
+  translate: -50% 0;
+}
+.die {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template: repeat(3, 1fr) / repeat(3, 1fr);
+  gap: 1vh;
+  padding: 2vh;
+  border-radius: 2.6vh;
+  background: var(--bg);
+  border: 3px solid var(--text);
+  opacity: 0;
+}
+.dice.is-active .die {
+  animation:
+    pop 0.25s cubic-bezier(0.22, 1, 0.36, 1) var(--t) both,
+    vanish 0.12s ease var(--u) forwards;
+}
+.dice.is-leaving .die:last-child {
+  opacity: 1;
+}
+.die.is-six {
+  border-color: var(--coral);
+}
+.pip {
+  border-radius: 999px;
+  background: transparent;
+}
+.pip.is-on {
+  background: var(--text);
+}
+.die.is-six .pip.is-on {
+  background: var(--coral);
+}
+.history {
+  position: absolute;
+  top: 28vh;
+  left: 50%;
+  display: flex;
+  gap: 1.2vh;
+  translate: -50% 0;
+}
+.roll {
+  display: grid;
+  place-items: center;
+  width: 5vh;
+  height: 5vh;
+  border-radius: 1.2vh;
+  background: var(--bg-off);
+  border: 2px solid var(--border);
+  font-family: var(--font-code);
+  font-size: clamp(0.7rem, 2vh, 1.3rem);
+  font-weight: 800;
+  color: var(--text-dim);
+  opacity: 0;
+}
+.dice.is-active .roll {
+  animation: pop 0.25s cubic-bezier(0.22, 1, 0.36, 1) var(--t) both;
+}
+.dice.is-leaving .roll {
+  opacity: 1;
+}
+.roll.is-six {
+  background: var(--coral);
+  border-color: var(--coral);
+  color: #FFFFFF;
+}
+.six {
+  position: absolute;
+  top: 36vh;
+  left: 50%;
+  display: flex;
+  align-items: center;
+  gap: 1.4vh;
+  translate: -50% 0;
+  opacity: 0;
+}
+.dice.is-active .six {
+  animation: appear 0.3s ease 4.6s both;
+}
+.dice.is-leaving .six {
+  opacity: 1;
+}
+.six-cat {
+  width: 8vh;
+  height: 8vh;
+}
+.six-label {
+  padding: calc(0.5vh + 0.3em) 1.4vh;
+  border-radius: 999px;
+  background: var(--coral);
+  font-size: clamp(0.7rem, 2vh, 1.3rem);
+  font-weight: 800;
+  color: #FFFFFF;
+}
+
+/* ═══ 3: NumPy ═════════════════════════════════════════════════════════ */
 .row {
   position: absolute;
   left: 6%;

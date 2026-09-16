@@ -751,7 +751,14 @@ export const slides: SlideEntry[] = [
     title: 'Bibliotheken für KI und ML',
     subtitle: 'pip, NumPy, pandas, matplotlib, scikit-learn',
     duration: 15,
-    teleprompter: 'Die großen Werkzeuge für KI und Daten sind nicht eingebaut, sondern Pakete. Installiert wird mit pip im Terminal von PyCharm – das landet in der .venv des Projekts. Gemeinsam einmal ausführen.',
+    teleprompter: 'Die großen Werkzeuge für KI und Daten sind nicht eingebaut, sondern Pakete. Installiert wird mit pip im Terminal von PyCharm: erst numpy allein, dann pandas und matplotlib in einem Befehl – mehrere Namen hintereinander gehen. Alles landet in der .venv des Projekts. Gemeinsam einmal ausführen.',
+  },
+  {
+    id: 'PRE-0146',
+    title: 'Bibliotheken – Importieren und benutzen',
+    parent: 'PRE-0127',
+    transition: 'none',
+    teleprompter: 'Installiert ist installiert – benutzt wird ein Paket mit import. Hier random, das schon dabei war: würfeln, bis eine Sechs kommt. Genauso importierst du numpy, pandas und matplotlib, nur dass die vorher pip brauchten.',
   },
   {
     id: 'PRE-0128',

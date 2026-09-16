@@ -1104,6 +1104,7 @@ else:
     output: 'Ausgabe',
     noOutput: 'noch keine Ausgabe',
     labels: {
+      six: 'Sechs!',
       loop: 'Liste + Schleife: einer nach dem anderen',
       array: 'NumPy-Array: alle auf einmal',
       age: 'alter',
@@ -1113,11 +1114,20 @@ else:
     stages: [
       {
         headline: 'Pakete installieren: pip.',
-        note: 'Nicht alles ist eingebaut. `pip install` lädt Pakete aus dem Internet – im Terminal von PyCharm, direkt in die .venv des Projekts.',
+        note: 'Erst eins: `pip install numpy`. Dann die nächsten – ein Befehl, mehrere Namen. Alles landet in der `.venv` des Projekts, im Terminal von PyCharm.',
         tally: 'pip install …',
-        code: '# im Terminal von PyCharm (unten links):\n# pip install numpy pandas matplotlib\n\nimport numpy\nprint("bereit!")',
+        code: '# Terminal von PyCharm (unten links):\n# pip install numpy\n# pip install pandas matplotlib\n\nimport numpy\nprint("bereit!")',
         focus: [],
         output: ['bereit!'],
+        outputFrom: 0,
+      },
+      {
+        headline: 'Importieren und benutzen.',
+        note: '`random` war schon dabei, `numpy` musste erst installiert werden. Importiert wird beides gleich – ab dann gehört dir das Werkzeug.',
+        tally: 'import random',
+        code: 'import random\n\naugen = 0\nwhile augen != 6:\n    augen = random.randint(1, 6)\n    print(augen)\nprint("Sechs!")',
+        focus: [],
+        output: ['3', '1', '5', '6', 'Sechs!'],
         outputFrom: 0,
       },
       {

@@ -1100,6 +1100,7 @@ else:
     output: 'Output',
     noOutput: 'no output yet',
     labels: {
+      six: 'Six!',
       loop: 'list + loop: one after another',
       array: 'NumPy array: all at once',
       age: 'age',
@@ -1109,11 +1110,20 @@ else:
     stages: [
       {
         headline: 'Installing packages: pip.',
-        note: 'Not everything is built in. `pip install` downloads packages from the internet – in PyCharm’s terminal, straight into the project’s .venv.',
+        note: 'One first: `pip install numpy`. Then the next ones – one command, several names. Everything lands in the `.venv` of the project, in the PyCharm terminal.',
         tally: 'pip install …',
-        code: '# in PyCharm’s terminal (bottom left):\n# pip install numpy pandas matplotlib\n\nimport numpy\nprint("ready!")',
+        code: '# PyCharm terminal (bottom left):\n# pip install numpy\n# pip install pandas matplotlib\n\nimport numpy\nprint("ready!")',
         focus: [],
         output: ['ready!'],
+        outputFrom: 0,
+      },
+      {
+        headline: 'Import it and use it.',
+        note: '`random` came with Python, `numpy` had to be installed first. Both are imported the same way – from then on the tool is yours.',
+        tally: 'import random',
+        code: 'import random\n\nroll = 0\nwhile roll != 6:\n    roll = random.randint(1, 6)\n    print(roll)\nprint("Six!")',
+        focus: [],
+        output: ['3', '1', '5', '6', 'Six!'],
         outputFrom: 0,
       },
       {
