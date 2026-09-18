@@ -1,3 +1,9 @@
+> **Four-day delivery (28 Sep–1 Oct 2026):** use the current
+> [curriculum](docs/precourse/FOUR_DAY_COURSE_DE.md) and
+> [slide run sheet](docs/precourse/SLIDE_REVISION_PLAN.md).
+> This file preserves the longer deck’s content inventory/backlog, not required
+> work or teaching time for the eight-hour course.
+
 # Revision plan: first review pass (2026-09-15)
 
 Feedback from walking through the deck slide by slide, turned into work. Slide
