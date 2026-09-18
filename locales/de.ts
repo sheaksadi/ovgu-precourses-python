@@ -6,6 +6,34 @@
  * Only `if`, `else` and Python itself stay English in every language.
  */
 const de = {
+  // Four-day classroom material intentionally stays German in both locales.
+  precourse: {
+    overview: {
+      title: 'Vier Tage: Probleme lösen',
+      lead: '28.09.–01.10.2026 · Mo–Do · täglich 2 Stunden',
+      items: [
+        'Montag: Abläufe planen und Werte verfolgen.',
+        'Dienstag: Entscheidungen und Grenzen prüfen.',
+        'Mittwoch: Listen durchlaufen und passende Werte zählen.',
+        'Donnerstag: Deinen Temperatur-Check bauen und testen.'
+      ],
+      footer: 'Vermuten → Planen → Nachverfolgen → Ausführen → Prüfen',
+      routes: 'Eine Route für alle: Grundlagen mit Hilfen · Aufbau mit kurzen eigenen Programmen · Vertiefung mit Grenzfällen und kleinen Funktionen.'
+    },
+    project: {
+      title: 'Dein Temperatur-Check',
+      lead: 'Wie viele Messwerte erreichen mindestens die gewählte Grenze?',
+      items: [
+        'Plane zuerst auf Papier. Nutze eine Liste, eine Schleife und eine Bedingung.',
+        'Bei Grenze 20: [18, 21, 20, 25, 17] → 3; [19, 20, 21] → 2.',
+        'Teste auch [20] → 1 und [] → 0. Bei Grenze 25 liefert die erste Liste 1.',
+        'Erkläre deinen Zähler und einen Fehler, den dein Test finden kann.'
+      ],
+      footer: 'Erst vorhersagen, dann ausführen und vergleichen.',
+      routes: 'Grundlagen: Gerüst oder Pseudocode. Aufbau: kurzes eigenes Programm, Funktion optional. Vertiefung: kleine Funktionen und längste warme Folge.'
+    }
+  },
+
   common: {
     language: 'Sprache',
     switchLanguage: 'Sprache wechseln',
@@ -13,7 +41,7 @@ const de = {
 
   title: {
     university: 'OVGU Magdeburg',
-    semester: 'Wintersemester 2026/27',
+    semester: '28.09.–01.10.2026 · täglich 2 Stunden',
     line1: 'Python',
     line2: 'Vorkurs',
     subtitleBefore: 'für',
