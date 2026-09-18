@@ -8,6 +8,29 @@
 const de = {
   // Four-day classroom material intentionally stays German in both locales.
   precourse: {
+    monday: {
+      title: 'Montag: Erst der Plan',
+      lead: 'Wie werden aus 135 Minuten Stunden und Restminuten?',
+      items: [
+        'Eingabe: eine ganze Zahl ab 0. Ausgabe: volle Stunden und übrige Minuten.',
+        'Vermute zuerst: Was kommt bei 135, 60 und 59 heraus?',
+        'Plane mit 60er-Gruppen. Schreibe so genau, dass dein Gegenüber jeden Schritt wörtlich ausführen kann.',
+        'Verfolge minuten, stunden und rest auf Papier. Prüfe: Stunden × 60 + Rest = Eingabe; Rest liegt zwischen 0 und 59.',
+      ],
+      footer: 'Erst den Ablauf testen. Danach übersetzen wir ihn in Python.',
+    },
+    tuesday: {
+      title: 'Dienstag: Wo liegt die Grenze?',
+      lead: 'Ein Thermometer soll für jeden Wert genau eine Meldung zeigen.',
+      items: [
+        'Unter 20 °C: kühl. Ab 20 bis unter 25 °C: angenehm. Ab 25 °C: warm.',
+        'Vermute die Meldungen für 19, 20, 24, 25 und 26. Markiere die Grenzen auf einem Zahlenstrahl.',
+        'Plane Fragen mit Ja/Nein. Verfolge für 25, welcher Weg genommen wird.',
+        'Fehlersuche: Zuerst „mindestens 20 → angenehm“, sonst „mindestens 25 → warm“. Welcher Test zeigt den Fehler?',
+      ],
+      footer: 'Grundlagen: unter 20 kühl, sonst nicht kühl. Erst begründen und testen, dann if / elif / else.',
+    },
+
     overview: {
       title: 'Vier Tage: Probleme lösen',
       lead: '28.09.–01.10.2026 · Mo–Do · täglich 2 Stunden',
@@ -134,9 +157,9 @@ const de = {
   },
 
   tryit: {
-    eyebrow: 'Selbst ausprobieren',
+    eyebrow: 'Montag · Vorhersagen und testen',
     title: 'Probier’s selbst!',
-    steps: ['Suche nach „python online ausführen“', 'Öffne einen Online-Compiler', 'Code einfügen und Run drücken'],
+    steps: ['Sage die Ausgabe vorher', 'Führe aus und vergleiche', 'Ändere einen Wert und teste erneut'],
     scan: 'Oder direkt scannen',
     query: 'python online ausführen',
     search: 'Suchen',
@@ -265,15 +288,15 @@ const de = {
     ],
     stages: [
       {
-        headline: 'Eine Variable ist eine Box mit Namen',
-        note: 'Vorhin stand der Text direkt in `print()`. Jetzt liegt er in einer Box namens `gruss`: links der Name, rechts der Wert, dazwischen `=`.',
+        headline: 'Was müssen wir uns merken?',
+        note: 'Unser Plan braucht gespeicherte Werte. Hier heißt der Name `gruss`. Prüfe: Speichert diese Zeile etwas oder zeigt sie schon etwas an?',
         code: 'gruss = "Hallo Welt!"',
         focus: [1],
         output: [] as string[],
         outputFrom: 0,
       },
       {
-        headline: 'Den Namen benutzen, den Wert bekommen',
+        headline: 'Welche Ausgabe erwartest du?',
         note: 'Python schaut in die Box und benutzt, was drin ist. Um den Namen kommen keine Anführungszeichen.',
         code: 'gruss = "Hallo Welt!"\nprint(gruss)',
         focus: [2],
@@ -281,8 +304,8 @@ const de = {
         outputFrom: 0,
       },
       {
-        headline: 'Neuer Wert, gleiche Box',
-        note: 'Ein neues `=` ersetzt den alten Wert. Die Box merkt sich immer nur den letzten.',
+        headline: 'Verfolge den Wert nach jeder Zeile',
+        note: 'Notiere nach jeder Zuweisung den Wert von `gruss`. Welche der beiden Ausgaben ändert sich, wenn du nur den zweiten Text änderst?',
         code: 'gruss = "Hallo Welt!"\nprint(gruss)\ngruss = "Hallo Momo!"\nprint(gruss)',
         focus: [3, 4],
         output: ['Hallo Welt!', 'Hallo Momo!'],
@@ -297,7 +320,7 @@ const de = {
         outputFrom: 0,
       },
       {
-        headline: 'Mit Variablen rechnen',
+        headline: 'Erst vorhersagen: 3 → ? → ?',
         note: 'Erst wird rechts gerechnet, dann kommt das Ergebnis zurück in die Box. `alter += 1` ist die Kurzform von `alter = alter + 1`.',
         code: 'alter = 3\nalter = alter + 1\nalter += 1\nprint(alter)',
         focus: [2, 3],
@@ -314,7 +337,7 @@ const de = {
       },
       {
         headline: '`input()` liefert immer Text',
-        note: 'Aus Text wird mit `int()` eine ganze Zahl und mit `float()` eine Kommazahl. `str()` macht wieder Text daraus.',
+        note: 'Eingabe → Umwandlung → Rechnung → Ausgabe. Verfolge die Eingabe 5: Wo ist sie noch Text? Teste danach 0. Für den Minutenplan erlauben wir nur ganze Zahlen ab 0.',
         code: 'eingabe = input("Wie alt ist Momo? ")\nprint(type(eingabe))\nalter = int(eingabe)\nprint(alter + 1)',
         focus: [1, 3],
         output: ['Wie alt ist Momo? 5', "<class 'str'>", '6'],
@@ -332,8 +355,8 @@ const de = {
   },
 
   door: {
-    steps: ['Problem', 'Lösen', 'Aufschreiben', 'Python'],
-    title: 'Kommt Momo ins Haus?',
+    steps: ['Vermuten', 'Nachverfolgen', 'Planen', 'Python prüfen'],
+    title: 'Dienstag: Eine Frage, zwei Wege',
     question: 'Frage',
     case1: 'Fall 1',
     case2: 'Fall 2',
@@ -343,7 +366,7 @@ const de = {
     goesIn: '✓ geht ins Haus',
     sleeps: '✗ schläft vor der Tür',
     prompt: 'Momo steht vor ihrer Haustür. Manchmal hat sie den Schlüssel dabei, manchmal nicht.',
-    ask: 'Was passiert in beiden Fällen?',
+    ask: 'Welche Ausgabe erwartest du – mit und ohne Schlüssel?',
     toPython: 'in Python',
     pseudo: `if Momo hat den Schlüssel:
     Momo geht ins Haus

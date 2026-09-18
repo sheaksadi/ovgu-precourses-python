@@ -7,6 +7,29 @@ import type { Messages } from './de'
 const en: Messages = {
   // Four-day classroom material intentionally stays German in both locales.
   precourse: {
+    monday: {
+      title: 'Montag: Erst der Plan',
+      lead: 'Wie werden aus 135 Minuten Stunden und Restminuten?',
+      items: [
+        'Eingabe: eine ganze Zahl ab 0. Ausgabe: volle Stunden und übrige Minuten.',
+        'Vermute zuerst: Was kommt bei 135, 60 und 59 heraus?',
+        'Plane mit 60er-Gruppen. Schreibe so genau, dass dein Gegenüber jeden Schritt wörtlich ausführen kann.',
+        'Verfolge minuten, stunden und rest auf Papier. Prüfe: Stunden × 60 + Rest = Eingabe; Rest liegt zwischen 0 und 59.',
+      ],
+      footer: 'Erst den Ablauf testen. Danach übersetzen wir ihn in Python.',
+    },
+    tuesday: {
+      title: 'Dienstag: Wo liegt die Grenze?',
+      lead: 'Ein Thermometer soll für jeden Wert genau eine Meldung zeigen.',
+      items: [
+        'Unter 20 °C: kühl. Ab 20 bis unter 25 °C: angenehm. Ab 25 °C: warm.',
+        'Vermute die Meldungen für 19, 20, 24, 25 und 26. Markiere die Grenzen auf einem Zahlenstrahl.',
+        'Plane Fragen mit Ja/Nein. Verfolge für 25, welcher Weg genommen wird.',
+        'Fehlersuche: Zuerst „mindestens 20 → angenehm“, sonst „mindestens 25 → warm“. Welcher Test zeigt den Fehler?',
+      ],
+      footer: 'Grundlagen: unter 20 kühl, sonst nicht kühl. Erst begründen und testen, dann if / elif / else.',
+    },
+
     overview: {
       title: 'Vier Tage: Probleme lösen',
       lead: '28.09.–01.10.2026 · Mo–Do · täglich 2 Stunden',
