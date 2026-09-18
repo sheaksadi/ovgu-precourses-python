@@ -14,4 +14,5 @@ export const PROBLEM_ROUNDS: Record<string, string[]> = {
   builtins: ['builtins-scores'],
   dicts: ['dicts-shelter'],
   data: ['data-temps'],
+  objects: ['objects-cat'],
 }

@@ -70,9 +70,38 @@ const functionsArea: CodeTask = {
   ],
 }
 
+/** The last one: a class, not a function. Tests build it and then use it. */
+const objectsCat: CodeTask = {
+  id: 'objects-cat',
+  names: {
+    de: { cls: 'Katze', a: 'name', b: 'hunger', fn: 'fuettern', c: 'menge', todo: 'dein Code' },
+    en: { cls: 'Katze', a: 'name', b: 'hunger', fn: 'fuettern', c: 'menge', todo: 'your code' },
+  },
+  starter: n => [
+    `class ${n.cls}:`,
+    `    def __init__(self, ${n.a}, ${n.b}):`,
+    `        # ${n.todo}`,
+    '        pass',
+    '',
+    `    def ${n.fn}(self, ${n.c}):`,
+    `        # ${n.todo}`,
+    '        pass',
+    '',
+  ].join('\n'),
+  tests: n => [
+    { call: `${n.cls}("Momo", 8).${n.b}`, expect: '8' },
+    { call: `${n.cls}("Momo", 8).${n.a}`, expect: "'Momo'" },
+    // Feeding returns nothing; what counts is the value left in the object.
+    { call: `(lambda k: (k.${n.fn}(5), k.${n.b})[1])(${n.cls}("Momo", 8))`, expect: '3' },
+    { call: `(lambda k: (k.${n.fn}(1), k.${n.fn}(1), k.${n.b})[2])(${n.cls}("Kiki", 5))`, expect: '3', hidden: true },
+    { call: `(lambda k: (k.${n.fn}(0), k.${n.b})[1])(${n.cls}("Bello", 3))`, expect: '3', hidden: true },
+  ],
+}
+
 export const CODE_TASKS: Record<string, CodeTask> = {
   [functionsGreet.id]: functionsGreet,
   [functionsArea.id]: functionsArea,
+  [objectsCat.id]: objectsCat,
 }
 
 export const isCodeTask = (id: string) => id in CODE_TASKS
