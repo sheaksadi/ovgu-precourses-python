@@ -121,9 +121,63 @@ building a function.
       pandas, open its documentation, find a function the course uses.
 - [x] **Slide 30** (APIs): cat API, see phase 0.
 
-## Later
+## Phase 6: sorting, as a detour
 
-- [ ] What comes after the APIs section: to discuss.
+Sorting is not part of the course's problem-solving thread. It sits right after
+the loops section as a self-contained detour: a loop does something recognisable,
+nobody has to solve anything, and whoever gets curious has a thread to pull on
+their own. No puzzle round, no code task, no leaderboard.
+
+- [ ] **Why order helps** — the same list of fish, shuffled and sorted, and the
+      three questions that get easy once it is sorted (largest, ranking, search).
+- [ ] **Bubble sort** — the idea as two neighbours comparing, then the same run
+      as Python next to the moving bars, so the code and the picture are one thing.
+- [ ] **Selection sort and insertion sort** — one stage each, short: find the
+      smallest and move it, or place each card into a sorted hand.
+- [ ] **How much work is that?** — count comparisons, not big-O notation:
+      10 items, 100 items, 1000 items, and what that means in seconds.
+- [ ] **`sorted()`** — one line beats all of them, and that is the point.
+- [ ] **Joke sorts** — bogosort (shuffle until it happens to be sorted, with the
+      expected number of tries), Stalin sort (delete anything out of order, O(n),
+      shorter list), sleep sort and miracle sort as a closing card.
+
+## Phase 7: objects
+
+Placed after the APIs section, as the last teaching block. The deck already
+hints at classes twice (`DataFrame(...)` in the libraries scene, methods on
+strings and lists), so this section collects those hints.
+
+- [ ] **The problem first** — many cats tracked in parallel lists, and what
+      breaks when one of them gets out of step. No syntax on this slide.
+- [ ] **Intuition** — one box per cat, holding both what it knows and what it
+      can do. The blueprint and the thing built from it (cookie cutter, cookies).
+- [ ] **Python syntax** — `class`, `__init__`, `self`, attributes, methods, one
+      stage each, each stage adding to the same cat class.
+- [ ] **Many instances** — three cats from one class, each with its own values.
+- [ ] **You have used objects all along** — `.append()`, `.upper()`,
+      `DataFrame(...)`: same idea, someone else's class.
+- [ ] **Code task** — write a small class and make the tests pass.
+
+## Phase 8: the hard round
+
+Two puzzles at the end, harder than every round before, because by then the
+group has lists, loops, functions, built-ins, dictionaries and classes.
+
+- [ ] **Puzzle 1** — parsing a small log into a dictionary, then a question that
+      needs both parts of it. Two parts, per-device input, as usual.
+- [ ] **Puzzle 2** — a simulation over many steps, where a naive loop is fine
+      but a small function or class makes part 2 bearable.
+- [ ] **Leaderboard and a solution walkthrough** for each.
+
+## Phase 9: where to go next
+
+- [ ] **What you can do now** — a short honest list, tied to the slides they saw.
+- [ ] **Channels worth watching** — 3Blue1Brown and Sebastian Lague first, then
+      Computerphile, CS50, and the Python-specific ones (Corey Schafer, mCoding,
+      ArjanCodes). Visual, one card each, with what each is good for.
+- [ ] **Keep practising** — Advent of Code, Exercism, and the advice to pick a
+      small annoying task and automate it.
+- [ ] **Thank you** — the closing slide.
 
 ---
 
