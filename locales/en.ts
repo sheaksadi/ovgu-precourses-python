@@ -1381,6 +1381,51 @@ else:
       },
     ],
   },
+  outro: {
+    can: {
+      title: 'What you can do now',
+      note: 'Not a sales pitch, a stock-take. This is enough to keep up in the first semester.',
+      items: [
+        { name: 'Variables and types', what: 'keep values, do maths, build `f"..."` strings' },
+        { name: 'Conditions', what: '`if`, `elif`, `else` - one question, several ways' },
+        { name: 'Lists', what: 'many values under one name, index, `append`' },
+        { name: 'Loops', what: '`for`, `while`, `range`, `break` - repeat the work' },
+        { name: 'Functions', what: 'write once, use everywhere, `return`' },
+        { name: 'Built-ins', what: '`len`, `sum`, `max`, `sorted`, `enumerate`, `zip`' },
+        { name: 'Dictionaries', what: 'name to value, instead of counting positions' },
+        { name: 'Libraries', what: '`pip install`, `import`, NumPy and pandas' },
+        { name: 'APIs', what: 'fetch data from the internet and read JSON' },
+        { name: 'Classes', what: 'data and behaviour in one place' },
+      ],
+    },
+    watch: {
+      title: 'Worth watching',
+      note: 'Recommendations, not homework. All free, all on YouTube.',
+      channels: [
+        { name: '3Blue1Brown', what: 'Maths you can see. The neural network series is the best free introduction to the topic there is.', tag: 'Maths & AI' },
+        { name: 'Sebastian Lague', what: 'Coding Adventures: simulations, graphics, pathfinding. Shows what programming feels like when it is fun.', tag: 'Projects' },
+        { name: 'Computerphile', what: 'Short explanations of computer science topics, often by the people who did the research.', tag: 'Theory' },
+        { name: 'CS50', what: 'The whole Harvard intro course, recorded. If you want one thread to follow: this one.', tag: 'Course' },
+        { name: 'Corey Schafer', what: 'Calm, thorough Python tutorials. Good when a topic from this course still wobbles.', tag: 'Python' },
+        { name: 'ArjanCodes', what: 'How to write code you still understand in a month. Interesting later, not yet.', tag: 'Later' },
+      ],
+    },
+    next: {
+      title: 'Keep going',
+      note: 'Practice beats watching. Pick one, not all of them.',
+      items: [
+        { name: 'Advent of Code', what: 'One puzzle a day from December 1st, exactly the format of the last days. adventofcode.com', tag: 'Puzzles' },
+        { name: 'Exercism', what: 'Exercises with feedback from real people, free. exercism.org', tag: 'Practice' },
+        { name: 'Automate something annoying', what: 'Rename files, work out grades, read a timetable. Start small and actually finish.', tag: 'The best advice' },
+      ],
+    },
+    thanks: {
+      title: 'Thank you',
+      line: 'Four days, a pile of cats, quite a lot of Python.',
+      note: 'The slides stay at the same address. The puzzles stay open - finish them at home if you like.',
+      sign: 'Good luck in your first semester!',
+    },
+  },
   problems: {
     eyebrow: 'Puzzle',
     part: 'Part {n}',
@@ -1510,6 +1555,38 @@ else:
         '`fuettern(menge)` takes `menge` off the hunger. No `print`, no `return` - the value stays inside the cat.',
       ],
       example: { input: 'k = Katze("Momo", 8)\nk.fuettern(5)\nk.hunger', answer: '3', note: '8 minus 5. Do not forget `self`.' },
+    },
+    'finale-logbook': {
+      title: 'Momo log book',
+      story: [
+        'Momo keeps a log. Every line is one catch: day, name, number of fish - this time as plain text, not as a ready-made Python list.',
+        'Read it with `zeile.split()`, which gives you a list of three pieces. Careful: `split` hands you text, `int()` turns it into numbers.',
+        'Which cat caught the most fish in total? Submit its name.',
+      ],
+      example: { input: '1 Momo 3\n1 Kiki 5\n2 Momo 4', answer: 'Momo', note: '3 + 4 = 7 against 5.' },
+      part2: {
+        story: [
+          'Same cat: what is its longest run? That is, how many days in a row did it catch at least one fish?',
+          'Hint: collect that cat days first, drop duplicates, sort them - then walk through once and count while the next day is exactly one higher.',
+        ],
+        example: { answer: '2', note: 'Day 1 and day 2, back to back.' },
+      },
+    },
+    'finale-shelter': {
+      title: 'The shelter',
+      story: [
+        'Eight cats, thirty rounds. `start` is every cat hunger at the beginning, `portionen` says how much food each round brings.',
+        'Every round works the same way: first every cat gets 1 hungrier, then the hungriest cat has that round portion taken off. On a tie the lower number wins. Hunger never goes below 0.',
+        'What is the hunger of all cats together once every round is done?',
+      ],
+      example: { input: 'start = [0, 3]\nportionen = [2, 2]', answer: '3', note: 'Round 1: [1, 4] → cat 1 eats → [1, 2]. Round 2: [2, 3] → cat 1 eats → [2, 1]. Together 3.' },
+      part2: {
+        story: [
+          'Which cat was fed most often? Submit its number - the first cat is 0, like a list index.',
+          'Hint: keep a second list counting per cat. If you like, write the whole thing as a class `Katze` with `hunger` and `gefuettert`.',
+        ],
+        example: { answer: '1', note: 'Cat 1 was the hungriest in both rounds.' },
+      },
     },
     'lists-basket': {
       title: "Momo's Basket",

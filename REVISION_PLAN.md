@@ -68,22 +68,22 @@ Slide 2 (PRE-0038). Today every screen spins on its own.
 
 The shared machinery for every practice round in phases 4 and 5.
 
-- [ ] **Puzzle rounds (Advent of Code style).** A problem has a description, a
+- [x] **Puzzle rounds (Advent of Code style).** A problem has a description, a
       generator that makes a personal puzzle input from a seed (the client id),
       and a solver that computes the expected answer on the server. The device
       shows the description, a "copy input" button and an answer field. Wrong
       answers get a gentle retry message; right answers are recorded once.
-- [ ] **Code tasks (function building).** The device has a small editor that runs
+- [x] **Code tasks (function building).** The device has a small editor that runs
       Python in the browser (Pyodide), runs hidden and visible tests against the
       student's function, and submits when they pass.
       Decided: Pyodide is bundled with the deck, so it works without internet.
-- [ ] **Room state.** Solves live in the WebSocket room: who solved which part,
+- [x] **Room state.** Solves live in the WebSocket room: who solved which part,
       when. It resets with the room.
-- [ ] **Projector view of a round.** The problem description, a live count of
+- [x] **Projector view of a round.** The problem description, a live count of
       solves, the solve toasts, and a leaderboard (first solvers first).
-- [ ] **Presenter view and dashboard.** The same solves, plus who is still
+- [x] **Presenter view and dashboard.** The same solves, plus who is still
       working, so the presenter knows whom to help.
-- [ ] **Solution walkthrough scene.** A reusable slide: zoom into the solution
+- [x] **Solution walkthrough scene.** A reusable slide: zoom into the solution
       code, step through it with values changing, zoom back out.
 
 ## Phase 4: practice rounds, in deck order
@@ -128,16 +128,16 @@ the loops section as a self-contained detour: a loop does something recognisable
 nobody has to solve anything, and whoever gets curious has a thread to pull on
 their own. No puzzle round, no code task, no leaderboard.
 
-- [ ] **Why order helps** — the same list of fish, shuffled and sorted, and the
+- [x] **Why order helps** — the same list of fish, shuffled and sorted, and the
       three questions that get easy once it is sorted (largest, ranking, search).
-- [ ] **Bubble sort** — the idea as two neighbours comparing, then the same run
+- [x] **Bubble sort** — the idea as two neighbours comparing, then the same run
       as Python next to the moving bars, so the code and the picture are one thing.
-- [ ] **Selection sort and insertion sort** — one stage each, short: find the
+- [x] **Selection sort and insertion sort** — one stage each, short: find the
       smallest and move it, or place each card into a sorted hand.
-- [ ] **How much work is that?** — count comparisons, not big-O notation:
+- [x] **How much work is that?** — count comparisons, not big-O notation:
       10 items, 100 items, 1000 items, and what that means in seconds.
-- [ ] **`sorted()`** — one line beats all of them, and that is the point.
-- [ ] **Joke sorts** — bogosort (shuffle until it happens to be sorted, with the
+- [x] **`sorted()`** — one line beats all of them, and that is the point.
+- [x] **Joke sorts** — bogosort (shuffle until it happens to be sorted, with the
       expected number of tries), Stalin sort (delete anything out of order, O(n),
       shorter list), sleep sort and miracle sort as a closing card.
 
@@ -147,37 +147,37 @@ Placed after the APIs section, as the last teaching block. The deck already
 hints at classes twice (`DataFrame(...)` in the libraries scene, methods on
 strings and lists), so this section collects those hints.
 
-- [ ] **The problem first** — many cats tracked in parallel lists, and what
+- [x] **The problem first** — many cats tracked in parallel lists, and what
       breaks when one of them gets out of step. No syntax on this slide.
-- [ ] **Intuition** — one box per cat, holding both what it knows and what it
+- [x] **Intuition** — one box per cat, holding both what it knows and what it
       can do. The blueprint and the thing built from it (cookie cutter, cookies).
-- [ ] **Python syntax** — `class`, `__init__`, `self`, attributes, methods, one
+- [x] **Python syntax** — `class`, `__init__`, `self`, attributes, methods, one
       stage each, each stage adding to the same cat class.
-- [ ] **Many instances** — three cats from one class, each with its own values.
-- [ ] **You have used objects all along** — `.append()`, `.upper()`,
+- [x] **Many instances** — three cats from one class, each with its own values.
+- [x] **You have used objects all along** — `.append()`, `.upper()`,
       `DataFrame(...)`: same idea, someone else's class.
-- [ ] **Code task** — write a small class and make the tests pass.
+- [x] **Code task** — write a small class and make the tests pass.
 
 ## Phase 8: the hard round
 
 Two puzzles at the end, harder than every round before, because by then the
 group has lists, loops, functions, built-ins, dictionaries and classes.
 
-- [ ] **Puzzle 1** — parsing a small log into a dictionary, then a question that
+- [x] **Puzzle 1** — parsing a small log into a dictionary, then a question that
       needs both parts of it. Two parts, per-device input, as usual.
-- [ ] **Puzzle 2** — a simulation over many steps, where a naive loop is fine
+- [x] **Puzzle 2** — a simulation over many steps, where a naive loop is fine
       but a small function or class makes part 2 bearable.
-- [ ] **Leaderboard and a solution walkthrough** for each.
+- [x] **Leaderboard** for the round. A solution walkthrough for each is still open.
 
 ## Phase 9: where to go next
 
-- [ ] **What you can do now** — a short honest list, tied to the slides they saw.
-- [ ] **Channels worth watching** — 3Blue1Brown and Sebastian Lague first, then
+- [x] **What you can do now** — a short honest list, tied to the slides they saw.
+- [x] **Channels worth watching** — 3Blue1Brown and Sebastian Lague first, then
       Computerphile, CS50, and the Python-specific ones (Corey Schafer, mCoding,
       ArjanCodes). Visual, one card each, with what each is good for.
-- [ ] **Keep practising** — Advent of Code, Exercism, and the advice to pick a
+- [x] **Keep practising** — Advent of Code, Exercism, and the advice to pick a
       small annoying task and automate it.
-- [ ] **Thank you** — the closing slide.
+- [x] **Thank you** — the closing slide.
 
 ---
 

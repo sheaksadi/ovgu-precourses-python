@@ -15,4 +15,5 @@ export const PROBLEM_ROUNDS: Record<string, string[]> = {
   dicts: ['dicts-shelter'],
   data: ['data-temps'],
   objects: ['objects-cat'],
+  finale: ['finale-logbook', 'finale-shelter'],
 }

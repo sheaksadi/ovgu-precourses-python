@@ -1385,6 +1385,51 @@ else:
       },
     ],
   },
+  outro: {
+    can: {
+      title: 'Was du jetzt kannst',
+      note: 'Das ist keine Werbung, sondern eine Bestandsaufnahme. Damit kommst du im ersten Semester mit.',
+      items: [
+        { name: 'Variablen und Typen', what: 'Werte merken, rechnen, `f"..."` zusammenbauen' },
+        { name: 'Bedingungen', what: '`if`, `elif`, `else` – eine Frage, mehrere Wege' },
+        { name: 'Listen', what: 'viele Werte in einem Namen, Index, `append`' },
+        { name: 'Schleifen', what: '`for`, `while`, `range`, `break` – Arbeit wiederholen' },
+        { name: 'Funktionen', what: 'einmal schreiben, überall benutzen, `return`' },
+        { name: 'Eingebautes', what: '`len`, `sum`, `max`, `sorted`, `enumerate`, `zip`' },
+        { name: 'Dictionaries', what: 'Name zu Wert, statt alles durchzuzählen' },
+        { name: 'Bibliotheken', what: '`pip install`, `import`, NumPy und pandas' },
+        { name: 'APIs', what: 'Daten aus dem Internet holen und JSON lesen' },
+        { name: 'Klassen', what: 'Daten und Verhalten an einem Ort' },
+      ],
+    },
+    watch: {
+      title: 'Weiterschauen',
+      note: 'Empfehlungen, keine Hausaufgaben. Alle gratis, alle auf YouTube.',
+      channels: [
+        { name: '3Blue1Brown', what: 'Mathe zum Sehen. Die Serie über neuronale Netze ist der beste Einstieg ins Thema, den es umsonst gibt.', tag: 'Mathe & KI' },
+        { name: 'Sebastian Lague', what: 'Coding Adventures: Simulationen, Grafik, Wegfindung. Zeigt, wie sich Programmieren anfühlt, wenn es Spaß macht.', tag: 'Projekte' },
+        { name: 'Computerphile', what: 'Kurze Erklärungen zu Informatik-Themen, oft von den Leuten, die daran geforscht haben.', tag: 'Theorie' },
+        { name: 'CS50', what: 'Der komplette Harvard-Einstiegskurs, aufgezeichnet. Wenn du einen roten Faden willst: der hier.', tag: 'Kurs' },
+        { name: 'Corey Schafer', what: 'Ruhige, gründliche Python-Tutorials. Gut, wenn ein Thema aus dem Vorkurs noch wackelt.', tag: 'Python' },
+        { name: 'ArjanCodes', what: 'Wie man Code schreibt, den man in einem Monat noch versteht. Danach interessant, nicht davor.', tag: 'Später' },
+      ],
+    },
+    next: {
+      title: 'Weitermachen',
+      note: 'Üben schlägt zuschauen. Such dir eins aus, nicht alle.',
+      items: [
+        { name: 'Advent of Code', what: 'Ab dem 1. Dezember jeden Tag ein Rätsel, genau im Format der letzten Tage. adventofcode.com', tag: 'Rätsel' },
+        { name: 'Exercism', what: 'Aufgaben mit Rückmeldung von echten Menschen, kostenlos. exercism.org', tag: 'Übung' },
+        { name: 'Etwas Nerviges automatisieren', what: 'Dateien umbenennen, Noten ausrechnen, Stundenplan einlesen. Klein anfangen und wirklich fertig werden.', tag: 'Der beste Tipp' },
+      ],
+    },
+    thanks: {
+      title: 'Danke',
+      line: 'Vier Tage, ein Haufen Katzen, ziemlich viel Python.',
+      note: 'Die Folien bleiben unter derselben Adresse. Die Rätsel bleiben offen – wer mag, macht sie zu Hause fertig.',
+      sign: 'Viel Erfolg im ersten Semester!',
+    },
+  },
   problems: {
     eyebrow: 'Rätsel',
     part: 'Teil {n}',
@@ -1514,6 +1559,38 @@ else:
         '`fuettern(menge)` zieht `menge` vom Hunger ab. Kein `print`, kein `return` – der Wert soll in der Katze stehen bleiben.',
       ],
       example: { input: 'k = Katze("Momo", 8)\nk.fuettern(5)\nk.hunger', answer: '3', note: '8 minus 5. `self` nicht vergessen.' },
+    },
+    'finale-logbook': {
+      title: 'Momos Logbuch',
+      story: [
+        'Momo führt Buch. Jede Zeile ist ein Fang: Tag, Name, Anzahl Fische – diesmal als reiner Text, nicht als fertige Python-Liste.',
+        'Einlesen mit `zeile.split()`, das gibt dir eine Liste aus drei Teilen. Achtung: `split` liefert Text, `int()` macht Zahlen daraus.',
+        'Welche Katze hat insgesamt die meisten Fische gefangen? Schick ihren Namen ab.',
+      ],
+      example: { input: '1 Momo 3\n1 Kiki 5\n2 Momo 4', answer: 'Momo', note: '3 + 4 = 7 gegen 5.' },
+      part2: {
+        story: [
+          'Dieselbe Katze: Was ist ihre längste Serie? Also wie viele Tage hintereinander hat sie mindestens einen Fisch gefangen?',
+          'Tipp: erst alle Tage dieser Katze sammeln, doppelte raus, sortieren – dann einmal durchgehen und zählen, solange der nächste Tag genau eins größer ist.',
+        ],
+        example: { answer: '2', note: 'Tag 1 und Tag 2 hintereinander.' },
+      },
+    },
+    'finale-shelter': {
+      title: 'Das Katzenhaus',
+      story: [
+        'Acht Katzen, dreißig Runden. `start` ist der Hunger jeder Katze am Anfang, `portionen` sagt, wie viel es in jeder Runde zu fressen gibt.',
+        'Jede Runde läuft gleich ab: erst wird jede Katze um 1 hungriger, dann bekommt die hungrigste Katze die Portion dieser Runde abgezogen. Bei Gleichstand gewinnt die mit der kleineren Nummer. Unter 0 geht der Hunger nie.',
+        'Wie groß ist der Hunger aller Katzen zusammen, wenn alle Runden durch sind?',
+      ],
+      example: { input: 'start = [0, 3]\nportionen = [2, 2]', answer: '3', note: 'Runde 1: [1, 4] → Katze 1 frisst → [1, 2]. Runde 2: [2, 3] → Katze 1 frisst → [2, 1]. Zusammen 3.' },
+      part2: {
+        story: [
+          'Welche Katze war am häufigsten dran? Schick ihre Nummer ab – die erste Katze ist die 0, wie beim Index einer Liste.',
+          'Tipp: eine zweite Liste mitführen, die pro Katze zählt. Wer mag, schreibt das Ganze als Klasse `Katze` mit `hunger` und `gefuettert`.',
+        ],
+        example: { answer: '1', note: 'Katze 1 war beide Runden die hungrigste.' },
+      },
     },
     'lists-basket': {
       title: 'Momos Einkaufskorb',
