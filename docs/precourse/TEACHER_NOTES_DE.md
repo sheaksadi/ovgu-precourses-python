@@ -1,6 +1,6 @@
-# Lehrnotizen, Diagnose und Lösungshinweise
+# Teacher preparation and German classroom answer key
 
-Begleitung zu `FOUR_DAY_COURSE_DE.md` und `STUDENT_WORKBOOK_DE.md`. Die Arbeitsblätter enthalten bewusst keine vollständige Projektlösung. Diese Datei ist für die Vorbereitung; nicht vor der Arbeitsphase projizieren.
+Companion to [the course plan](FOUR_DAY_COURSE_DE.md) and [workbook](STUDENT_WORKBOOK_DE.md). The German sections below are classroom prompts, teaching phrases and answer wording. Keep this answer key separate from student handouts; reveal solutions only after independent work. Functions are optional in Grundlagen and Aufbau; the loop-and-condition solution is sufficient.
 
 ## Zehnminütige Diagnose am Montag
 
@@ -86,7 +86,7 @@ def anzahl_warm(temperaturen, grenze):
     return anzahl
 ```
 
-Grundlagen bekommen diesen Helfer fertig, rufen ihn mit zwei kleinen Listen auf und erklären das Ergebnis. Eigenständiges Schreiben von `def` ist hier kein Abschlusskriterium.
+Optional bekommen Grundlagen diesen Helfer fertig, rufen ihn mit zwei kleinen Listen auf und erklären das Ergebnis. Eigenständiges Schreiben von `def` ist hier kein Abschlusskriterium.
 
 Referenz für Vertiefung:
 
@@ -106,12 +106,14 @@ def laengste_warme_folge(temperaturen, grenze):
 
 Zusatztests bei Grenze 20: `[]` → 0, `[18,19]` → 0, `[20,21,22]` → 3, `[20,21,18,25]` → 2. Keine verschachtelte Schleife nötig. Ein `return` im Schleifenrumpf wäre zu früh: Die restlichen Werte würden fehlen.
 
-Projektbeurteilung: Auftrag erfüllt; nachvollziehbarer Plan; mindestens normaler und Grenzfall geprüft; Erklärung ohne Ablesen. In Aufbau/Vertiefung zusätzlich Funktion ausführen und Rückgabewert prüfen. Papierleistung und tatsächliche Ausführung getrennt dokumentieren.
+Projektbeurteilung: Auftrag erfüllt; nachvollziehbarer Plan; mindestens normaler und Grenzfall geprüft; Erklärung ohne Ablesen. Bei der optionalen Funktion bzw. in Vertiefung zusätzlich Funktion ausführen und Rückgabewert prüfen. Papierleistung und tatsächliche Ausführung getrennt dokumentieren.
 
-## Vorbereitung in drei Tagen
+## Preparation checklist
 
-1. **Heute:** Lehrplan und Beispiele abstimmen, Materialliste kürzen, Aufgaben selbst lösen. Diagnose und Papierfallback vorbereiten.
-2. **Morgen:** Nur freigegebene Folien/Notizen ändern, Kernroute im Browser proben. Technische Blocker separat beheben. Keine neue API- oder Animationsplattform anfangen.
-3. **Danach:** Zwei-Stunden-Generalprobe mit zweitem Gerät; Druckversion, lokale Daten und statische Animationsbilder sichern. Kleine Fehler korrigieren, neue Features stoppen.
+1. Solve every workbook task, print the diagnostic and prepare code cards.
+2. Rehearse the selected slides and German prompts; use the manual run sheet.
+3. Rehearse a full two-hour session with another device, printed tasks and local
+   data. Stop adding features once rehearsal begins.
 
-CS50P nicht vollständig neu anschauen: Notizen/Shorts aus Woche 0–2 gezielt für die eigene Unsicherheit nutzen, dann eine Aufgabe selbst lösen und laut auf Deutsch erklären. Pro Thema höchstens einen klaren Demonstrationsfall vorbereiten.
+Review only the reference material needed for a specific teaching uncertainty.
+Prepare one clear example per concept; do not add the complete CS50P syllabus.

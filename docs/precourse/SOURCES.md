@@ -14,14 +14,12 @@ Prepared 2026-09-18. The German tasks in this package are newly written; CS50 pr
 
 The temperature project is an original choice for this short course: fixed data, visible boundaries, no accounts/network and a natural bridge to mathematics.
 
-## Project evidence
+## Preparation provenance
 
-The provided `AGENTS.md`, `COURSE_PLAN.md`, and `slides.config.ts` attachments were inspected. A previously downloaded source snapshot of [the presentation repository](https://github.com/sheaksadi/ovgu-precourses-python/tree/deck/course-content) was also used. The user's screenshots show later problem-runner work; version-specific features must be rechecked in the current WSL checkout before implementing the technical plan.
+Adapted from the supplied Windows `python-course-package` and the existing
+curriculum commit. The current local checkout was inspected for this contribution;
+the slide map records current permanent IDs. References above are retained from
+the preparation package, not newly verified external-source claims.
 
-These documents are a proposed revision, not a claim that the running app has been changed or that the three curriculum routes already exist.
-
-## Personal repositories
-
-The public [theone7504 profile](https://github.com/theone7504) lists `C-and-Python`, `Manim`, and `OVGU-Math-M1-Animations`. The Manim project descriptions establish a relevant teaching/visualization connection. Individual source-file inspection could not be completed in this preparation environment; no claim about specific solved exercises or code quality is based on that listing. Do not infer a skill rating from repository names.
-
-For a later pass, nominate two or three old exercises to discuss: what the problem was, how the solution was decomposed, and which mistakes would make good teaching examples. Avoid putting complete old assessment solutions into student starter files.
+The short course uses a manual instructor run sheet, not an automated route
+selector. The legacy content library remains available for reference.

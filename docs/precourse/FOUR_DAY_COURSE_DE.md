@@ -1,100 +1,123 @@
-# Python-Vorkurs: Probleme lösen in vier Tagen
+# Four-day Python precourse
 
-Planungsstand: 18.09.2026. Unterricht: Montag, 28.09., bis Donnerstag, 01.10.2026, jeweils 120 Minuten. Insgesamt 480 Minuten einschließlich vier Pausen à 10 Minuten; 440 Minuten Lernaktivitäten.
+Delivery plan: Monday **2026-09-28** through Thursday **2026-10-01**, two hours
+per day. Total: **480 minutes**, including four 10-minute breaks; 440 minutes
+of learning activities. This is the current short-course plan. The root
+[course plan](../../COURSE_PLAN.md) remains a legacy content inventory.
+The `_DE` filename is retained for existing links; planning prose is English.
+Classroom wording and the [student workbook](STUDENT_WORKBOOK_DE.md) are German.
 
-Status: neuer Lehrplanvorschlag. Nach gemeinsamer Freigabe ersetzt er die bisherige Stoffplanung als verbindlichen Zeitrahmen. `COURSE_PLAN.md` und die vorhandenen Folien bleiben vorerst als Materialsammlung erhalten. Diese Markdown-Dateien ändern die laufende App nicht.
+## Learning promise
 
-## Unser Versprechen an die Studierenden
+> Du musst keine Befehle auswendig lernen. Du zerlegst ein kleines Problem in
+> Schritte, sagst Ergebnisse voraus, prüfst deine Lösung und erklärst deinen Weg.
 
-Du musst keine Befehle auswendig lernen. Am Ende kannst du ein kleines Problem in Schritte zerlegen, einen Ablauf vorhersagen, eine Lösung testen und erklären, warum sie funktioniert. Je nach gewählter Kursroute setzt du diese Schritte mit mehr oder weniger Unterstützung in Python um.
+Use **Vermuten → Planen → Nachverfolgen → Ausführen → Prüfen**. Begin with a
+problem and a concrete example; introduce syntax only when it serves the plan.
+Debugging means finding the smallest example that contradicts an assumption.
 
-Unser Arbeitsrhythmus: **Vermuten → Planen → Nachverfolgen → Ausführen → Prüfen.** Erst ein Beispiel und eine Idee, dann die benötigte Schreibweise. Fehler sind Hinweise auf eine noch unklare Annahme.
+## One instructor-selected route for the whole class
 
-## Drei Routen, eine Lerngruppe
+The instructor selects Grundlagen, Aufbau, or Vertiefung for everyone, based on
+explained solutions rather than typing speed. Reassess at day boundaries; do not
+run three simultaneous groups or label individual students by ability.
 
-Die Lehrperson wählt eine Route für die ganze Gruppe. Es gibt keine drei gleichzeitig laufenden Kurse und keine dauerhaften Etiketten für einzelne Studierende. Die Route kann am Tageswechsel angepasst werden. Maßgeblich sind erklärte Lösungen, nicht Gerätebesitz, Selbstvertrauen oder Tippgeschwindigkeit.
+| Route | Support and completion target |
+| --- | --- |
+| Grundlagen | Pictures, code cards, supplied scaffolds; paper and pseudocode are valid. Trace values, justify missing steps and test a solution. Minimal independent syntax; calling a supplied function is optional. |
+| Aufbau | Normal beginner route: short independent programs using lists, loops and decisions. Add a small function only after the core solution works. |
+| Vertiefung | Same problems, with counterexamples, boundary cases and small functions; optionally investigate the longest warm sequence. More reasoning, not more libraries. |
 
-| Route | Voraussetzung | Unterstützung und Ziel |
-|---|---|---|
-| Grundlagen | Keine sichere Programmiererfahrung | Bilder, Befehls-/Codekarten, kurze Gerüste; Abläufe nachvollziehen, Lücken begründen und eigene Tests entwickeln |
-| Aufbau | Zuweisungen und einfache Entscheidungen werden verstanden | Kurze Programme selbst schreiben; am Ende eine Funktion mit Parametern und Rückgabewert |
-| Vertiefung | Auch einfache Schleifen und Funktionsaufrufe werden sicher erklärt | Gleiche Kernprobleme selbstständig lösen, Gegenbeispiele finden, Lösungen zerlegen und Grenzfälle prüfen |
+## Daily outcomes
 
-Vertiefung bedeutet mehr Denkarbeit, nicht mehr Bibliotheken. Auch diese Route bleibt bei 8 Stunden.
+| Day | Guiding question / classroom task | Evidence |
+| --- | --- | --- |
+| Mon 28 Sep | „Kann Momo deiner Anleitung folgen?“; „Wie lange sind 135 Minuten?“ | Ordered instructions, traced assignments, whole hours and remaining minutes |
+| Tue 29 Sep | „Wo liegt die Grenze?“ | Predict temperature messages, repair overlapping conditions, explain boundary tests |
+| Wed 30 Sep | „Eine Regel, viele Messwerte“ | Trace a short list, count matching values, explain why the counter starts outside the loop |
+| Thu 1 Oct | „Dein Temperatur-Check“ | Plan, implement or trace, test and explain a small solution; functions optional except for the Vertiefung extension |
 
-## Vier Tage auf einen Blick
+Day 1 accepts valid nonnegative integer inputs only. `input()` returns text;
+conversion is introduced when needed. No input-validation framework is required.
+Day 2 uses three messages (below 20, below 25, otherwise); Grundlagen uses two.
+Days 3–4 explicitly use a different counting rule: a value is warm when it meets
+the selected threshold, initially 20. Explain this change before counting.
 
-| Datum | Leitfrage und sichtbares Ergebnis | Grundlagen | Aufbau | Vertiefung |
-|---|---|---|---|---|
-| Mo 28.09. | Wie beschreibe ich einen eindeutigen Ablauf? Momo steuern; Minuten in Stunden/Restminuten umrechnen | Befehle ordnen, Werte verfolgen, Rechengerüst ergänzen | Eingabe → Berechnung → Ausgabe selbst schreiben | Annahmen festlegen, zwei Lösungen vergleichen, Ausgaben prüfen |
-| Di 29.09. | Wie entscheidet ein Programm? Temperaturmeldungen mit eindeutigen Grenzen | Ein `if/else`, Vergleich und Wahrheitswert | `if/elif/else`, sich ausschließende Fälle | Kombinierte Regeln und Gegenbeispiele; überlappende Bedingungen reparieren |
-| Mi 30.09. | Wie wende ich dieselbe Regel auf viele Werte an? Warme Tage zählen | Kurze Liste, `for`, Zähler; Tabelle für jede Wiederholung | Zählen und Summieren mit Bedingung selbst umsetzen | Eine zusammenhängende Folge untersuchen; `while` nur als Ersatz für einen Transferblock |
-| Do 01.10. | Wie baue und prüfe ich eine kleine Lösung? Projekt Temperatur-Check | Gerüst vervollständigen, bereitgestellte Funktion aufrufen und erklären | Eigene Funktion `anzahl_warm(werte, grenze)` mit `return` | Zwei kleine Funktionen, längste warme Folge, gezielte Funktionstests |
+## Timing (all routes)
 
-Strings nutzen wir für Nachrichten und Eingaben, Listen für mehrere Messwerte. Eingebaute Funktionen lernen wir bei Bedarf kennen, nicht als separate Liste zum Auswendiglernen. `input()` liefert Text; eine Zahl entsteht erst durch Umwandlung. Am ersten Tag gelten ausdrücklich gültige, nichtnegative ganze Zahlen als Eingabe.
+Days 1–3 each follow this 120-minute schedule:
 
-## Der Zeitplan gilt für jede Route
+| Minutes | Activity |
+| --- | --- |
+| 00–10 | Monday diagnostic; otherwise two retrieval questions |
+| 10–25 | Concrete problem, examples and predictions |
+| 25–40 | Shared model: picture/pseudocode → Python |
+| 40–55 | Trace or debug a solution |
+| 55–65 | Break |
+| 65–90 | Pair work on the daily problem |
+| 90–105 | Transfer OR consolidation |
+| 105–115 | Compare solutions and investigate one mistake |
+| 115–120 | Individual exit ticket |
 
-### Tage 1–3: je 120 Minuten
+Day 4:
 
-| Minute | Aktivität |
-|---|---|
-| 00–10 | Am Montag Diagnose; danach zwei kurze Wiederholungsfragen |
-| 10–25 | Konkretes Problem, Beispiele und Vermutungen sammeln |
-| 25–40 | Ein Modell gemeinsam entwickeln: Bild/Pseudocode → Python |
-| 40–55 | Ablauf nachverfolgen oder eine fehlerhafte Lösung reparieren |
-| 55–65 | Pause |
-| 65–90 | Partnerarbeit am Tagesproblem |
-| 90–105 | Transferproblem ODER Grundlagen festigen |
-| 105–115 | Lösungen vergleichen, einen typischen Fehler untersuchen |
-| 115–120 | Individuelles Exit-Ticket |
+| Minutes | Activity |
+| --- | --- |
+| 00–10 | Retrieval and route check |
+| 10–25 | Decomposition; optional functions at the chosen level |
+| 25–40 | Project brief, examples and personal plan |
+| 40–55 | First implementation or paper trace |
+| 55–65 | Break |
+| 65–95 | Continue and improve |
+| 95–110 | Peer tests and short demonstrations |
+| 110–115 | Transfer to another kind of measurement |
+| 115–120 | Individual exit ticket |
 
-### Tag 4: 120 Minuten
+Protect practice, breaks and the project. Drop an extra example first if time is
+lost. Explain for no more than 15 minutes before asking students to predict,
+choose, trace or try something.
 
-| Minute | Aktivität |
-|---|---|
-| 00–10 | Wiederholung und Routenentscheidung |
-| 10–25 | Zerlegung/Funktionen auf dem Niveau der Route |
-| 25–40 | Projektauftrag, Beispiele und eigener Plan |
-| 40–55 | Erste Umsetzung bzw. Ablaufspur |
-| 55–65 | Pause |
-| 65–95 | Weiterarbeiten und verbessern |
-| 95–110 | Gegenseitige Tests und kurze Vorführung |
-| 110–115 | Was lässt sich auf andere Probleme übertragen? |
-| 115–120 | Individuelles Exit-Ticket |
+## Selecting and adjusting the route
 
-Bei Zeitverlust entfällt zuerst ein Zusatzbeispiel. Übungszeit, Pause und Abschlussprojekt bleiben geschützt. Maximal 15 Minuten am Stück erklären, dann müssen die Studierenden etwas vorhersagen, entscheiden oder ausprobieren.
+Use the four diagnostic prompts in [teacher notes](TEACHER_NOTES_DE.md).
+These thresholds are practical planning heuristics, not a validated assessment:
 
-## Route auswählen und anpassen
+- Vertiefung: at least 80% explain all four tasks, including loop states and
+  function input, return and subsequent use. A correct final number is insufficient.
+- Otherwise Aufbau: at least 70% explain assignment and decision correctly.
+- Otherwise Grundlagen. Do not accelerate based on the fastest three voices.
 
-Die vier Diagnoseaufgaben stehen in `TEACHER_NOTES_DE.md`. Papier ist gleichwertig; es gibt keine Note. Folgende Schwellen sind praktische Planungsregeln, kein wissenschaftlich validierter Test:
+At the end of each day use two fresh core examples. Increase independence only
+when at least 80% solve and explain both and have the next day's prerequisites.
+If at least 30% still struggle after a hint, consolidate or lower the route the
+next day. For small groups, interpret percentages alongside actual observations.
 
-- Vertiefung: Mindestens 80 % lösen alle vier Aufgaben und zeigen eine korrekte Zustandsfolge der Schleife sowie Eingabe, Rückgabe und anschließende Verwendung beim Funktionsaufruf. Reine Rechenergebnisse reichen nicht.
-- Sonst Aufbau: Mindestens 70 % lösen Zuweisung und Entscheidung korrekt.
-- Sonst Grundlagen. Sind Zuweisung und Entscheidung sicher, aber die weiterführenden Ablaufspuren unklar, höchstens Aufbau wählen und im ersten gemeinsamen Programm erneut prüfen.
+## Project and fallback
 
-Am Tagesende zwei neue Kernbeispiele prüfen. Erst aufsteigen, wenn mindestens 80 % beide selbstständig lösen und den Weg erklären; benötigte Vorkenntnisse des nächsten Tages zusätzlich prüfen. Wenn nach einem Hinweis mindestens 30 % noch am Kern scheitern: Festigungsblock nutzen oder am nächsten Tag zurückstufen. Nicht wegen der schnellsten drei Stimmen beschleunigen.
+The **Temperatur-Check** counts values meeting a chosen threshold in a fixed list.
+Use lists, a loop and a conditional; functions are an optional decomposition step.
+No API, download, account, ranking or package installation is needed. The workbook
+contains the exact contract, five expected results and route-specific support.
 
-## Wenn Geräte oder Internet fehlen
+Pair students if devices are scarce; switch implementation, tracing and testing
+roles every ten minutes. On phones, collect predictions rather than require
+Python typing. Without devices/network, use printed tasks and trace tables; the
+instructor can run Python locally. Paper demonstrates problem solving, not
+independent interpreter use: record these outcomes separately. If setup takes
+more than five minutes, use the pair/paper fallback.
 
-- Ein Laptop pro Person: erst selbst versuchen, dann zu zweit vergleichen.
-- Ein Laptop für zwei bis drei: Rollen Umsetzung, Ablaufkontrolle und Test wechseln alle zehn Minuten.
-- Nur Handys: Antworten/Vermutungen sammeln; keine Pflicht zum Tippen von Python am Handy.
-- Kein Schülergerät/kein Netz: gedruckte Aufgaben, Codekarten und Tabellen; Lehrperson führt lokal aus.
-- Kein Beamer: Ausdrucke des Storyboards und Tafel.
+## Deliberately outside the core
 
-Papierlösungen zeigen algorithmisches Verständnis, aber belegen keine selbstständige Python-Ausführung. Dieses Lernziel unterscheiden wir ausdrücklich. Browser-Python und Abstimmungen sind ein Zusatz; vorab am tatsächlich verwendeten Gerät prüfen. Keine spontane Installation oder Kontoerstellung im Unterricht. Wenn ein Setup nach fünf Minuten nicht läuft, Partner-/Papiermodus nutzen.
+IDE installation, nested loops, method catalogues, dictionaries, files, regex,
+OOP, package installation, NumPy/pandas/ML and APIs remain reference material.
+`while`, `assert` or limited error handling may replace a transfer activity in
+Vertiefung, never add required time. This is not a compressed complete CS50P.
+See [sources](SOURCES.md) for the preparation package's references.
 
-## Bewusst nicht im Pflichtprogramm
+## Before delivery
 
-IDE-Installation, verschachtelte Schleifen, umfassende String-/Listenmethoden, Dictionaries, Datei-Ein-/Ausgabe, Regex, OOP, Paketinstallation, NumPy/pandas/ML, externe APIs und ein vollständiges Testframework. `while`, `assert` oder eine eng begrenzte Fehlerbehandlung sind höchstens Ersatzaufgaben in der Vertiefungsroute, nie zusätzliche Pflichtblöcke.
-
-Der Kurs ist kein verkürztes vollständiges CS50P. Die Inspiration kommt vor allem aus den Wochen 0–2; Testfälle verwenden wir von Anfang an. Quellen: `SOURCES.md`.
-
-## Abnahme des Lehrplans
-
-- [ ] Alle vier Tage wurden mit Uhr und Pausen durchgesprochen.
-- [ ] Für jede Route existieren Auftrag, Hilfen, erwartete Ergebnisse und ein Abschlusskriterium.
-- [ ] Alle Pflichtaufgaben sind ohne Internet und ohne Rangliste lösbar.
-- [ ] Gerätebedarf und Sprache wurden mit der Organisation geklärt; bis dahin gilt der Papier-/Partnermodus.
-- [ ] Alte Folien gelten als Reserve, nicht als zusätzliche Pflicht.
+- Rehearse each 120-minute session including the break.
+- Print the workbook and keep the answer key separate.
+- Check the chosen route's instructions, support and completion criteria.
+- Test the actual classroom devices; keep paper and local Python available.
+- Follow the [slide run sheet](SLIDE_REVISION_PLAN.md), not the full-deck Next button.

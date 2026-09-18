@@ -1,3 +1,9 @@
+> **Four-day delivery (28 Sep–1 Oct 2026):** use the current
+> [curriculum](docs/precourse/FOUR_DAY_COURSE_DE.md) and
+> [slide run sheet](docs/precourse/SLIDE_REVISION_PLAN.md).
+> This file preserves the longer deck’s content inventory/backlog, not required
+> work or teaching time for the eight-hour course.
+
 # Course plan: from lists to APIs
 
 Working plan for the part of the deck that follows "Code ausführen" (PRE-0056).

@@ -128,8 +128,8 @@ Baue ein Werkzeug, das für eine Liste von Temperaturen und eine frei wählbare 
 3. Schreibe deinen Plan in Pseudocode.
 4. Setze ihn um, teste und erkläre eine Verbesserung.
 
-- Grundlagen: Nutze das Gerüst von Tag 3, ersetze die feste Grenze durch eine Variable und teste mindestens zwei Fälle. Rufe danach mit Hilfe der Lehrperson eine bereitgestellte Funktion auf.
-- Aufbau: Schreibe `anzahl_warm(temperaturen, grenze)`. Sie gibt eine Zahl zurück; die Ausgabe mit `print()` erfolgt außerhalb. Prüfe alle fünf Fälle.
+- Grundlagen: Nutze das Gerüst von Tag 3, ersetze die feste Grenze durch eine Variable und teste mindestens zwei Fälle. Optional: Rufe mit Hilfe der Lehrperson eine bereitgestellte Funktion auf.
+- Aufbau: Schreibe ein kurzes Programm ohne Gerüst und prüfe alle fünf Fälle. Wenn es sicher funktioniert: Fasse die Auswertung optional in `anzahl_warm(temperaturen, grenze)` zusammen. Die Funktion gibt eine Zahl zurück; `print()` steht außerhalb.
 - Vertiefung: Ergänze `laengste_warme_folge(temperaturen, grenze)` als zweite Funktion. Definiere und prüfe leere Liste, nur kalte Werte, nur warme Werte und zwei getrennte warme Folgen.
 
 Für das Beispiel `[18, 21, 20, 25, 17]` und Grenze 20 beträgt die längste Folge 3. Für `[20, 21, 18, 25]` beträgt sie 2.
