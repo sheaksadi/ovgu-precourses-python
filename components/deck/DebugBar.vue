@@ -25,7 +25,14 @@ const { flatSlides, getSlideById, getSlideByRoute, firstSlideId } = useSlideData
 const route = useRoute()
 const router = useRouter()
 
-onMounted(() => debug.adopt())
+/** Inside a lab pane, and on the lab page itself, the bar is only in the way. */
+const framed = ref(false)
+const hidden = computed(() => framed.value || route.path === '/lab')
+
+onMounted(() => {
+  debug.adopt()
+  framed.value = window.self !== window.top
+})
 
 /** The slide this screen shows, else the room's. */
 const here = computed(() => getSlideByRoute(route.path) || getSlideById(store.globalSlideId) || getSlideById(firstSlideId.value))
@@ -86,7 +93,7 @@ const endDrag = () => { dragging.value = false }
 
 <template>
   <div
-    v-if="debug.enabled.value"
+    v-if="debug.enabled.value && !hidden"
     class="debug"
     :class="{ 'is-dragging': dragging }"
     :style="{ left: `${debug.spot.value.x}px`, top: `${debug.spot.value.y}px` }"
@@ -116,6 +123,7 @@ const endDrag = () => { dragging.value = false }
       <button type="button" :class="{ 'is-on': what === 'control' }" @click="openPage('/control')">remote</button>
       <button type="button" :class="{ 'is-on': what === 'dashboard' }" @click="openPage('/dashboard')">dashboard</button>
       <button type="button" @click="openPage('/join')">join</button>
+      <button type="button" class="is-lab" title="Every view at once, side by side" @click="openPage('/lab')">lab</button>
     </span>
 
     <button type="button" class="off" title="Leave debug mode" @click="debug.set(false)">✕</button>
@@ -186,6 +194,9 @@ const endDrag = () => { dragging.value = false }
 .group button.is-on {
   background: #89B4FA;
   color: #11111B;
+}
+.group button.is-lab {
+  color: #89B4FA;
 }
 
 .where {

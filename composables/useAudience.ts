@@ -13,6 +13,7 @@
  */
 import { computed } from 'vue'
 import { useCookie, useState } from '#app'
+import { useRoute } from 'vue-router'
 import { useI18n } from '~/composables/useI18n'
 import { cleanName, formatCuteName, parseCuteName, rollCuteName } from '~/utils/cuteNames'
 
@@ -24,20 +25,31 @@ const makeId = () => `${Date.now().toString(36)}-${Math.random().toString(36).sl
 
 export function useAudience() {
   const { locale } = useI18n()
+  const route = useRoute()
   const idCookie = useCookie<string | undefined>('deck-audience', COOKIE)
   const nameCookie = useCookie<string | undefined>('deck-name', COOKIE)
   const customCookie = useCookie<string | undefined>('deck-name-custom', COOKIE)
 
+  /**
+   * `?as=Lea` makes this view a different person than the cookies say, without
+   * touching them. Identity lives in cookies, so every frame of the lab page
+   * would otherwise be the same student; this is how one machine can act as a
+   * whole room. Nothing else uses it.
+   */
+  const pretend = cleanName(typeof route.query.as === 'string' ? route.query.as : '')
+
   const id = useState<string>('deck-audience-id', () => {
+    if (pretend) return `as-${pretend.toLowerCase().replace(/[^\w-]+/g, '-').slice(0, 24)}`
     if (typeof idCookie.value === 'string' && /^[\w-]{6,40}$/.test(idCookie.value)) return idCookie.value
     const next = makeId()
     idCookie.value = next
     return next
   })
 
-  const custom = useState<boolean>('deck-audience-custom', () => String(customCookie.value) === '1')
+  const custom = useState<boolean>('deck-audience-custom', () => (pretend ? true : String(customCookie.value) === '1'))
 
   const name = useState<string>('deck-audience-name', () => {
+    if (pretend) return pretend
     const stored = cleanName(nameCookie.value)
     if (stored) return stored
     const next = formatCuteName(rollCuteName(), locale.value)
@@ -50,8 +62,10 @@ export function useAudience() {
     const next = cleanName(raw)
     if (!next) return false
     name.value = next
-    nameCookie.value = next
     custom.value = typed
+    // A pretend view never writes the cookies: the real device keeps its name.
+    if (pretend) return true
+    nameCookie.value = next
     customCookie.value = typed ? '1' : undefined
     return true
   }

@@ -111,6 +111,15 @@ const styleGuide = slideIdToRoute('PRE-0010')
         >
           <span class="text-trim">debug</span>
         </button>
+        <!-- Only worth offering once debug is on: it opens the testing surface. -->
+        <NuxtLink
+          v-if="debug.enabled.value"
+          class="home-lang-option home-debug is-active"
+          to="/lab"
+          title="Every view at once, side by side"
+        >
+          <span class="text-trim">lab</span>
+        </NuxtLink>
         <span class="home-lang" role="group" :aria-label="t('common.switchLanguage')">
           <button
             v-for="code in locales"
