@@ -173,7 +173,7 @@ const status = computed(() => {
           'is-pass': result?.results.find(entry => entry.call === test.call)?.pass,
           'is-fail': result && result.results.find(entry => entry.call === test.call)?.pass === false,
         }">
-          <code class="task-test-call">{{ test.call }}</code>
+          <code class="task-test-call">{{ test.show ?? test.call }}</code>
           <span class="task-test-arrow">→</span>
           <code class="task-test-expect">{{ test.expect }}</code>
           <span class="task-test-mark">

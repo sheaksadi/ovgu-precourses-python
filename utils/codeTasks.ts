@@ -17,6 +17,8 @@ import type { Locale } from '~/composables/useI18n'
 export interface CodeTest {
   /** Python expression, evaluated after the student's code. */
   call: string
+  /** What the student reads, when the expression itself is noisy. */
+  show?: string
   /** What `repr()` of the result must be. */
   expect: string
   /** Only checked on Submit, not on Run. */
@@ -92,9 +94,23 @@ const objectsCat: CodeTask = {
     { call: `${n.cls}("Momo", 8).${n.b}`, expect: '8' },
     { call: `${n.cls}("Momo", 8).${n.a}`, expect: "'Momo'" },
     // Feeding returns nothing; what counts is the value left in the object.
-    { call: `(lambda k: (k.${n.fn}(5), k.${n.b})[1])(${n.cls}("Momo", 8))`, expect: '3' },
-    { call: `(lambda k: (k.${n.fn}(1), k.${n.fn}(1), k.${n.b})[2])(${n.cls}("Kiki", 5))`, expect: '3', hidden: true },
-    { call: `(lambda k: (k.${n.fn}(0), k.${n.b})[1])(${n.cls}("Bello", 3))`, expect: '3', hidden: true },
+    {
+      call: `(lambda k: (k.${n.fn}(5), k.${n.b})[1])(${n.cls}("Momo", 8))`,
+      show: `${n.cls}("Momo", 8).${n.fn}(5) ➜ .${n.b}`,
+      expect: '3',
+    },
+    {
+      call: `(lambda k: (k.${n.fn}(1), k.${n.fn}(1), k.${n.b})[2])(${n.cls}("Kiki", 5))`,
+      show: `${n.cls}("Kiki", 5).${n.fn}(1) 2x ➜ .${n.b}`,
+      expect: '3',
+      hidden: true,
+    },
+    {
+      call: `(lambda k: (k.${n.fn}(0), k.${n.b})[1])(${n.cls}("Bello", 3))`,
+      show: `${n.cls}("Bello", 3).${n.fn}(0) ➜ .${n.b}`,
+      expect: '3',
+      hidden: true,
+    },
   ],
 }
 
