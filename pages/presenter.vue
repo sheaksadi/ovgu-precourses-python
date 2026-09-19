@@ -14,6 +14,7 @@ import { useWebSocket } from '~/composables/useWebSocket'
 import { useKeyBindings } from '~/composables/useKeyBindings'
 import SlidePreview from '~/components/presenter/SlidePreview.vue'
 import { useSpins } from '~/composables/useSpins'
+import { useI18n } from '~/composables/useI18n'
 
 definePageMeta({ layout: false })
 
@@ -30,6 +31,14 @@ const {
 const { deckConfig, slideTree } = useSlideData()
 const { resolveKeys } = useKeyBindings()
 const ws = useWebSocket()
+
+/**
+ * The presenter's own language, not the room's. The slides on the projector
+ * follow the link they were opened with; this only decides which half of the
+ * deck this screen reads — the German the room sees, or the English of
+ * `slides.en.ts`, titles and speaker notes included.
+ */
+const { locale, locales, setLocale } = useI18n()
 
 /** The presenter view drives the room, so its own position is the room's. */
 const current = computed(() => globalSlide.value || flatSlides.value[0])
@@ -193,6 +202,20 @@ onUnmounted(() => {
           </button>
           <button @click="resetTimer" class="text-gray-500 hover:text-white p-1" aria-label="Reset the timer">
             <Icon name="lucide:rotate-ccw" />
+          </button>
+        </div>
+
+        <div class="flex items-center gap-1 bg-gray-900 border border-gray-800 rounded-lg p-1" role="group" aria-label="Notes language">
+          <button
+            v-for="code in locales"
+            :key="code"
+            type="button"
+            class="px-2 py-1 rounded-md text-xs font-bold uppercase tracking-wide transition-colors"
+            :class="code === locale ? 'bg-blue-600 text-white' : 'text-gray-400 hover:text-white'"
+            :aria-pressed="code === locale"
+            @click="setLocale(code)"
+          >
+            {{ code }}
           </button>
         </div>
 

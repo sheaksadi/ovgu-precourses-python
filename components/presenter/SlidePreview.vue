@@ -35,16 +35,52 @@ const measure = () => {
 }
 
 const post = () => {
-  if (!loaded.value || !props.slideId) return
+  if (!props.slideId) return
   frame.value?.contentWindow?.postMessage(
     { type: 'deck:peek', slideId: props.slideId },
     window.location.origin
   )
 }
 
+/**
+ * Keep asking until the frame is actually on the slide.
+ *
+ * The frame boots on whichever slide the presenter view knew first, which is
+ * slide 1 while the room state is still on its way. The message that corrects
+ * it can arrive before the app inside the frame is listening — the load event
+ * can even fire before this component hydrates — and then the preview sits on
+ * the wrong slide for the rest of the talk. So: post, check, post again.
+ */
+let syncTimer: ReturnType<typeof setInterval> | null = null
+
+const onSlide = () => {
+  if (!props.route) return false
+  try {
+    return frame.value?.contentWindow?.location.pathname === props.route
+  } catch {
+    // Not readable yet; assume not there, the retries are cheap.
+    return false
+  }
+}
+
+const sync = () => {
+  if (syncTimer) clearInterval(syncTimer)
+  post()
+  let tries = 0
+  syncTimer = setInterval(() => {
+    tries++
+    if (onSlide() || tries > 12) {
+      clearInterval(syncTimer!)
+      syncTimer = null
+      return
+    }
+    post()
+  }, 400)
+}
+
 const onLoad = () => {
   loaded.value = true
-  post()
+  sync()
 }
 
 // The first slide we are asked for decides the iframe's one and only src.
@@ -52,7 +88,7 @@ watch(() => props.route, (route) => {
   if (route && !initialSrc.value) initialSrc.value = `${route}?mode=stage&peek=1`
 }, { immediate: true })
 
-watch(() => props.slideId, () => post())
+watch(() => props.slideId, () => sync())
 
 // With no slide to show, fall back to the placeholder rather than leaving the
 // last slide on screen: at the end of the deck there is no next slide.
@@ -60,13 +96,22 @@ const showFrame = computed(() => !!initialSrc.value && !!props.slideId)
 
 onMounted(() => {
   measure()
+  // The frame can finish loading before this component hydrates, in which case
+  // its load event is long gone and the first postMessage would be dropped.
+  // Anything already complete counts as loaded, and gets told what to show.
+  const ready = frame.value?.contentDocument?.readyState
+  if (ready === 'complete' || ready === 'interactive') loaded.value = true
+  sync()
   if (box.value && 'ResizeObserver' in window) {
     observer = new ResizeObserver(measure)
     observer.observe(box.value)
   }
 })
 
-onBeforeUnmount(() => observer?.disconnect())
+onBeforeUnmount(() => {
+  observer?.disconnect()
+  if (syncTimer) clearInterval(syncTimer)
+})
 </script>
 
 <template>

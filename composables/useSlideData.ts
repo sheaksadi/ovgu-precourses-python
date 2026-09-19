@@ -1,6 +1,8 @@
 import { computed } from 'vue'
 import { slides, deckConfig, slideCounter } from '~/slides.config'
 import type { SlideEntry, SlideInteractive, SlideLayoutName, SlideTransition } from '~/slides.config'
+import { slidesEn } from '~/slides.en'
+import { useI18n } from '~/composables/useI18n'
 import { isSlideId, slideIdToRoute, routeToSlideId } from '~/utils/slideId'
 
 export interface FlatSlide {
@@ -45,6 +47,8 @@ function routeOf(entry: SlideEntry): string {
 }
 
 export const useSlideData = () => {
+  const { locale } = useI18n()
+
   /** Every visible slide, in presentation order, with numbering resolved. */
   const flatSlides = computed<FlatSlide[]>(() => {
     const visible = slides.filter(entry => !entry.hidden)
@@ -76,13 +80,16 @@ export const useSlideData = () => {
         subCounters.set(parent!.id, subNumber)
       }
 
+      // English where it exists, German otherwise: the overlay may lag behind.
+      const said = locale.value === 'en' ? slidesEn[entry.id] : undefined
+
       return {
         id: entry.id,
-        title: entry.title,
-        subtitle: entry.subtitle,
+        title: said?.title ?? entry.title,
+        subtitle: said?.subtitle ?? entry.subtitle,
         route: routeOf(entry),
         layout: entry.layout || DEFAULT_LAYOUT,
-        teleprompter: entry.teleprompter,
+        teleprompter: said?.teleprompter ?? entry.teleprompter,
         transition: entry.transition,
         duration: entry.duration,
         backgroundColor: entry.backgroundColor,
@@ -91,7 +98,7 @@ export const useSlideData = () => {
         problem: entry.problem,
         isSubSlide,
         parentId: parent?.id,
-        parentTitle: parent?.title,
+        parentTitle: (locale.value === 'en' ? slidesEn[parent?.id ?? '']?.title : undefined) ?? parent?.title,
         index,
         mainNumber,
         subNumber,
