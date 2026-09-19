@@ -17,6 +17,9 @@ onMounted(() => { joinUrl.value = `${window.location.origin}/join` })
 <template>
   <div class="thanks-slide relative w-full h-full overflow-hidden">
     <div class="dot-field absolute inset-0 pointer-events-none" aria-hidden="true"></div>
+    <!-- Two soft colour fields, so the last slide is not a white sheet. -->
+    <div class="wash wash-warm" aria-hidden="true"></div>
+    <div class="wash wash-cool" aria-hidden="true"></div>
 
     <div class="thanks-body">
       <div class="rule" aria-hidden="true">
@@ -42,6 +45,36 @@ onMounted(() => { joinUrl.value = `${window.location.origin}/join` })
   background: var(--bg);
 }
 
+.wash {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+}
+.wash-warm {
+  right: -12vw;
+  top: -18vh;
+  width: 50vw;
+  height: 50vw;
+  background: radial-gradient(
+    circle at 50% 50%,
+    color-mix(in srgb, var(--sun) 40%, transparent),
+    color-mix(in srgb, var(--coral) 16%, transparent) 55%,
+    transparent 72%
+  );
+}
+.wash-cool {
+  right: 8vw;
+  bottom: -26vh;
+  width: 42vw;
+  height: 42vw;
+  background: radial-gradient(
+    circle at 50% 50%,
+    color-mix(in srgb, var(--mint) 32%, transparent),
+    color-mix(in srgb, var(--lavender) 14%, transparent) 55%,
+    transparent 72%
+  );
+}
+
 .dot-field {
   background-image: radial-gradient(circle, var(--border) 1px, transparent 1px);
   background-size: 2.4vw 2.4vw;
@@ -63,8 +96,8 @@ onMounted(() => { joinUrl.value = `${window.location.origin}/join` })
   margin-bottom: 3.2vh;
 }
 .rule span {
-  height: 0.55vh;
-  width: 2.4vw;
+  height: 0.8vh;
+  width: 3.2vw;
   border-radius: 999px;
   animation: rise 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
