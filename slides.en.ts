@@ -110,6 +110,11 @@ export const slidesEn: Record<string, SlideText> = {
     subtitle: 'Make a file, write code, Run',
     teleprompter: 'Now the first file of your own. Right click the project folder, New, Python File, type a name, Enter. PyCharm adds the .py ending itself. Type print("Hallo Welt!") into the file. No need to save, PyCharm saves on its own. Watch the quotes and the brackets. Press the green arrow at the top, or right click in the code and choose Run. The run window opens at the bottom with Hallo Welt! and exit code 0. Task: change the text and run it again. Enter plays the demo again.',
   },
+  'PRE-0205': {
+    title: 'Questions?',
+    subtitle: 'A short break before the lists',
+    teleprompter: 'The halfway break. So far: print, variables, comparisons, if - everything from here builds on that. "Any questions?" gets nothing, so the slide asks three concrete ones instead. Wait it out, ten seconds is fine. Anyone who would rather not speak up can ask the person next to them.',
+  },
   'PRE-0059': {
     title: 'Lists',
     subtitle: 'Momo\'s fish',

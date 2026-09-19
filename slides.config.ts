@@ -105,13 +105,6 @@ export const slides: SlideEntry[] = [
     teleprompter: 'Und jetzt als echtes Python. Oben unser Plan, unten derselbe Plan, den der Computer ausführen kann. if und else bleiben gleich, die Frage wird zu einer Variablen hat_schluessel, und was Momo tut, wird zu print. Ändere True zu False und frag: Was steht jetzt da?',
   },
   {
-    id: 'PRE-0039',
-    title: 'Probier’s selbst',
-    subtitle: 'Online-Compiler öffnen und den Code ausführen',
-    duration: 5,
-    teleprompter: 'Jetzt selbst ausprobieren. Die Vorführung zeigt den Weg: suchen, Online-Compiler öffnen, Code einfügen, Run. Wer mag, scannt den Code. Aufgabe: den Text im print ändern, zum Beispiel in den eigenen Namen, und nochmal Run drücken. Enter zeigt die Vorführung nochmal.',
-  },
-  {
     id: 'PRE-0186',
     title: 'print() – etwas anzeigen',
     subtitle: 'Text, Zahlen, Ja/Nein',
@@ -131,6 +124,13 @@ export const slides: SlideEntry[] = [
     parent: 'PRE-0186',
     transition: 'none',
     teleprompter: 'Die dritte Sorte: True und False, Pythons Ja und Nein. Groß geschrieben, ohne Anführungszeichen. Auf 10 > 3 antwortet Python selbst mit True – genau das haben wir bei Momos Schlüssel schon benutzt. Und: Mehrere Werte in einem print, mit Komma getrennt, Python setzt Leerzeichen dazwischen. Die Namen für die Sorten kommen gleich bei den Variablen, hier reicht: Text, Zahl, Ja/Nein.',
+  },
+  {
+    id: 'PRE-0039',
+    title: 'Probier’s selbst',
+    subtitle: 'Online-Compiler öffnen und den Code ausführen',
+    duration: 5,
+    teleprompter: 'Jetzt selbst ausprobieren. Die Vorführung zeigt den Weg: suchen, Online-Compiler öffnen, Code einfügen, Run. Wer mag, scannt den Code. Aufgabe: den Text im print ändern, zum Beispiel in den eigenen Namen, und nochmal Run drücken. Enter zeigt die Vorführung nochmal.',
   },
   {
     id: 'PRE-0040',
@@ -277,6 +277,14 @@ export const slides: SlideEntry[] = [
     parent: 'PRE-0189',
     transition: 'none',
     teleprompter: 'Alles in einem kleinen Programm. Zeile für Zeile vorlesen lassen, dann laufen lassen. Aufgabe für zwischendurch: Ändert das Alter und das Ticket und sagt vorher, was herauskommt. Damit ist alles da, was wir gleich bei den Listen brauchen.',
+  },
+  {
+    id: 'PRE-0205',
+    title: 'Fragen?',
+    subtitle: 'Kurze Pause vor den Listen',
+    layout: 'slide-bare',
+    duration: 5,
+    teleprompter: 'Halbzeit-Pause. Bis hier: print, Variablen, Vergleiche, if – ab jetzt baut alles darauf auf. „Noch Fragen?“ bringt nichts, deshalb stehen drei konkrete Fragen auf der Folie. Selbst kurz warten, ruhig zehn Sekunden. Wer nichts sagen will, kann auch zum Nachbarn fragen.',
   },
   {
     id: 'PRE-0059',

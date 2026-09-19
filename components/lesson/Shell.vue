@@ -35,6 +35,15 @@ const props = withDefaults(defineProps<{
   stackOutput?: boolean
   /** Smaller code and output type, for samples of seven lines or more. */
   dense?: boolean
+  /**
+   * Draw the code with the characters you type, not the font's ligatures.
+   *
+   * JetBrains Mono joins `==` into one long equals and `!=` into a single sign,
+   * which is lovely to read and wrong to learn from: the comparison lesson is
+   * about the two keys you press. Editors join them up again, and the lesson
+   * says so on its last slide.
+   */
+  plainCode?: boolean
   outputLabel: string
   noOutput: string
 }>(), {
@@ -46,6 +55,7 @@ const props = withDefaults(defineProps<{
   outputDelays: undefined,
   stackOutput: false,
   dense: false,
+  plainCode: false,
 })
 
 const link = useCodeLink()
@@ -125,7 +135,7 @@ const columnWidth = computed(() => `${Math.max(...props.output.map(line => line.
 </script>
 
 <template>
-  <div class="shell relative w-full h-full overflow-hidden" :class="`stage-${stage}`">
+  <div class="shell relative w-full h-full overflow-hidden" :class="[`stage-${stage}`, { 'is-plain-code': plainCode }]">
     <header class="shell-head">
       <div class="shell-progress">
         <span class="shell-eyebrow">{{ eyebrow }}</span>
@@ -343,6 +353,14 @@ const columnWidth = computed(() => `${Math.max(...props.output.map(line => line.
 }
 .shell-code.is-tall .out-line {
   font-size: clamp(0.6rem, 1.55vh, 0.95rem);
+}
+
+/* A lesson about the characters themselves cannot have them joined up. */
+.shell.is-plain-code :deep(.code-panel),
+.shell.is-plain-code .out-line,
+.shell.is-plain-code .shell-scene {
+  font-variant-ligatures: none;
+  font-feature-settings: 'liga' 0, 'calt' 0;
 }
 
 /* ─── Takeaway ───────────────────────────────────────────────────────── */

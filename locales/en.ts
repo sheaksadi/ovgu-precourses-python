@@ -434,6 +434,9 @@ else:
       { left: 'False', right: 'True', and: 'False', or: 'True' },
       { left: 'False', right: 'False', and: 'False', or: 'False' },
     ],
+      editorLabel: 'In PyCharm or VS Code',
+      editorNote: 'The same characters, only drawn more prettily. What you type is always two keys.',
+      editor: ['==', '!=', '>=', '<='],
     stages: [
       {
         headline: 'A question Python answers.',
@@ -1747,6 +1750,12 @@ else:
     empty: 'Nothing opened yet. Puzzles show up here once one has come round.',
     back: 'Back to the talk',
     open: 'Open puzzles',
+  },
+  questionTime: {
+    eyebrow: 'A short break',
+    headline: 'Questions?',
+    prompts: ['What went too fast?', 'Where did the code not do what you wanted?', 'What did you try out?'],
+    note: 'So far: print, variables, comparisons, if. Everything from here builds on that – so ask now, not later.',
   },
   problems: {
     eyebrow: 'Puzzle',

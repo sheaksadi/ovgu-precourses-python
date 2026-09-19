@@ -55,3 +55,16 @@ time: look at the code first, then build.
       puzzle dock has now; in the presenter view it sits in the middle of the
       navigation. The puzzle dock moves to the last slide, or to its own
       `/puzzles` page.
+
+## E. Third pass (2026-09-19, same session)
+
+- [x] **14. Move slide 5** (PRE-0039, "Probier's selbst") to after the print
+      slides, so the first thing they run themselves is a `print` they have
+      just been shown.
+- [x] **15. Ligatures in the comparison slides:** the code font draws `==` as
+      one long equals and `!=` as a single sign, which hides what you type.
+      Turn ligatures off for that lesson so the characters are the ones on the
+      keyboard, and say on the last slide of the group that PyCharm and VS Code
+      usually draw them joined up.
+- [x] **16. A question slide** after the comparison group and before the lists
+      ("Momos Fische"), for whatever the room wants to ask.

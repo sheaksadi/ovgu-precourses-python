@@ -65,6 +65,8 @@ const { t, tm } = useI18n()
 
 const stages = computed(() => tm<Stage[]>('compare.stages'))
 const current = computed(() => stages.value[props.stage - 1]!)
+/** The signs, twice: as typed, and as an editor's ligatures draw them. */
+const editor = computed(() => tm<string[]>('compare.editor'))
 const ops = computed(() => tm<Op[]>('compare.ops'))
 const paths = computed(() => tm<Path[]>('compare.paths'))
 const combos = computed(() => tm<Combo[]>('compare.combos'))
@@ -93,6 +95,7 @@ const outputDelays = computed(() => current.value.output.map((_, i) => 1.4 + i *
     :output-from="current.outputFrom"
     :output-delays="outputDelays"
     :dense="stage >= 4"
+    plain-code
     :output-label="t('compare.output')"
     :no-output="t('compare.noOutput')"
   >
@@ -120,6 +123,19 @@ const outputDelays = computed(() => current.value.output.map((_, i) => 1.4 + i *
         <div v-if="stage === 2" class="warn">
           <span class="warn-line"><code>=</code>{{ warn.one.replace('=', '').trim() }}</span>
           <span class="warn-line is-loud"><code>==</code>{{ warn.two.replace('==', '').trim() }}</span>
+        </div>
+
+        <!-- Last stage: the same signs as an editor draws them. -->
+        <div v-else class="editor">
+          <span class="editor-label">{{ t('compare.editorLabel') }}</span>
+          <div class="editor-rows">
+            <span v-for="sign in editor" :key="sign" class="editor-row">
+              <code class="editor-typed">{{ sign }}</code>
+              <span class="editor-arrow" aria-hidden="true">→</span>
+              <code class="editor-shown">{{ sign }}</code>
+            </span>
+          </div>
+          <span class="editor-note">{{ t('compare.editorNote') }}</span>
         </div>
       </div>
 
@@ -182,6 +198,58 @@ const outputDelays = computed(() => current.value.output.map((_, i) => 1.4 + i *
 </template>
 
 <style scoped>
+/* ─── 7: how an editor draws the same signs ──────────────────────────── */
+.editor {
+  margin-top: 1.4vh;
+  display: flex;
+  flex-direction: column;
+  gap: 0.7vh;
+  padding: 1.1vh 1.3vh;
+  border-radius: 1.1vh;
+  background: var(--bg);
+  border: 2px dashed var(--border);
+  animation: rise 0.4s cubic-bezier(0.22, 1, 0.36, 1) 0.9s both;
+}
+.editor-label {
+  font-size: clamp(0.4rem, 1.05vh, 0.68rem);
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+.editor-rows {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6vh 1.4vh;
+}
+.editor-row {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.5vh;
+}
+.editor-typed,
+.editor-shown {
+  font-family: var(--font-code);
+  font-size: clamp(0.55rem, 1.6vh, 1.05rem);
+  font-weight: 800;
+  color: var(--text);
+}
+/* The one place in this lesson that keeps the ligatures: it is showing them. */
+.editor-shown {
+  color: var(--sky);
+  font-variant-ligatures: common-ligatures contextual;
+  font-feature-settings: 'liga' 1, 'calt' 1;
+}
+.editor-arrow {
+  font-size: clamp(0.45rem, 1.2vh, 0.78rem);
+  color: var(--text-muted);
+}
+.editor-note {
+  font-size: clamp(0.44rem, 1.2vh, 0.78rem);
+  line-height: 1.4;
+  color: var(--text-dim);
+}
+
 .scene {
   position: absolute;
   inset: 0;

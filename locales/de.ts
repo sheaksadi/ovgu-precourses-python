@@ -437,6 +437,9 @@ else:
       { left: 'False', right: 'True', and: 'False', or: 'True' },
       { left: 'False', right: 'False', and: 'False', or: 'False' },
     ],
+      editorLabel: 'In PyCharm oder VS Code',
+      editorNote: 'Dieselben Zeichen, nur schöner gezeichnet. Getippt werden immer zwei Tasten.',
+      editor: ['==', '!=', '>=', '<='],
     stages: [
       {
         headline: 'Eine Frage, die Python beantwortet.',
@@ -1751,6 +1754,12 @@ else:
     empty: 'Noch nichts geöffnet. Die Rätsel erscheinen hier, sobald eins dran war.',
     back: 'Zurück zum Vortrag',
     open: 'Rätsel öffnen',
+  },
+  questionTime: {
+    eyebrow: 'Kurze Pause',
+    headline: 'Fragen?',
+    prompts: ['Was war zu schnell?', 'Wo hat der Code nicht getan, was du wolltest?', 'Was hast du ausprobiert?'],
+    note: 'Bis hierher: print, Variablen, Vergleiche, if. Ab jetzt kommt alles darauf obendrauf – deshalb jetzt fragen, nicht später.',
   },
   problems: {
     eyebrow: 'Rätsel',
