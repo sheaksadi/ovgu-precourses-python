@@ -13,7 +13,7 @@
  * short output lines flow into columns, so the output card never runs into the
  * takeaway.
  */
-import { computed, onMounted } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useCodeLink } from '~/composables/useCodeLink'
 
 const props = withDefaults(defineProps<{
@@ -50,6 +50,64 @@ const props = withDefaults(defineProps<{
 
 const link = useCodeLink()
 onMounted(() => link.clear())
+
+/**
+ * Printed patterns have to line up in columns.
+ *
+ * A monospace advance is a fraction of the font size — 0.6em, so 10.8px at the
+ * size the output card uses. Every second glyph therefore lands on a half
+ * pixel, and in a block of `*` the eye reads that as a column out of line. It
+ * only shows where lines are meant to be compared to each other, which is
+ * exactly what `stackOutput` marks, so the fix applies there and nowhere else:
+ * measure the real advance and add the fraction of a pixel that rounds it up to
+ * a whole one. The type keeps its size; only the tracking moves, by under half
+ * a pixel.
+ */
+const outLines = ref<HTMLElement | null>(null)
+const snap = ref('normal')
+
+const measureSnap = () => {
+  const host = outLines.value
+  // The size lives on the line, not on the box around it.
+  const line = host?.querySelector('.out-line')
+  if (!host || !line || !props.stackOutput) { snap.value = 'normal'; return }
+  const style = getComputedStyle(line)
+  const probe = document.createElement('span')
+  probe.style.cssText = 'position:absolute;visibility:hidden;white-space:pre;letter-spacing:normal'
+  probe.style.fontFamily = style.fontFamily
+  probe.style.fontSize = style.fontSize
+  probe.style.fontWeight = style.fontWeight
+  probe.textContent = '0'.repeat(50)
+  host.appendChild(probe)
+  const advance = probe.getBoundingClientRect().width / 50
+  probe.remove()
+  if (!advance) { snap.value = 'normal'; return }
+  const off = Math.round(advance) - advance
+  snap.value = Math.abs(off) < 0.01 ? 'normal' : `${off.toFixed(3)}px`
+}
+
+let frame: number | null = null
+const remeasure = () => {
+  if (frame) cancelAnimationFrame(frame)
+  frame = requestAnimationFrame(measureSnap)
+}
+
+let watcher: ResizeObserver | null = null
+
+onMounted(() => {
+  remeasure()
+  if ('ResizeObserver' in window) {
+    watcher = new ResizeObserver(remeasure)
+    if (outLines.value) watcher.observe(outLines.value)
+  }
+  window.addEventListener('resize', remeasure)
+})
+watch(() => [props.stackOutput, props.output], remeasure, { deep: true })
+onBeforeUnmount(() => {
+  watcher?.disconnect()
+  window.removeEventListener('resize', remeasure)
+  if (frame) cancelAnimationFrame(frame)
+})
 
 /** Split `backtick` spans out of a sentence, so they render as code. */
 const segments = (text: string) => text.split('`').map((part, index) => ({ part, code: index % 2 === 1 }))
@@ -91,7 +149,13 @@ const columnWidth = computed(() => `${Math.max(...props.output.map(line => line.
 
       <div class="shell-output">
         <span class="output-label">{{ outputLabel }}</span>
-        <div v-if="output.length" class="out-lines" :class="{ 'is-columns': columns }" :style="{ '--col': columnWidth }">
+        <div
+          v-if="output.length"
+          ref="outLines"
+          class="out-lines"
+          :class="{ 'is-columns': columns }"
+          :style="{ '--col': columnWidth, letterSpacing: snap }"
+        >
           <span
             v-for="(line, index) in output"
             :key="`${stage}-${index}`"
