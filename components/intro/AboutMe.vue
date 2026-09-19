@@ -8,10 +8,10 @@
  * hello, not a portfolio — a name, one line, and the path from Minecraft mods
  * in a lockdown to Rust at the university.
  *
- * The path is the point, so the path is what moves: the thread draws itself
- * downwards and each stop lands as the line reaches it, the way the demos
- * elsewhere in the deck play. Everything else is deliberately short — the
- * talking happens in the room, not on the slide.
+ * The path is the point, so the path is what moves: each stop lands in turn and
+ * draws its own segment of the rail down to the next one, in its own colour, so
+ * the line ends at the last stop rather than running on past it. Everything else
+ * is deliberately short — the talking happens in the room, not on the slide.
  *
  * Words come from `me.*` in `locales/`, lifted from the portfolio site's own
  * wording so both say the same thing.
@@ -43,7 +43,6 @@ const colourOf = (index: number) => `var(--${COLOURS[index % COLOURS.length]})`
 const STEP = 0.45
 const START = 0.7
 const at = (index: number) => START + index * STEP
-const drawFor = computed(() => path.value.length * STEP + 0.3)
 </script>
 
 <template>
@@ -81,10 +80,7 @@ const drawFor = computed(() => path.value.length * STEP + 0.3)
 
       <!-- The path starts at zero, which is the whole reason it is on the slide. -->
       <section class="me-path">
-        <span class="path-label">{{ t('me.pathLabel') }}</span>
-
-        <ol class="path-list" :style="{ '--draw': `${drawFor}s` }">
-          <span class="path-thread" aria-hidden="true"></span>
+        <ol class="path-list">
           <li
             v-for="(step, index) in path"
             :key="step.year"
@@ -260,20 +256,11 @@ const drawFor = computed(() => path.value.length * STEP + 0.3)
   display: flex;
   flex-direction: column;
   gap: 1.8vh;
+  /* The rail the dots sit on, measured from the left edge of the list. */
+  --rail: 1.1vh;
+  --dot: 1.3vh;
   padding-left: 2.2vh;
 }
-/* Drawn from the top down, so the path arrives stop by stop. */
-.path-thread {
-  position: absolute;
-  top: 1vh;
-  bottom: 1vh;
-  left: 0.75vh;
-  width: 2px;
-  background: linear-gradient(180deg, var(--coral), var(--sun), var(--mint), var(--sky), var(--lavender));
-  transform-origin: top center;
-  animation: grow-down var(--draw) linear 0.55s both;
-}
-
 .step {
   position: relative;
   display: grid;
@@ -282,12 +269,27 @@ const drawFor = computed(() => path.value.length * STEP + 0.3)
   gap: 1.1vh;
   animation: step-in 0.5s cubic-bezier(0.22, 1, 0.36, 1) var(--t) both;
 }
+/* The segment from this stop down to the next one, in this stop's colour. */
+.step:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  left: calc(var(--rail) - 2.2vh - 1px);
+  top: calc(0.5vh + var(--dot));
+  height: calc(100% - var(--dot) + 1.8vh);
+  width: 2px;
+  background: var(--accent);
+  opacity: 0.45;
+  transform-origin: top center;
+  animation: grow-down 0.4s linear var(--t) both;
+}
+
 .step-dot {
   position: absolute;
-  left: -1.75vh;
+  /* Centre on the rail: the step itself starts one padding in. */
+  left: calc(var(--rail) - 2.2vh - var(--dot) / 2);
   top: 0.5vh;
-  width: 1.3vh;
-  height: 1.3vh;
+  width: var(--dot);
+  height: var(--dot);
   border-radius: 999px;
   background: var(--accent);
   animation: dot-pop 0.45s cubic-bezier(0.22, 1, 0.36, 1) var(--t) both;

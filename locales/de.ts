@@ -59,7 +59,6 @@ const de = {
     eyebrow: 'Kurz zu mir',
     name: 'Sheak Sadi',
     role: 'Bilingual Informatics · OVGU · 3. Semester',
-    pathLabel: 'Der Weg',
     path: [
       { year: '2020', what: 'Minecraft-Mods', how: 'Java, aus Langeweile' },
       { year: '2022', what: 'Webseiten', how: 'JavaScript, dann TypeScript' },

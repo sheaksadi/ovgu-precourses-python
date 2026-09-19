@@ -58,7 +58,6 @@ const en: Messages = {
     eyebrow: 'A quick hello',
     name: 'Sheak Sadi',
     role: 'Bilingual Informatics · OVGU · 3rd semester',
-    pathLabel: 'The path',
     path: [
       { year: '2020', what: 'Minecraft mods', how: 'Java, out of boredom' },
       { year: '2022', what: 'Websites', how: 'JavaScript, then TypeScript' },
