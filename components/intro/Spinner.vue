@@ -31,12 +31,15 @@ import { useI18n } from '~/composables/useI18n'
 import { useDeckRole } from '~/composables/useDeckRole'
 import { useWebSocket } from '~/composables/useWebSocket'
 import { useSpins, type SpinRecord } from '~/composables/useSpins'
+import { useDemos } from '~/composables/useDemos'
 import { avatarFor } from '~/utils/cuteNames'
 import type { SpriteName } from '~/utils/sprites'
 
 const { t, tm } = useI18n()
 const { isViewer, isPeek, isProjector } = useDeckRole()
 const ws = useWebSocket()
+// A demo playing in the room holds this too: one animation at a time.
+const demos = useDemos()
 const spins = useSpins()
 
 /** Only a follow-along device spins; the projector and the presenter's previews watch. */
@@ -392,7 +395,7 @@ onBeforeUnmount(() => {
     <p class="sr-only" aria-live="polite">{{ phase === 'landed' && current >= 0 ? `${shownName}: ${questions[current]}` : '' }}</p>
 
     <div class="spinner-controls">
-      <button v-if="canSpin" type="button" class="spin-button" :disabled="phase === 'spinning'" @click="request">
+      <button v-if="canSpin" type="button" class="spin-button" :disabled="phase === 'spinning' || demos.busy.value" @click="request">
         <Icon name="lucide:refresh-cw" class="spin-icon" :class="{ 'is-spinning': phase === 'spinning' }" />
         <span class="text-trim">{{ phase === 'landed' ? t('intro.spinAgain') : t('intro.spin') }}</span>
       </button>

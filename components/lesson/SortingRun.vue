@@ -14,6 +14,8 @@
  */
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useI18n } from '~/composables/useI18n'
+import { useDemos } from '~/composables/useDemos'
+import { useWebSocket } from '~/composables/useWebSocket'
 import { sortFrames, type SortName } from '~/utils/sorting'
 
 const props = defineProps<{ algo: SortName }>()
@@ -65,20 +67,37 @@ const play = () => {
   step()
 }
 
+/** How long this run takes, so a replay can hold the room for that long. */
+const demos = useDemos()
+const ws = useWebSocket()
+const runsFor = () => frames.value.length * SPEED + 1200
+
+/** Asked for by a person: the whole room watches it again, from the top. */
+const replay = () => {
+  const ms = runsFor()
+  demos.hold(ms)
+  ws.sendDemoReplay(ms)
+}
+
 const onKey = (event: KeyboardEvent) => {
   if (event.key !== 'Enter') return
   if (['INPUT', 'TEXTAREA'].includes((event.target as HTMLElement).tagName)) return
-  play()
+  replay()
 }
+
+/** The room asked: play, but do not ask the room back. */
+const onRoomReplay = () => play()
 
 onMounted(() => {
   play()
   window.addEventListener('keydown', onKey)
+  window.addEventListener('deck:demo-replay', onRoomReplay)
 })
 watch(() => props.algo, () => play())
 onBeforeUnmount(() => {
   stop()
   window.removeEventListener('keydown', onKey)
+  window.removeEventListener('deck:demo-replay', onRoomReplay)
 })
 
 const roleOf = (id: number) => {

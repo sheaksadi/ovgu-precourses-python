@@ -18,6 +18,7 @@ import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import { useI18n } from '~/composables/useI18n'
 import { useDeckRole } from '~/composables/useDeckRole'
 import { useWebSocket } from '~/composables/useWebSocket'
+import { useDemos } from '~/composables/useDemos'
 import { useCats } from '~/composables/useCats'
 import { localizeName } from '~/utils/cuteNames'
 
@@ -44,6 +45,8 @@ const words = computed(() => tm<Record<'order' | 'kitchen' | 'request' | 'respon
 /* ─── Stage 4: the room's cat ─── */
 const { isViewer, isPeek, isProjector } = useDeckRole()
 const ws = useWebSocket()
+// One animation at a time: a demo playing in the room holds this button.
+const demos = useDemos()
 const cats = useCats()
 
 /** Students ask; the projector and the presenter's previews only watch. */
@@ -166,7 +169,7 @@ const outputDelays = computed(() => {
           <span v-if="loading" class="spinner"></span>
         </div>
         <div class="live-bar">
-          <button v-if="canAsk" type="button" class="cat-button" :disabled="loading" @click="ask">
+          <button v-if="canAsk" type="button" class="cat-button" :disabled="loading || demos.busy.value" @click="ask">
             <Icon name="lucide:refresh-cw" class="cat-icon" :class="{ 'is-spinning': loading }" />
             <span class="text-trim">{{ words.ask }}</span>
           </button>

@@ -121,6 +121,13 @@ export default defineWebSocketHandler({
         if (cat) wsManager.broadcast(cat)
         else peer.send(JSON.stringify({ type: 'cat_busy' }))
       }
+      else if (data.type === 'demo') {
+        // Somebody asked a demo to play again. It plays again everywhere: the
+        // projector is the screen the room is watching, and a replay that only
+        // runs on the phone that tapped it is no use to anyone.
+        const forMs = Math.min(Math.max(Number(data.forMs) || 0, 0), 60_000)
+        wsManager.broadcast({ type: 'demo', at: Date.now(), forMs })
+      }
       else if (data.type === 'command') {
         // Room commands use POST /api/command. WebSocket is broadcast-only.
         return

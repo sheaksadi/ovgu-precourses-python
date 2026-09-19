@@ -7,7 +7,9 @@
  * with a replay button under it. Used by the walk-throughs in `components/pycharm/`,
  * which drive it with `useDemoPlayer`.
  */
+import { computed } from 'vue'
 import { useDeckRole } from '~/composables/useDeckRole'
+import { useDemos } from '~/composables/useDemos'
 
 const props = defineProps<{
   eyebrow: string
@@ -23,7 +25,12 @@ const props = defineProps<{
 const emit = defineEmits<{ replay: [] }>()
 
 // The projector carries no buttons; Enter on its own keyboard still replays.
-const { isProjector } = useDeckRole()
+const { isProjector, role } = useDeckRole()
+
+// While the room is watching a replay, the button that would cut it off goes
+// quiet. The presenter view keeps every control it has.
+const demos = useDemos()
+const held = computed(() => demos.busy.value && role.value !== 'presenter')
 
 const isDone = (step: number) => step < props.stage || (step === props.stage && props.finished)
 </script>
@@ -62,7 +69,7 @@ const isDone = (step: number) => step < props.stage || (step === props.stage && 
       <slot />
 
       <div v-if="!isProjector" class="walk-controls">
-        <button type="button" class="walk-replay" @click="emit('replay')">
+        <button type="button" class="walk-replay" :disabled="held" @click="emit('replay')">
           <Icon name="lucide:rotate-ccw" />
           <span class="text-trim">{{ replay }}</span>
         </button>
@@ -202,6 +209,10 @@ const isDone = (step: number) => step < props.stage || (step === props.stage && 
   gap: 1.6vh;
 }
 
+.walk-replay:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
 .walk-replay {
   display: inline-flex;
   align-items: center;

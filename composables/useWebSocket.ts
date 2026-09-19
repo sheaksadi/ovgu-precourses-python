@@ -5,6 +5,7 @@ import { useDeckRole } from '~/composables/useDeckRole'
 import { useSlideData } from '~/composables/useSlideData'
 import { useAudience } from '~/composables/useAudience'
 import { SPIN_MS, useSpins } from '~/composables/useSpins'
+import { useDemos } from '~/composables/useDemos'
 import { useProblems } from '~/composables/useProblems'
 import { useCats } from '~/composables/useCats'
 import { useToasts } from '~/composables/useToasts'
@@ -41,6 +42,7 @@ export const useWebSocket = () => {
   const { getSlideByRoute } = useSlideData()
   const audience = useAudience()
   const spins = useSpins()
+  const demos = useDemos()
   const problems = useProblems()
   const cats = useCats()
   const toasts = useToasts()
@@ -202,6 +204,11 @@ export const useWebSocket = () => {
         else if (data.type === 'cat_busy') {
           cats.clearWaiting()
         }
+        else if (data.type === 'demo') {
+          // Every screen plays it again, from the top, at the same moment.
+          demos.applyRemote(data)
+          window.dispatchEvent(new CustomEvent('deck:demo-replay'))
+        }
         else if (data.type === 'spin_busy') {
           window.dispatchEvent(new CustomEvent('deck:spin-busy'))
         }
@@ -244,6 +251,11 @@ export const useWebSocket = () => {
     send({ type: 'cat' })
   }
 
+  /** Ask the room to play the running demo again, for `forMs` milliseconds. */
+  const sendDemoReplay = (forMs: number) => {
+    send({ type: 'demo', forMs })
+  }
+
   const sendPointer = (clientId: string, active: boolean, x: number, y: number, color: string) => {
     send({ type: 'pointer', clientId, active, x, y, color })
   }
@@ -283,6 +295,7 @@ export const useWebSocket = () => {
     sendPointer,
     sendPresence,
     sendSpin,
-    sendCat
+    sendCat,
+    sendDemoReplay
   }
 }

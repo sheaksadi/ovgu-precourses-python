@@ -1,6 +1,8 @@
 import { nextTick, onBeforeUnmount, onMounted, ref, watch, type Ref } from 'vue'
 import { useState } from '#app'
 import { useI18n } from '~/composables/useI18n'
+import { useDemos } from '~/composables/useDemos'
+import { useWebSocket } from '~/composables/useWebSocket'
 
 /**
  * Plays a click-through demo like a short screen recording: the browser of the
@@ -13,6 +15,11 @@ import { useI18n } from '~/composables/useI18n'
  * continues the demo through `useState`, so advancing a slide never makes it jump.
  *
  * Plays on mount, again on Enter or `play()`, and again when the language changes.
+ *
+ * A replay asked for by a person plays everywhere: `replay()` tells the room
+ * over the WebSocket and every screen starts from the top together, because the
+ * room is watching the projector, not the phone that tapped. While it runs the
+ * deck is held busy (`useDemos`), so the buttons that could cut it off go quiet.
  */
 export interface DemoStage {
   /** Names the demo, so the pointer is handed only to the stage that continues it. */
@@ -41,8 +48,12 @@ export interface DemoPlayerOptions extends DemoStage {
 
 export const useDemoPlayer = (options: DemoPlayerOptions) => {
   const { locale } = useI18n()
+  const demos = useDemos()
+  const ws = useWebSocket()
   const continues = options.continues ?? { id: options.id, stage: options.stage - 1 }
 
+  /** How long the last run took, so a replay can hold the room for that long. */
+  const lastRun = ref(0)
   const pointer = ref<DemoPointer>({ x: 0, y: 0, visible: false })
   /** Place the pointer and the scene without gliding, for the opening frame. */
   const instant = ref(false)
@@ -98,7 +109,7 @@ export const useDemoPlayer = (options: DemoPlayerOptions) => {
     requestAnimationFrame(() => requestAnimationFrame(() => { instant.value = false }))
   }
 
-  const play = async () => {
+  const play = async (): Promise<number> => {
     stop()
     finished.value = false
     options.reset()
@@ -108,33 +119,46 @@ export const useDemoPlayer = (options: DemoPlayerOptions) => {
       options.land()
       pointer.value = { ...pointer.value, visible: false }
       finished.value = true
-      return
+      return 0
     }
 
     const end = options.script()
     later(end + 500, () => { finished.value = true })
+    return end + 500
+  }
+
+  /** A person asked for it again: the whole room plays it again. */
+  const replay = () => {
+    const runs = lastRun.value || 6000
+    demos.hold(runs)
+    ws.sendDemoReplay(runs)
   }
 
   const onKey = (event: KeyboardEvent) => {
     if (event.key !== 'Enter') return
     if (['INPUT', 'TEXTAREA'].includes((event.target as HTMLElement).tagName)) return
     event.preventDefault()
-    play()
+    replay()
   }
+
+  /** The room asked: play, but do not ask the room back. */
+  const onRoomReplay = () => { play().then((ms) => { lastRun.value = ms }) }
 
   options.reset()
 
   onMounted(() => {
-    play()
+    play().then((ms) => { lastRun.value = ms })
     window.addEventListener('keydown', onKey)
+    window.addEventListener('deck:demo-replay', onRoomReplay)
   })
 
-  watch(locale, () => play())
+  watch(locale, () => play().then((ms) => { lastRun.value = ms }))
 
   onBeforeUnmount(() => {
     stop()
     window.removeEventListener('keydown', onKey)
+    window.removeEventListener('deck:demo-replay', onRoomReplay)
   })
 
-  return { pointer, instant, finished, later, pointAt, pointAtFraction, play }
+  return { pointer, instant, finished, later, pointAt, pointAtFraction, play: replay, busy: demos.busy }
 }
