@@ -400,6 +400,10 @@ export const slidesEn: Record<string, SlideText> = {
     title: 'Built-in functions - text',
     teleprompter: 'Texts have functions you call with a dot: methods. split matters especially when reading data from files. There are many more - help(str) shows them all.',
   },
+  'PRE-0201': {
+    title: 'Built-in functions - chained',
+    teleprompter: 'Every function returns something, and that may go straight into the next one. split makes words, sorted orders them, join glues them together. Read it from the inside out - the same as the nested calls earlier. Ask: what happens first?',
+  },
   'PRE-0118': {
     title: 'Now you: built-ins',
     subtitle: 'Who wins, and the best three',
@@ -409,6 +413,11 @@ export const slidesEn: Record<string, SlideText> = {
     title: 'Looking things up: built-in functions',
     subtitle: 'Search, official docs, read an example',
     teleprompter: 'Nobody knows every function by heart - looking things up is part of the craft. Type what you want and take the result from docs.python.org, not the first blog. Every built-in function is there with an example. Enter plays the demo again.',
+  },
+  'PRE-0202': {
+    title: 'Three cats, nothing but numbers',
+    subtitle: 'The problem before the solution',
+    teleprompter: 'The problem first. Three cats, four facts each, all of it lists. Ask the room: how old is Luna? They have to count. Then: what is at position 3? Nobody is sure any more. That is exactly where dictionaries come in.',
   },
   'PRE-0119': {
     title: 'Dictionaries',

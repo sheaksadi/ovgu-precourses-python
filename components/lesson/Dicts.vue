@@ -15,6 +15,7 @@
  */
 import { computed } from 'vue'
 import { useI18n } from '~/composables/useI18n'
+import { useLineClock, type LineStep } from '~/composables/useLineClock'
 
 type StageNumber = 1 | 2 | 3 | 4
 
@@ -50,6 +51,33 @@ const outputDelays = computed(() => {
     default: return undefined
   }
 })
+
+/**
+ * Which line is running, over time. Without this the panel lights the two
+ * `print` lines for the whole slide, and the line that actually builds the
+ * dictionary — the point of the lesson — never lights at all.
+ */
+const SCHEDULE: Record<number, LineStep[]> = {
+  1: [{ at: 0.3, line: 1 }, { at: 1.1, line: 2 }, { at: 1.8, line: 3 }],
+  3: [
+    { at: 0.3, line: 1 },
+    { at: 0.8, line: 2 },
+    { at: 1.3, line: 4 },
+    { at: 2.0, line: 5 },
+    { at: 2.6, line: 6 },
+  ],
+  // The loop header lights again on the second pass, so the passes stay visible.
+  4: [
+    { at: 0.2, line: 1 },
+    { at: 0.5, line: 2 },
+    { at: 0.8, line: 3 },
+    { at: cardAt(0) + 0.2, line: 5 },
+    { at: cardAt(0) + 0.8, line: 6 },
+    { at: cardAt(1) + 0.2, line: 5 },
+    { at: cardAt(1) + 0.8, line: 6 },
+  ],
+}
+const line = useLineClock(() => SCHEDULE[props.stage] ?? [], () => props.stage)
 </script>
 
 <template>
@@ -62,7 +90,7 @@ const outputDelays = computed(() => {
     :code="current.code"
     :variant="current.variant ?? 'python'"
     :file="t('dicts.file')"
-    :focus="current.focus"
+    :focus="line ? [line] : current.focus"
     :output="current.output"
     :output-from="current.outputFrom"
     :output-delays="outputDelays"

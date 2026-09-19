@@ -7,28 +7,28 @@ time: look at the code first, then build.
 
 ## A. Functions: maths and physics (slides 27 to 29)
 
-- [ ] **1. After 27** (PRE-0104): the circle formula, written a second time.
+- [x] **1. After 27** (PRE-0104): the circle formula, written a second time.
       The same code becomes a `quadrat()` function and a `PI` variable, so the
       body reads like the formula on the board instead of like arithmetic. Show
       the before and the after, and say why the second one is the one to write.
-- [ ] **2. After 27.1** (PRE-0105): comments. Right now nobody can tell what
+- [x] **2. After 27.1** (PRE-0105): comments. Right now nobody can tell what
       `c * 9 / 5 + 32` is. Two comment lines above the `return` explain the
       formula, and the slide introduces `#` as a note for humans.
-- [ ] **3. After 27.2** (PRE-0106): nested calls. A second function
+- [x] **3. After 27.2** (PRE-0106): nested calls. A second function
       (acceleration from two speeds) calls the speed function, and a third
       averages two accelerations — a call inside a call, on purpose.
-- [ ] **4. Replace 27.3** (PRE-0107): the call-stack slide is covered by task 3.
+- [x] **4. Replace 27.3** (PRE-0107): the call-stack slide is covered by task 3.
       Put something a step harder in its place, to build intuition for what
       comes after this course.
-- [ ] **5. Drop slide 29** (PRE-0108 to PRE-0111, "Tiere, die miteinander
+- [x] **5. Drop slide 29** (PRE-0108 to PRE-0111, "Tiere, die miteinander
       reden"): the maths slides now cover what it taught. Keep at most one
       compact slide of examples if something is lost.
 
 ## B. Built-ins and dictionaries
 
-- [ ] **6. After 33.4** (PRE-0117): pipelines. Built-in functions chained into
+- [x] **6. After 33.4** (PRE-0117): pipelines. Built-in functions chained into
       one another to get something done. Keep it simple — two or three links.
-- [ ] **7. Before 36** (PRE-0119): one slide that states the dictionary problem
+- [x] **7. Before 36** (PRE-0119): one slide that states the dictionary problem
       before the solution arrives. Three cats with their details in parallel
       lists, and no good way to look one up.
 - [ ] **8. Highlighting audit:** several lessons light the `print` line while

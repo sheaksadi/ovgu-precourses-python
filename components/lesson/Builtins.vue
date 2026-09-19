@@ -17,7 +17,7 @@
 import { computed } from 'vue'
 import { useI18n } from '~/composables/useI18n'
 
-type StageNumber = 1 | 2 | 3 | 4 | 5
+type StageNumber = 1 | 2 | 3 | 4 | 5 | 6
 
 interface Stage {
   headline: string
@@ -37,6 +37,8 @@ const current = computed(() => stages.value[props.stage - 1]!)
 const pets = computed(() => tm<Array<{ name: string, food: string }>>('builtins.pets'))
 const words = computed(() => tm<string[]>('builtins.words'))
 const replacement = computed(() => t('builtins.replacement'))
+/** 6: the same value, one station at a time. */
+const chain = computed(() => tm<Array<{ value: string, step: string }>>('builtins.chain'))
 
 /* 1–2: the fish */
 const VALUES = [12, 30, 8, 21, 15, 18]
@@ -65,6 +67,7 @@ const outputDelays = computed(() => {
     case 3: return [3.3, 3.8]
     case 4: return [0.8, 1.2, 1.6, 3.0, 3.6]
     case 5: return [1.0, 2.0, 3.0, 3.9]
+    case 6: return [2.0, 4.2]
     default: return undefined
   }
 })
@@ -160,6 +163,18 @@ const shown = (own: number) => props.stage === own || props.stage === own + 1
           <code class="method" style="--t: 1.8s;">.split()</code>
           <code class="method" style="--t: 2.8s;">"-".join(…) <b>a-b-c</b></code>
           <code class="method" style="--t: 3.6s;">.replace(…)</code>
+        </div>
+      </div>
+
+      <!-- ═══ 6: one result into the next function ═══ -->
+      <div v-if="stage === 6" class="part chain is-active">
+        <span class="chain-label">{{ t('builtins.chainLabel') }}</span>
+        <div v-for="(link, k) in chain" :key="k" class="link-row" :style="{ '--t': `${0.6 + k * 1.1}s` }">
+          <code class="link-value" :class="{ 'is-last': k === chain.length - 1 }">{{ link.value }}</code>
+          <span v-if="link.step" class="link-step">
+            <span class="link-arrow"></span>
+            <code class="link-fn">{{ link.step }}</code>
+          </span>
         </div>
       </div>
     </div>
@@ -574,6 +589,77 @@ code {
 /* split: the words pull apart into separate tiles. */
 .text .word {
   animation: split 0.45s cubic-bezier(0.22, 1, 0.36, 1) 2s both;
+}
+
+/* ═══ 6: the chain ═════════════════════════════════════════════════════
+   The same value on its way down: each row is what it is at that point,
+   with the function that turns it into the next row beside the arrow. */
+.chain {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 7vh 4% 2vh;
+}
+.chain-label {
+  margin-bottom: 1.6vh;
+  padding: calc(0.25vh + 0.3em) 1vh;
+  border-radius: 999px;
+  background: var(--bg-off);
+  border: 2px solid var(--border);
+  font-size: clamp(0.42rem, 1.15vh, 0.72rem);
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  animation: appear 0.3s ease 0.3s both;
+}
+.link-row {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  animation: rise 0.4s cubic-bezier(0.22, 1, 0.36, 1) var(--t) both;
+}
+.link-value {
+  padding: 0.6vh 1.2vh;
+  border-radius: 0.9vh;
+  background: var(--bg);
+  border: 2px solid var(--border);
+  font-size: clamp(0.52rem, 1.5vh, 0.95rem);
+  font-weight: 800;
+  white-space: nowrap;
+  color: var(--text);
+}
+.link-value.is-last {
+  background: var(--mint);
+  border-color: var(--text);
+  border-width: 3px;
+}
+/* The arrow stays on the centre line, the function name sits beside it. */
+.link-step {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  padding: 0.4vh 0;
+}
+.link-arrow {
+  width: 0.35vh;
+  height: 3vh;
+  border-radius: 999px;
+  background: var(--sky);
+}
+.link-fn {
+  position: absolute;
+  top: 50%;
+  left: calc(50% + 1.2vh);
+  translate: 0 -50%;
+  padding: 0.25vh 0.8vh;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--sky) 25%, var(--bg));
+  font-size: clamp(0.46rem, 1.3vh, 0.82rem);
+  font-weight: 800;
+  white-space: nowrap;
+  color: var(--text);
 }
 
 /* ─── Keyframes ──────────────────────────────────────────────────────── */

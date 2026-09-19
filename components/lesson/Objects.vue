@@ -23,6 +23,7 @@
  */
 import { computed } from 'vue'
 import { useI18n } from '~/composables/useI18n'
+import { useLineClock, type LineStep } from '~/composables/useLineClock'
 
 type StageNumber = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8
 
@@ -64,6 +65,35 @@ const momoHunger = computed(() => {
   return { from: 8, to: 8 }
 })
 const flips = computed(() => props.stage >= 5 && props.stage <= 7)
+
+/**
+ * Which line is running, over time, and when each printed line lands with it.
+ * A lit `print` on its own says nothing; what teaches here is the line that
+ * stores the value, and — on stage 6 — the jump into the method and back.
+ */
+const SCHEDULE: Record<number, LineStep[]> = {
+  1: [{ at: 0.3, line: 1 }, { at: 0.6, line: 2 }, { at: 0.9, line: 3 }, { at: 1.4, line: 4 }],
+  2: [{ at: 0.3, line: 1 }, { at: 1.0, line: 2 }],
+  4: [{ at: 0.4, line: 1 }, { at: 1.0, line: 2 }, { at: 1.6, line: 3 }, { at: 2.1, line: 4 }, { at: 2.8, line: 6 }],
+  5: [{ at: 0.5, line: 1 }, { at: 1.3, line: 2 }, { at: 2.2, line: 3 }, { at: 2.8, line: 4 }],
+  // The call, into the method, and back out to the print that started it.
+  6: [{ at: 0.3, line: 10 }, { at: 1.0, line: 6 }, { at: 1.7, line: 7 }, { at: 2.4, line: 8 }, { at: 3.0, line: 10 }],
+  7: [{ at: 0.3, line: 1 }, { at: 0.8, line: 2 }, { at: 1.3, line: 3 }, { at: 2.2, line: 5 }, { at: 3.0, line: 6 }],
+  8: [{ at: 0.4, line: 1 }, { at: 0.9, line: 2 }, { at: 1.8, line: 4 }, { at: 2.4, line: 5 }, { at: 3.0, line: 6 }],
+}
+const line = useLineClock(() => SCHEDULE[props.stage] ?? [], () => props.stage)
+
+const outputDelays = computed(() => {
+  switch (props.stage) {
+    case 1: return [1.6]
+    case 2: return [1.2]
+    case 5: return [0.8, 1.6, 3.0]
+    case 6: return [3.2]
+    case 7: return [3.2]
+    case 8: return [1.2, 3.2]
+    default: return undefined
+  }
+})
 </script>
 
 <template>
@@ -76,9 +106,10 @@ const flips = computed(() => props.stage >= 5 && props.stage <= 7)
     :code="current.code"
     :variant="stage === 3 ? 'pseudo' : 'python'"
     :file="t('objects.file')"
-    :focus="current.focus"
+    :focus="line ? [line] : current.focus"
     :output="current.output"
     :output-from="current.outputFrom"
+    :output-delays="outputDelays"
     :dense="stage === 6"
     :output-label="t('objects.output')"
     :no-output="t('objects.noOutput')"
