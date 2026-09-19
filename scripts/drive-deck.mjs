@@ -137,8 +137,8 @@ const browser = await connect(await browserWs())
 // The deck this drives: the first slides in order, and the loops round, which is
 // where a device has something of its own to keep.
 const FIRST = { route: '/slides/pre-0033' }
-const SECOND = { route: '/slides/pre-0038', title: 'Vorstellungsrunde' }
-const DRIFTED = { route: '/slides/pre-0034' }
+const SECOND = { route: '/slides/pre-0185', title: 'Kurz zu mir' }
+const DRIFTED = { route: '/slides/pre-0038' }
 const PUZZLE = { route: '/slides/pre-0137', title: 'Rätsel: Momos Fang' }
 const BOARD = { route: '/slides/pre-0138' }
 
@@ -242,7 +242,7 @@ check('live preview shows the room slide', livePath === (await path(viewer)),
 
 // --- The presenter view sees the room -----------------------------------
 await wait(800)
-const counters = await evaluate(presenter, `[...document.querySelectorAll('aside dd')].map(d => d.innerText).join(' / ')`)
+const counters = await evaluate(presenter, `[...document.querySelectorAll('[data-audience]')].map(d => d.innerText).join(' / ')`)
 check('presenter view reports the audience', /\d/.test(counters || ''),
   `following / off-sync / working = ${counters}`)
 await shot(presenter, '09-presenter-live', 1600, 1000)
