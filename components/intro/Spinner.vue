@@ -127,10 +127,26 @@ const toggleMute = () => {
 }
 
 /* ─── Reel ───────────────────────────────────────────────────────────── */
+/**
+ * Who spun is news, not a label: it holds while the room reads the toast, then
+ * clears so the line says again that the next person may spin. The question
+ * itself stays on the reel — that is what the group is talking about.
+ */
+const CREDIT_MS = 6000
+const credited = ref(true)
+let creditTimer: ReturnType<typeof setTimeout> | undefined
+
+const holdCredit = () => {
+  credited.value = true
+  clearTimeout(creditTimer)
+  creditTimer = setTimeout(() => { credited.value = false }, CREDIT_MS)
+}
+
 const land = () => {
   velocity.value = 0
   phase.value = 'landed'
   chime()
+  holdCredit()
 }
 
 /** Play a spin the room drew. A newer spin takes over from wherever the reel is. */
@@ -146,6 +162,8 @@ const play = (record: SpinRecord) => {
   const end = from + LOOPS * n + mod(slot - mod(from, n), n)
 
   phase.value = 'spinning'
+  credited.value = true
+  clearTimeout(creditTimer)
 
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
     position.value = end
@@ -243,11 +261,12 @@ const blur = computed(() => `blur(${Math.min(5, velocity.value * 0.09).toFixed(2
 const bubble = computed(() => (!canSpin.value && phase.value === 'idle' ? t('intro.momo.screen') : t(`intro.momo.${phase.value}`)))
 
 const shownName = computed(() => (shown.value ? spins.nameOf(shown.value) : ''))
-const avatar = computed(() => (shown.value ? avatarFor(shownName.value) : null))
+const avatar = computed(() => (who.value ? avatarFor(shownName.value) : null))
 
 const who = computed(() => {
-  // Nothing spun yet: the reel says it is ready, no waiting message needed.
-  if (!shown.value) return ''
+  // Nothing spun yet, or the credit has had its moment: the reel says it is
+  // ready, and the line goes quiet rather than claiming someone is still up.
+  if (!shown.value || (phase.value !== 'spinning' && !credited.value)) return ''
   return phase.value === 'spinning'
     ? t('intro.spinningBy', { name: shownName.value })
     : t('intro.spunBy', { name: shownName.value })
@@ -278,6 +297,9 @@ const adoptLatest = (latest: SpinRecord | null) => {
   shown.value = latest
   position.value = order.value.indexOf(mod(latest.question, count.value))
   phase.value = 'landed'
+  // Late arrivals join a room that has already read the credit.
+  credited.value = spins.isBusy()
+  if (credited.value) holdCredit()
 }
 
 // The room's state usually arrives just after mount. A live spin sets `shown`
@@ -304,6 +326,7 @@ watch(count, (n) => {
 onBeforeUnmount(() => {
   cancelAnimationFrame(frame)
   clearTimeout(busyTimer)
+  clearTimeout(creditTimer)
   window.removeEventListener('keydown', onKey)
   window.removeEventListener('deck:spin', onSpin)
   window.removeEventListener('deck:spin-busy', showBusy)
@@ -343,7 +366,7 @@ onBeforeUnmount(() => {
       </span>
     </button>
 
-    <p class="sr-only" aria-live="polite">{{ phase === 'landed' && current >= 0 ? `${who}: ${questions[current]}` : '' }}</p>
+    <p class="sr-only" aria-live="polite">{{ phase === 'landed' && current >= 0 ? `${shownName}: ${questions[current]}` : '' }}</p>
 
     <div class="spinner-controls">
       <button v-if="canSpin" type="button" class="spin-button" :disabled="phase === 'spinning'" @click="request">

@@ -19,8 +19,8 @@ export interface SpinRecord {
   at: number
 }
 
-/** Matches `SPIN_MS` on the server. */
-const SPIN_MS = 4600
+/** Matches `SPIN_MS` on the server: how long the reel rolls before it lands. */
+export const SPIN_MS = 4600
 const HISTORY = 12
 
 const toRecord = (event: SpinRecord): SpinRecord => ({

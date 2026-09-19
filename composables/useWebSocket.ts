@@ -4,7 +4,7 @@ import { useInteractionStore } from '~/stores/interactionStore'
 import { useDeckRole } from '~/composables/useDeckRole'
 import { useSlideData } from '~/composables/useSlideData'
 import { useAudience } from '~/composables/useAudience'
-import { useSpins } from '~/composables/useSpins'
+import { SPIN_MS, useSpins } from '~/composables/useSpins'
 import { useProblems } from '~/composables/useProblems'
 import { useCats } from '~/composables/useCats'
 import { useToasts } from '~/composables/useToasts'
@@ -164,13 +164,19 @@ export const useWebSocket = () => {
           if (spins.apply(data)) {
             window.dispatchEvent(new CustomEvent('deck:spin', { detail: data }))
             const who = data.by ? localizeName(data.by.name, locale.value) : t('intro.presenter')
-            toasts.push({
-              tone: 'lavender',
-              name: data.by ? who : undefined,
-              icon: data.by ? undefined : 'lucide:refresh-cw',
-              title: t('intro.toast', { name: who }),
-              body: tm<string[]>('intro.questions')[data.question] ?? '',
-            })
+            const question = tm<string[]>('intro.questions')[data.question] ?? ''
+            // The toast carries the answer, so it waits for the reel: announcing
+            // the question while it is still rolling gives the spin away.
+            const lands = Math.max(0, data.at + SPIN_MS - Date.now())
+            setTimeout(() => {
+              toasts.push({
+                tone: 'lavender',
+                name: data.by ? who : undefined,
+                icon: data.by ? undefined : 'lucide:refresh-cw',
+                title: t('intro.toast', { name: who }),
+                body: question,
+              })
+            }, lands)
           }
         }
         else if (data.type === 'spin_state') {
