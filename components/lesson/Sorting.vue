@@ -65,10 +65,10 @@ const sortedIds = [...ids].sort((x, y) => value(x) - value(y))
  * the same run seen twice, so the panel must follow the bars line by line.
  */
 const LINES: Record<number, SortLines> = {
-  2: { compare: 3, swap: 4, done: 1 },
-  3: { compare: 4, swap: 5, done: 6 },
-  4: { compare: 4, swap: 6, done: 6 },
-  5: { compare: 4, swap: 5, done: 7 },
+  2: { outer: 1, inner: 2, compare: 3, swap: 4, done: 1 },
+  3: { outer: 2, inner: 3, compare: 4, swap: 5, done: 6 },
+  4: { outer: 1, inner: 3, compare: 4, swap: 6, done: 6 },
+  5: { outer: 1, inner: 4, compare: 4, swap: 5, done: 7 },
 }
 
 /** A still frame, for the stages that only show a before and an after. */
@@ -82,6 +82,8 @@ const still = (order: number[], rest: Partial<SortFrame> = {}): SortFrame => ({
   compares: 0,
   swaps: 0,
   pass: 0,
+  i: -1,
+  j: -1,
   line: 0,
   ...rest,
 })
@@ -202,6 +204,12 @@ const roleOf = (id: number) => {
       <template v-else>
         <span v-if="stage > 1 && stage < 6" class="chips">
           <span class="chip">{{ t('sorting.pass') }} {{ now.pass }}</span>
+          <span v-if="now.i >= 0" class="chip is-loop">
+            <span class="loop-var">i</span> = {{ now.i }}
+            <template v-if="now.j >= 0">
+              <span class="loop-sep">·</span><span class="loop-var">j</span> = {{ now.j }}
+            </template>
+          </span>
           <span class="chip is-count">{{ t('sorting.compares') }}: {{ now.compares }}</span>
         </span>
 
@@ -286,6 +294,20 @@ const roleOf = (id: number) => {
   background: var(--text);
   border-color: var(--text);
   color: var(--bg);
+}
+/* The loop counters, named as the code names them. */
+.chip.is-loop {
+  background: color-mix(in srgb, var(--sky) 16%, var(--bg));
+  border-color: var(--sky);
+  color: var(--text);
+}
+.loop-var {
+  font-weight: 800;
+  color: var(--sky);
+}
+.loop-sep {
+  margin: 0 0.4vh;
+  color: var(--text-muted);
 }
 
 .state {

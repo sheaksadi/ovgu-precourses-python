@@ -18,6 +18,7 @@
 import { computed } from 'vue'
 import { useCodeLink } from '~/composables/useCodeLink'
 import { useI18n } from '~/composables/useI18n'
+import { useLineClock, type LineStep } from '~/composables/useLineClock'
 
 type StageNumber = 1 | 2 | 3 | 4
 
@@ -70,6 +71,23 @@ const stopTimes = computed(() => VALUES.map((_, i) => at(i)))
 const keepTimes = computed(() => timed([0.3, at(1) + 0.35]))
 const countTimes = computed(() => timed([0.3, ...big.map(fish => at(fish.i) + 0.35)]))
 
+/**
+ * All three loops have the same shape — `for`, `if`, and a line that only runs
+ * when the `if` holds — so the panel lights the third line only on the fish
+ * that actually pass the test.
+ */
+const schedule = computed<LineStep[]>(() => {
+  if (props.stage === 4) return []
+  const steps: LineStep[] = []
+  VALUES.forEach((_, i) => {
+    steps.push({ at: at(i), line: 3 }, { at: at(i) + 0.2, line: 4 })
+    if (verdicts.value[i]) steps.push({ at: at(i) + 0.4, line: 5 })
+  })
+  steps.push({ at: at(VALUES.length - 1) + 0.85, line: 6 })
+  return steps
+})
+const line = useLineClock(() => schedule.value, () => props.stage)
+
 const outputDelays = computed(() => [props.stage === 4 ? 0.6 : at(VALUES.length - 1) + 0.9])
 
 const lit = (word: string) => link.isActive(`word:${word}`)
@@ -85,7 +103,7 @@ const phase = (active: number) => (props.stage === active ? 'is-running' : 'is-s
     :note="current.note"
     :code="current.code"
     :file="t('loops.solve.file')"
-    :focus="current.focus"
+    :focus="line ? [line] : current.focus"
     :output="current.output"
     :output-from="current.outputFrom"
     :output-delays="outputDelays"

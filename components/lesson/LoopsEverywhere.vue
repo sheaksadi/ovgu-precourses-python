@@ -15,6 +15,7 @@
  */
 import { computed } from 'vue'
 import { useI18n } from '~/composables/useI18n'
+import { useLineClock, type LineStep } from '~/composables/useLineClock'
 
 type StageNumber = 1 | 2 | 3 | 4
 
@@ -52,6 +53,47 @@ const starRowAt = (i: number) => 0.6 + (i - 1) * 0.55
 const years = [1, 2, 3, 4, 5].map(year => ({ year, money: Math.round(100 * 1.1 ** year) }))
 const yearAt = (y: number) => 0.7 + (y - 1) * 0.7
 
+/**
+ * The nested stage is the one that needs this most: the outer `for` lights once
+ * per row, the inner one per tile, and `print()` at the end of every row, which
+ * is exactly the order the tiles appear in.
+ */
+const schedule = computed<LineStep[]>(() => {
+  const steps: LineStep[] = []
+  switch (props.stage) {
+    case 1:
+      [...WORD].forEach((_, k) => {
+        steps.push({ at: letterAt(k), line: 1 }, { at: letterAt(k) + 0.2, line: 2 })
+      })
+      break
+    case 2:
+      for (let r = 0; r < ROWS; r++) {
+        steps.push({ at: tileAt(r, 0) - 0.2, line: 1 })
+        for (let c = 0; c < COLS; c++) {
+          steps.push({ at: tileAt(r, c), line: 2 }, { at: tileAt(r, c) + 0.08, line: 3 })
+        }
+        steps.push({ at: tileAt(r, COLS - 1) + 0.22, line: 4 })
+      }
+      break
+    case 3:
+      [1, 2, 3, 4, 5].forEach((i) => {
+        steps.push({ at: starRowAt(i), line: 1 }, { at: starRowAt(i) + 0.2, line: 2 })
+      })
+      break
+    case 4:
+      years.forEach(({ year }) => {
+        steps.push(
+          { at: yearAt(year), line: 2 },
+          { at: yearAt(year) + 0.2, line: 3 },
+          { at: yearAt(year) + 0.4, line: 4 },
+        )
+      })
+      break
+  }
+  return steps
+})
+const line = useLineClock(() => schedule.value, () => props.stage)
+
 const outputDelays = computed(() => {
   switch (props.stage) {
     case 1: return [...WORD].map((_, k) => letterAt(k) + 0.25)
@@ -76,7 +118,7 @@ const shown = (own: number) => props.stage === own || props.stage === own + 1
     :note="current.note"
     :code="current.code"
     :file="t('loops.everywhere.file')"
-    :focus="current.focus"
+    :focus="line ? [line] : current.focus"
     :output="current.output"
     :output-from="current.outputFrom"
     :output-delays="outputDelays"

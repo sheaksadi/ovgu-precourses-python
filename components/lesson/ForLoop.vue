@@ -18,6 +18,7 @@
 import { computed } from 'vue'
 import { useCodeLink } from '~/composables/useCodeLink'
 import { useI18n } from '~/composables/useI18n'
+import { useLineClock, type LineStep } from '~/composables/useLineClock'
 
 type StageNumber = 1 | 2 | 3 | 4 | 5
 
@@ -57,6 +58,45 @@ const outputDelays = computed(() => {
   return [0, 0, 0, 0, 0, 0.9]
 })
 
+/**
+ * The code panel walks with Momo: the `for` lights when she reaches a fish, the
+ * body while that pass runs, and the line after the loop once she is done.
+ */
+const at = (i: number) => start.value + i * STEP
+const schedule = computed<LineStep[]>(() => {
+  const steps: LineStep[] = []
+  const last = VALUES.length - 1
+  switch (props.stage) {
+    case 1:
+      VALUES.forEach((_, i) => steps.push({ at: 0.55 + i * 0.5, line: i + 2 }))
+      break
+    case 2:
+      VALUES.forEach((_, i) => {
+        steps.push({ at: at(i), line: 1 }, { at: at(i) + 0.25, line: 2 })
+      })
+      break
+    case 3:
+      VALUES.forEach((_, i) => {
+        steps.push({ at: at(i), line: 2 }, { at: at(i) + 0.25, line: 3 })
+      })
+      break
+    case 4:
+      VALUES.forEach((_, i) => {
+        steps.push({ at: at(i), line: 2 }, { at: at(i) + 0.25, line: 3 })
+      })
+      steps.push({ at: at(last) + 0.9, line: 4 })
+      break
+    case 5:
+      VALUES.forEach((_, i) => {
+        steps.push({ at: at(i), line: 3 }, { at: at(i) + 0.25, line: 4 })
+      })
+      steps.push({ at: at(last) + 0.9, line: 5 })
+      break
+  }
+  return steps
+})
+const line = useLineClock(() => schedule.value, () => props.stage)
+
 const lit = (word: string) => link.isActive(`word:${word}`)
 </script>
 
@@ -70,7 +110,7 @@ const lit = (word: string) => link.isActive(`word:${word}`)
     :code="current.code"
     :variant="current.variant ?? 'python'"
     :file="t('loops.for.file')"
-    :focus="current.focus"
+    :focus="line ? [line] : current.focus"
     :output="current.output"
     :output-from="current.outputFrom"
     :output-delays="outputDelays"

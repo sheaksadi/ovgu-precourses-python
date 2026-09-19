@@ -16,6 +16,7 @@
  */
 import { computed } from 'vue'
 import { useI18n } from '~/composables/useI18n'
+import { useLineClock, type LineStep } from '~/composables/useLineClock'
 
 type StageNumber = 1 | 2 | 3 | 4
 
@@ -57,6 +58,14 @@ const posts = computed(() => NUMBERS[props.stage].map((value, i) => ({
   product: value * TIMES,
 })))
 
+/** Every post is one pass: the `for` lights on arrival, the `print` right after. */
+const schedule = computed<LineStep[]>(() =>
+  posts.value.flatMap(post => [
+    { at: at(post.i), line: 1 },
+    { at: at(post.i) + 0.25, line: 2 },
+  ]))
+const line = useLineClock(() => schedule.value, () => props.stage)
+
 const outputDelays = computed(() => posts.value.map(post => at(post.i) + 0.15))
 const bannerChanges = computed(() => props.stage > 1 && previous.value.banner !== current.value.banner)
 </script>
@@ -70,7 +79,7 @@ const bannerChanges = computed(() => props.stage > 1 && previous.value.banner !=
     :note="current.note"
     :code="current.code"
     :file="t('loops.range.file')"
-    :focus="current.focus"
+    :focus="line ? [line] : current.focus"
     :output="current.output"
     :output-from="current.outputFrom"
     :output-delays="outputDelays"

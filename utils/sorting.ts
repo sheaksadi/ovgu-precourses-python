@@ -26,20 +26,31 @@ export interface SortFrame {
   compares: number
   swaps: number
   pass: number
+  /** The loop counters right now, as the code names them, or -1. */
+  i: number
+  j: number
   /** The line of the code panel this moment is running. */
   line: number
 }
 
 export type SortName = 'bubble' | 'selection' | 'insertion'
 
-/** Which line each kind of moment lights. */
+/**
+ * Which line each kind of moment lights. The loop headers matter as much as the
+ * body: a run that only ever lights the `if` hides where the passes begin and
+ * end, which is the part of a nested loop that is hard to see.
+ */
 export interface SortLines {
+  /** The outer `for`, lit when a pass starts. */
+  outer: number
+  /** The inner `for` or `while`, lit when it starts over. */
+  inner: number
   compare: number
   swap: number
   done: number
 }
 
-const NO_LINES: SortLines = { compare: 0, swap: 0, done: 0 }
+const NO_LINES: SortLines = { outer: 0, inner: 0, compare: 0, swap: 0, done: 0 }
 
 export const sortFrames = (values: number[], name: SortName, lines: SortLines = NO_LINES): SortFrame[] => {
   const size = values.length
@@ -60,6 +71,8 @@ export const sortFrames = (values: number[], name: SortName, lines: SortLines = 
     compares,
     swaps,
     pass: 0,
+    i: -1,
+    j: -1,
     line: 0,
     ...rest,
   })
@@ -68,13 +81,15 @@ export const sortFrames = (values: number[], name: SortName, lines: SortLines = 
 
   if (name === 'bubble') {
     for (let i = 0; i < size - 1; i++) {
+      out.push(frame({ right: i, pass: i + 1, i, line: lines.outer }))
+      out.push(frame({ right: i, pass: i + 1, i, j: 0, line: lines.inner }))
       for (let j = 0; j < size - 1 - i; j++) {
         compares++
-        out.push(frame({ a: j, b: j + 1, right: i, pass: i + 1, line: lines.compare }))
+        out.push(frame({ a: j, b: j + 1, right: i, pass: i + 1, i, j, line: lines.compare }))
         if (value(arr[j]!) > value(arr[j + 1]!)) {
           ;[arr[j], arr[j + 1]] = [arr[j + 1]!, arr[j]!]
           swaps++
-          out.push(frame({ a: j, b: j + 1, swap: true, right: i, pass: i + 1, line: lines.swap }))
+          out.push(frame({ a: j, b: j + 1, swap: true, right: i, pass: i + 1, i, j, line: lines.swap }))
         }
       }
     }
@@ -82,16 +97,18 @@ export const sortFrames = (values: number[], name: SortName, lines: SortLines = 
 
   if (name === 'selection') {
     for (let i = 0; i < size - 1; i++) {
+      out.push(frame({ left: i, pass: i + 1, i, line: lines.outer }))
       let min = i
+      out.push(frame({ a: min, left: i, pass: i + 1, i, j: i + 1, line: lines.inner }))
       for (let j = i + 1; j < size; j++) {
         compares++
-        out.push(frame({ a: min, b: j, left: i, pass: i + 1, line: lines.compare }))
+        out.push(frame({ a: min, b: j, left: i, pass: i + 1, i, j, line: lines.compare }))
         if (value(arr[j]!) < value(arr[min]!)) min = j
       }
       if (min !== i) {
         ;[arr[i], arr[min]] = [arr[min]!, arr[i]!]
         swaps++
-        out.push(frame({ a: i, b: min, swap: true, left: i, pass: i + 1, line: lines.swap }))
+        out.push(frame({ a: i, b: min, swap: true, left: i, pass: i + 1, i, line: lines.swap }))
       }
     }
   }
@@ -100,18 +117,20 @@ export const sortFrames = (values: number[], name: SortName, lines: SortLines = 
     // Drawn as the adjacent swaps it really is: the card slides left one place
     // at a time, which is what the picture has to show.
     for (let i = 1; i < size; i++) {
+      out.push(frame({ left: i, pass: i, i, line: lines.outer }))
       let j = i
+      out.push(frame({ a: j, left: i, pass: i, i, j, line: lines.inner }))
       while (j > 0 && value(arr[j - 1]!) > value(arr[j]!)) {
         compares++
-        out.push(frame({ a: j - 1, b: j, left: i, pass: i, line: lines.compare }))
+        out.push(frame({ a: j - 1, b: j, left: i, pass: i, i, j, line: lines.compare }))
         ;[arr[j - 1], arr[j]] = [arr[j]!, arr[j - 1]!]
         swaps++
-        out.push(frame({ a: j - 1, b: j, swap: true, left: i, pass: i, line: lines.swap }))
+        out.push(frame({ a: j - 1, b: j, swap: true, left: i, pass: i, i, j, line: lines.swap }))
         j--
       }
       if (j > 0) {
         compares++
-        out.push(frame({ a: j - 1, b: j, left: i + 1, pass: i, line: lines.compare }))
+        out.push(frame({ a: j - 1, b: j, left: i + 1, pass: i, i, j, line: lines.compare }))
       }
     }
   }

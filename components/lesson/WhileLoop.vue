@@ -17,6 +17,7 @@
  */
 import { computed } from 'vue'
 import { useI18n } from '~/composables/useI18n'
+import { useLineClock, type LineStep } from '~/composables/useLineClock'
 
 type StageNumber = 1 | 2 | 3 | 4 | 5
 
@@ -64,6 +65,54 @@ const guessAt = (k: number) => 0.8 + k * 1.2
 const fishColors = ['sky', 'text-muted', 'mint', 'lavender']
 const walkAt = (i: number) => 0.7 + i * 1.0
 
+/**
+ * A `while` is its condition, so the panel goes back to the `while` line before
+ * every pass — including the last check, the one that ends the loop and hands
+ * control to the line underneath.
+ */
+const schedule = computed<LineStep[]>(() => {
+  const steps: LineStep[] = []
+  switch (props.stage) {
+    case 2:
+      [0, 1, 2].forEach((k) => {
+        steps.push(
+          { at: biteAt(k), line: 2 },
+          { at: biteAt(k) + 0.3, line: 3 },
+          { at: biteAt(k) + 0.6, line: 4 },
+        )
+      })
+      steps.push({ at: biteAt(3), line: 2 }, { at: biteAt(3) + 0.4, line: 5 })
+      break
+    case 3:
+      RUNAWAY_AT.forEach((time, k) => {
+        steps.push({ at: time, line: k % 2 === 0 ? 2 : 3 })
+      })
+      break
+    case 4:
+      GUESSES.forEach((guess, k) => {
+        steps.push(
+          { at: guessAt(k), line: 3 },
+          { at: guessAt(k) + 0.35, line: 4 },
+          { at: guessAt(k) + 0.6, line: guess === SECRET ? 5 : 7 },
+        )
+        if (guess === SECRET) steps.push({ at: guessAt(k) + 0.9, line: 6 })
+      })
+      break
+    case 5:
+      fishColors.forEach((_, i) => {
+        const rotten = i === 1
+        steps.push(
+          { at: walkAt(i), line: 2 },
+          { at: walkAt(i) + 0.2, line: 3 },
+          { at: walkAt(i) + 0.4, line: rotten ? 4 : 5 },
+        )
+      })
+      break
+  }
+  return steps
+})
+const line = useLineClock(() => schedule.value, () => props.stage)
+
 const outputDelays = computed(() => {
   switch (props.stage) {
     case 2: return [biteAt(0) + 0.75, biteAt(1) + 0.75, biteAt(2) + 0.75, biteAt(3) + 0.7]
@@ -87,7 +136,7 @@ const show = (...list: number[]) => list.includes(props.stage)
     :code="current.code"
     :variant="current.variant ?? 'python'"
     :file="t('loops.while.file')"
-    :focus="current.focus"
+    :focus="line ? [line] : current.focus"
     :output="current.output"
     :output-from="current.outputFrom"
     :output-delays="outputDelays"
