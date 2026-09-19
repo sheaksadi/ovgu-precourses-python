@@ -4,11 +4,14 @@
  * Auto-imported as `<IntroAboutMe />`.
  *
  * It exists for one reason: the room is about to be asked to introduce
- * themselves, and it is easier to do that after someone else has gone first.
- * So this is a short hello, not a portfolio — a few lines on the left, and on
- * the right the path from Minecraft mods in a lockdown to writing Rust at the
- * university. The path is the point: it starts at zero, which is where the room
- * is starting too.
+ * themselves, and that is easier once someone else has gone first. So it is a
+ * hello, not a portfolio — a name, one line, and the path from Minecraft mods
+ * in a lockdown to Rust at the university.
+ *
+ * The path is the point, so the path is what moves: the thread draws itself
+ * downwards and each stop lands as the line reaches it, the way the demos
+ * elsewhere in the deck play. Everything else is deliberately short — the
+ * talking happens in the room, not on the slide.
  *
  * Words come from `me.*` in `locales/`, lifted from the portfolio site's own
  * wording so both say the same thing.
@@ -29,57 +32,70 @@ interface Chip {
 
 const { t, tm } = useI18n()
 
-const lines = computed(() => tm<string[]>('me.lines'))
 const path = computed(() => tm<Step[]>('me.path'))
 const chips = computed(() => tm<Chip[]>('me.chips'))
 
-/** The deck's rule, in its order: one colour per step of the path. */
+/** The deck's rule, in its order: one colour per stop. */
 const COLOURS = ['coral', 'sun', 'mint', 'sky', 'lavender']
 const colourOf = (index: number) => `var(--${COLOURS[index % COLOURS.length]})`
+
+/** The thread reaches a stop, then the stop lands. One rhythm for the whole path. */
+const STEP = 0.45
+const START = 0.7
+const at = (index: number) => START + index * STEP
+const drawFor = computed(() => path.value.length * STEP + 0.3)
 </script>
 
 <template>
   <div class="me">
-    <div class="wash" aria-hidden="true"></div>
-
-    <header class="me-head">
-      <div class="rule" aria-hidden="true">
-        <span v-for="colour in COLOURS" :key="colour" :style="{ background: `var(--${colour})` }"></span>
-      </div>
-      <span class="me-eyebrow">{{ t('me.eyebrow') }}</span>
-      <h2 class="me-name">{{ t('me.name') }}</h2>
-      <p class="me-role">{{ t('me.role') }}</p>
-    </header>
+    <div class="wash wash-warm" aria-hidden="true"></div>
+    <div class="wash wash-cool" aria-hidden="true"></div>
 
     <div class="me-body">
-      <div class="me-said">
-        <p v-for="(line, index) in lines" :key="index" class="me-line" :style="{ '--t': `${0.35 + index * 0.12}s` }">
-          {{ line }}
+      <section class="me-said">
+        <div class="rule" aria-hidden="true">
+          <span v-for="(colour, index) in COLOURS" :key="colour" :style="{ background: `var(--${colour})`, '--t': `${index * 0.06}s` }"></span>
+        </div>
+
+        <span class="me-eyebrow">{{ t('me.eyebrow') }}</span>
+
+        <h2 class="me-name">
+          <span class="name-text">{{ t('me.name') }}</span>
+          <span class="name-sweep" aria-hidden="true"></span>
+        </h2>
+
+        <p class="me-role">{{ t('me.role') }}</p>
+        <p class="me-kicker">{{ t('me.kicker') }}</p>
+
+        <p class="me-punch">
+          <span class="punch-mark" aria-hidden="true"></span>
+          {{ t('me.punch') }}
         </p>
 
         <div class="me-chips">
-          <span class="chips-label">{{ t('me.chipsLabel') }}</span>
           <span
             v-for="(chip, index) in chips"
             :key="chip.text"
             class="chip"
-            :style="{ '--t': `${0.8 + index * 0.08}s` }"
+            :style="{ '--t': `${1.5 + index * 0.1}s` }"
           >
             <Icon :name="chip.icon" aria-hidden="true" />
             {{ chip.text }}
           </span>
         </div>
-      </div>
+      </section>
 
-      <!-- The path: it starts at zero, which is the whole reason it is on the slide. -->
-      <div class="me-path">
+      <!-- The path starts at zero, which is the whole reason it is on the slide. -->
+      <section class="me-path">
         <span class="path-label">{{ t('me.pathLabel') }}</span>
-        <ol class="path-list">
+
+        <ol class="path-list" :style="{ '--draw': `${drawFor}s` }">
+          <span class="path-thread" aria-hidden="true"></span>
           <li
             v-for="(step, index) in path"
             :key="step.year"
             class="step"
-            :style="{ '--accent': colourOf(index), '--t': `${0.5 + index * 0.12}s` }"
+            :style="{ '--accent': colourOf(index), '--t': `${at(index)}s` }"
           >
             <span class="step-dot" aria-hidden="true"></span>
             <span class="step-year">{{ step.year }}</span>
@@ -89,7 +105,7 @@ const colourOf = (index: number) => `var(--${COLOURS[index % COLOURS.length]})`
             </span>
           </li>
         </ol>
-      </div>
+      </section>
     </div>
 
     <p class="me-note">{{ t('me.note') }}</p>
@@ -107,168 +123,215 @@ const colourOf = (index: number) => `var(--${COLOURS[index % COLOURS.length]})`
   overflow: hidden;
 }
 
+/* Two soft colour fields, drifting, so the slide is not a white sheet. */
 .wash {
   position: absolute;
-  inset: auto -12vw -24vh auto;
-  width: 44vw;
-  height: 44vw;
   border-radius: 50%;
+  pointer-events: none;
+  animation: drift 18s ease-in-out infinite alternate;
+}
+.wash-warm {
+  right: -14vw;
+  top: -20vh;
+  width: 48vw;
+  height: 48vw;
   background: radial-gradient(
     circle at 50% 50%,
-    color-mix(in srgb, var(--coral) 18%, transparent),
-    color-mix(in srgb, var(--sun) 10%, transparent) 55%,
+    color-mix(in srgb, var(--coral) 26%, transparent),
+    color-mix(in srgb, var(--sun) 12%, transparent) 55%,
     transparent 72%
   );
-  pointer-events: none;
 }
-
-.me-head {
-  position: relative;
-}
-.rule {
-  display: flex;
-  gap: 0.4vw;
-  margin-bottom: 1.6vh;
-}
-.rule span {
-  height: 0.55vh;
-  width: 2.4vw;
-  border-radius: 999px;
-  animation: rise 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
-}
-.rule span:nth-child(2) { animation-delay: 0.05s; }
-.rule span:nth-child(3) { animation-delay: 0.1s; }
-.rule span:nth-child(4) { animation-delay: 0.15s; }
-.rule span:nth-child(5) { animation-delay: 0.2s; }
-
-.me-eyebrow {
-  font-size: clamp(0.5rem, 1.3vh, 0.85rem);
-  font-weight: 800;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--text-muted);
-}
-.me-name {
-  margin-top: 0.4vh;
-  font-size: clamp(1.6rem, 5.4vh, 3.6rem);
-  font-weight: 800;
-  line-height: 1;
-  letter-spacing: -0.03em;
-  color: var(--text);
-  animation: rise 0.5s cubic-bezier(0.22, 1, 0.36, 1) 0.1s both;
-}
-.me-role {
-  margin-top: 0.8vh;
-  font-size: clamp(0.65rem, 1.8vh, 1.1rem);
-  font-weight: 600;
-  color: var(--text-dim);
-  animation: rise 0.5s cubic-bezier(0.22, 1, 0.36, 1) 0.18s both;
+.wash-cool {
+  left: 34vw;
+  bottom: -30vh;
+  width: 40vw;
+  height: 40vw;
+  background: radial-gradient(
+    circle at 50% 50%,
+    color-mix(in srgb, var(--sky) 22%, transparent),
+    color-mix(in srgb, var(--lavender) 12%, transparent) 55%,
+    transparent 72%
+  );
+  animation-delay: -9s;
 }
 
 .me-body {
   position: relative;
   flex: 1;
   min-height: 0;
-  margin-top: 4vh;
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 3vw;
-  /* Follows the header rather than floating in the middle of the slide. */
-  align-content: start;
+  grid-template-columns: 1.05fr 1fr;
+  gap: 4vw;
+  align-content: center;
 }
 
-.me-line {
-  margin-bottom: 1.4vh;
-  max-width: 44ch;
-  font-size: clamp(0.68rem, 1.9vh, 1.15rem);
-  line-height: 1.45;
-  color: var(--text);
-  animation: rise 0.45s cubic-bezier(0.22, 1, 0.36, 1) var(--t) both;
+/* ─── Left: who ──────────────────────────────────────────────────────── */
+.rule {
+  display: flex;
+  gap: 0.4vw;
+  margin-bottom: 2vh;
 }
-.me-line:last-of-type {
+.rule span {
+  height: 0.6vh;
+  width: 2.6vw;
+  border-radius: 999px;
+  animation: sweep-in 0.5s cubic-bezier(0.22, 1, 0.36, 1) var(--t) both;
+  transform-origin: left center;
+}
+
+.me-eyebrow {
+  display: block;
+  font-size: clamp(0.5rem, 1.3vh, 0.85rem);
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  animation: rise 0.45s ease 0.1s both;
+}
+
+.me-name {
+  position: relative;
+  display: inline-block;
+  margin-top: 0.6vh;
+  font-size: clamp(2rem, 8vh, 5rem);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.035em;
+  color: var(--text);
+}
+.name-text {
+  position: relative;
+  display: inline-block;
+  animation: rise-big 0.6s cubic-bezier(0.22, 1, 0.36, 1) 0.15s both;
+}
+/* A colour sweep that runs under the name once it has landed. */
+.name-sweep {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -0.6vh;
+  height: 0.7vh;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--coral), var(--sun), var(--mint), var(--sky), var(--lavender));
+  transform-origin: left center;
+  animation: sweep-in 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.5s both;
+}
+
+.me-role {
+  margin-top: 2.2vh;
+  font-family: var(--font-code);
+  font-size: clamp(0.6rem, 1.7vh, 1.05rem);
+  font-weight: 700;
   color: var(--text-dim);
+  animation: rise 0.5s cubic-bezier(0.22, 1, 0.36, 1) 0.6s both;
+}
+.me-kicker {
+  margin-top: 1.4vh;
+  font-size: clamp(0.75rem, 2.2vh, 1.4rem);
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--text);
+  animation: rise 0.5s cubic-bezier(0.22, 1, 0.36, 1) 0.75s both;
+}
+
+.me-punch {
+  position: relative;
+  margin-top: 2.2vh;
+  padding-left: 1.6vh;
+  max-width: 34ch;
+  font-size: clamp(0.68rem, 2vh, 1.25rem);
+  font-weight: 700;
+  line-height: 1.35;
+  color: var(--text);
+  animation: rise 0.5s cubic-bezier(0.22, 1, 0.36, 1) 1.1s both;
+}
+.punch-mark {
+  position: absolute;
+  left: 0;
+  top: 0.35em;
+  bottom: 0.2em;
+  width: 0.45vh;
+  border-radius: 999px;
+  background: var(--coral);
+  transform-origin: top center;
+  animation: grow-down 0.45s cubic-bezier(0.22, 1, 0.36, 1) 1.25s both;
 }
 
 .me-chips {
   display: flex;
   flex-wrap: wrap;
-  align-items: center;
-  gap: 0.6vh 0.8vh;
-  margin-top: 2vh;
-}
-.chips-label {
-  width: 100%;
-  font-size: clamp(0.45rem, 1.15vh, 0.72rem);
-  font-weight: 800;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--text-muted);
+  gap: 0.7vh;
+  margin-top: 2.6vh;
 }
 .chip {
   display: inline-flex;
   align-items: center;
   gap: 0.5vh;
-  padding: 0.45vh 1vh;
+  padding: 0.5vh 1.1vh;
   border-radius: 999px;
   background: var(--bg-off);
   border: 1px solid var(--border);
   font-size: clamp(0.5rem, 1.35vh, 0.88rem);
   font-weight: 600;
   color: var(--text-dim);
-  animation: rise 0.4s cubic-bezier(0.22, 1, 0.36, 1) var(--t) both;
+  animation: pop 0.4s cubic-bezier(0.22, 1, 0.36, 1) var(--t) both;
 }
 
-/* ─── The path ───────────────────────────────────────────────────────── */
+/* ─── Right: the path ────────────────────────────────────────────────── */
 .me-path {
   min-width: 0;
 }
 .path-label {
   display: block;
-  margin-bottom: 1.2vh;
+  margin-bottom: 1.6vh;
   font-size: clamp(0.45rem, 1.15vh, 0.72rem);
   font-weight: 800;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--text-muted);
+  animation: rise 0.4s ease 0.55s both;
 }
 .path-list {
   position: relative;
   display: flex;
   flex-direction: column;
-  gap: 1.1vh;
-  padding-left: 1.6vh;
+  gap: 1.8vh;
+  padding-left: 2.2vh;
 }
-/* The thread the dots sit on. */
-.path-list::before {
-  content: '';
+/* Drawn from the top down, so the path arrives stop by stop. */
+.path-thread {
   position: absolute;
   top: 1vh;
   bottom: 1vh;
-  left: 0.55vh;
+  left: 0.75vh;
   width: 2px;
-  background: var(--border);
+  background: linear-gradient(180deg, var(--coral), var(--sun), var(--mint), var(--sky), var(--lavender));
+  transform-origin: top center;
+  animation: grow-down var(--draw) linear 0.55s both;
 }
+
 .step {
   position: relative;
   display: grid;
   grid-template-columns: 6.5ch 1fr;
   align-items: baseline;
-  gap: 1vh;
-  animation: rise 0.45s cubic-bezier(0.22, 1, 0.36, 1) var(--t) both;
+  gap: 1.1vh;
+  animation: step-in 0.5s cubic-bezier(0.22, 1, 0.36, 1) var(--t) both;
 }
 .step-dot {
   position: absolute;
-  left: -1.35vh;
-  top: 0.55vh;
-  width: 1.1vh;
-  height: 1.1vh;
+  left: -1.75vh;
+  top: 0.5vh;
+  width: 1.3vh;
+  height: 1.3vh;
   border-radius: 999px;
   background: var(--accent);
-  box-shadow: 0 0 0 0.35vh color-mix(in srgb, var(--accent) 20%, transparent);
+  animation: dot-pop 0.45s cubic-bezier(0.22, 1, 0.36, 1) var(--t) both;
 }
 .step-year {
   font-family: var(--font-code);
-  font-size: clamp(0.5rem, 1.4vh, 0.9rem);
+  font-size: clamp(0.52rem, 1.45vh, 0.95rem);
   font-weight: 800;
   color: var(--accent);
 }
@@ -278,37 +341,82 @@ const colourOf = (index: number) => `var(--${COLOURS[index % COLOURS.length]})`
   min-width: 0;
 }
 .step-what {
-  font-size: clamp(0.62rem, 1.75vh, 1.05rem);
+  font-size: clamp(0.68rem, 2vh, 1.2rem);
   font-weight: 800;
   color: var(--text);
 }
 .step-how {
-  font-size: clamp(0.52rem, 1.4vh, 0.9rem);
+  font-size: clamp(0.52rem, 1.45vh, 0.92rem);
   line-height: 1.35;
   color: var(--text-dim);
+}
+/* The last stop is where the story is now, so it is the one that is filled in. */
+.step:last-child .step-what {
+  /* The pill hugs the words instead of running to the edge of the slide. */
+  align-self: flex-start;
+  padding: 0.2vh 0.9vh;
+  margin-left: -0.9vh;
+  border-radius: 0.7vh;
+  background: color-mix(in srgb, var(--accent) 20%, var(--bg));
 }
 
 .me-note {
   position: relative;
-  margin-top: 1.6vh;
-  font-size: clamp(0.5rem, 1.4vh, 0.9rem);
+  margin-top: 1.4vh;
+  font-size: clamp(0.48rem, 1.35vh, 0.85rem);
   color: var(--text-muted);
-  animation: rise 0.45s ease 1.2s both;
+  animation: rise 0.45s ease 2s both;
 }
 
 @keyframes rise {
   from { opacity: 0; translate: 0 1.2vh; }
   to { opacity: 1; translate: 0 0; }
 }
+@keyframes rise-big {
+  from { opacity: 0; translate: 0 2.4vh; }
+  to { opacity: 1; translate: 0 0; }
+}
+@keyframes sweep-in {
+  from { opacity: 0; scale: 0 1; }
+  to { opacity: 1; scale: 1 1; }
+}
+@keyframes grow-down {
+  from { scale: 1 0; }
+  to { scale: 1 1; }
+}
+@keyframes step-in {
+  from { opacity: 0; translate: 1.4vh 0; }
+  to { opacity: 1; translate: 0 0; }
+}
+@keyframes dot-pop {
+  from { opacity: 0; scale: 0; }
+  60% { scale: 1.35; }
+  to { opacity: 1; scale: 1; }
+}
+@keyframes pop {
+  from { opacity: 0; scale: 0.85; }
+  to { opacity: 1; scale: 1; }
+}
+@keyframes drift {
+  from { translate: 0 0; }
+  to { translate: -3vw 2vh; }
+}
 
 /* A phone reads it as one column, the path underneath. */
 @media (max-width: 760px) {
   .me-body {
     grid-template-columns: minmax(0, 1fr);
-    gap: 2.4vh;
+    gap: 3vh;
+    align-content: start;
   }
   .wash {
     display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wash {
+    animation: none;
   }
 }
 </style>
