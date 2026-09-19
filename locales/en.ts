@@ -765,6 +765,25 @@ else:
       mineCounts: ['100', '10,000', '1,000,000'],
       builtinCounts: ['30', '700', '10,000'],
     },
+    big: {
+      eyebrow: 'At full size',
+      swaps: 'swaps',
+      values: 'values',
+      running: 'running',
+      done: 'done',
+      bubble: {
+        name: 'Bubble sort',
+        rule: 'Compare two neighbours and swap when the left one is bigger. The largest value rises to the end in every pass.',
+      },
+      selection: {
+        name: 'Selection sort',
+        rule: 'Look for the smallest value in what is left and move it to the front. Few swaps, just as many comparisons.',
+      },
+      insertion: {
+        name: 'Insertion sort',
+        rule: 'Push every value left until it fits, like cards in your hand. On nearly sorted data the fastest of the three.',
+      },
+    },
     oneLine: 'one line',
     stages: [
       {

@@ -769,6 +769,25 @@ else:
       mineCounts: ['100', '10.000', '1.000.000'],
       builtinCounts: ['30', '700', '10.000'],
     },
+    big: {
+      eyebrow: 'In voller Größe',
+      swaps: 'Tausche',
+      values: 'Werte',
+      running: 'läuft',
+      done: 'fertig',
+      bubble: {
+        name: 'Bubble Sort',
+        rule: 'Immer zwei Nachbarn vergleichen und tauschen, wenn der linke größer ist. Der größte Wert steigt in jedem Durchlauf nach hinten.',
+      },
+      selection: {
+        name: 'Selection Sort',
+        rule: 'Im Rest den kleinsten Wert suchen und nach vorne holen. Wenig Tausche, aber genauso viele Vergleiche.',
+      },
+      insertion: {
+        name: 'Insertion Sort',
+        rule: 'Jeden Wert so weit nach links schieben, bis er passt – wie Karten auf der Hand. Bei fast sortierten Daten die schnellste der drei.',
+      },
+    },
     oneLine: 'eine Zeile',
     stages: [
       {

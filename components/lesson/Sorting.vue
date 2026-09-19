@@ -23,6 +23,7 @@
  */
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useI18n } from '~/composables/useI18n'
+import { sortFrames, type SortFrame, type SortLines } from '~/utils/sorting'
 
 type StageNumber = 1 | 2 | 3 | 4 | 5 | 6 | 7
 
@@ -33,21 +34,6 @@ interface Stage {
   focus: number[]
   output: string[]
   outputFrom: number
-}
-
-/** One moment of a run: where every value stands, and what is being looked at. */
-interface Frame {
-  order: number[]
-  /** The two positions being compared, or -1. */
-  a: number
-  b: number
-  /** True when this frame is the result of a swap. */
-  swap: boolean
-  /** How many positions are final, counted from the left and from the right. */
-  left: number
-  right: number
-  compares: number
-  pass: number
 }
 
 const props = defineProps<{ stage: StageNumber }>()
@@ -74,7 +60,19 @@ const value = (id: number) => VALUES[id]!
 const ids = VALUES.map((_, i) => i)
 const sortedIds = [...ids].sort((x, y) => value(x) - value(y))
 
-const frame = (order: number[], rest: Partial<Frame> = {}): Frame => ({
+/**
+ * Which line each kind of moment lights, per stage. The scene and the code are
+ * the same run seen twice, so the panel must follow the bars line by line.
+ */
+const LINES: Record<number, SortLines> = {
+  2: { compare: 3, swap: 4, done: 1 },
+  3: { compare: 4, swap: 5, done: 6 },
+  4: { compare: 4, swap: 6, done: 6 },
+  5: { compare: 4, swap: 5, done: 7 },
+}
+
+/** A still frame, for the stages that only show a before and an after. */
+const still = (order: number[], rest: Partial<SortFrame> = {}): SortFrame => ({
   order: [...order],
   a: -1,
   b: -1,
@@ -82,83 +80,22 @@ const frame = (order: number[], rest: Partial<Frame> = {}): Frame => ({
   left: 0,
   right: 0,
   compares: 0,
+  swaps: 0,
   pass: 0,
+  line: 0,
   ...rest,
 })
 
-/** Bubble sort, recorded: the largest value rises to the end of each pass. */
-const bubbleFrames = (): Frame[] => {
-  const arr = [...ids]
-  const out: Frame[] = [frame(arr)]
-  let compares = 0
-  for (let i = 0; i < N - 1; i++) {
-    for (let j = 0; j < N - 1 - i; j++) {
-      compares++
-      out.push(frame(arr, { a: j, b: j + 1, right: i, compares, pass: i + 1 }))
-      if (value(arr[j]!) > value(arr[j + 1]!)) {
-        ;[arr[j], arr[j + 1]] = [arr[j + 1]!, arr[j]!]
-        out.push(frame(arr, { a: j, b: j + 1, swap: true, right: i, compares, pass: i + 1 }))
-      }
-    }
-  }
-  out.push(frame(arr, { left: N, compares, pass: N - 1 }))
-  return out
-}
-
-/** Selection sort: the finished part grows on the left. */
-const selectionFrames = (): Frame[] => {
-  const arr = [...ids]
-  const out: Frame[] = [frame(arr)]
-  let compares = 0
-  for (let i = 0; i < N - 1; i++) {
-    let min = i
-    for (let j = i + 1; j < N; j++) {
-      compares++
-      out.push(frame(arr, { a: min, b: j, left: i, compares, pass: i + 1 }))
-      if (value(arr[j]!) < value(arr[min]!)) min = j
-    }
-    if (min !== i) {
-      ;[arr[i], arr[min]] = [arr[min]!, arr[i]!]
-      out.push(frame(arr, { a: i, b: min, swap: true, left: i, compares, pass: i + 1 }))
-    }
-  }
-  out.push(frame(arr, { left: N, compares, pass: N - 1 }))
-  return out
-}
-
-/** Insertion sort, as the adjacent slides it really is. */
-const insertionFrames = (): Frame[] => {
-  const arr = [...ids]
-  const out: Frame[] = [frame(arr)]
-  let compares = 0
-  for (let i = 1; i < N; i++) {
-    let j = i
-    while (j > 0 && value(arr[j - 1]!) > value(arr[j]!)) {
-      compares++
-      out.push(frame(arr, { a: j - 1, b: j, left: i, compares, pass: i }))
-      ;[arr[j - 1], arr[j]] = [arr[j]!, arr[j - 1]!]
-      out.push(frame(arr, { a: j - 1, b: j, swap: true, left: i, compares, pass: i }))
-      j--
-    }
-    if (j > 0) {
-      compares++
-      out.push(frame(arr, { a: j - 1, b: j, left: i + 1, compares, pass: i }))
-    }
-  }
-  out.push(frame(arr, { left: N, compares, pass: N - 1 }))
-  return out
-}
-
 /** The whole run of this stage, and how fast it plays. */
-const run = computed<{ frames: Frame[], speed: number }>(() => {
+const run = computed<{ frames: SortFrame[], speed: number }>(() => {
   switch (props.stage) {
-    case 1: return { frames: [frame(ids), frame(sortedIds, { left: N })], speed: 1500 }
-    case 2: return { frames: bubbleFrames(), speed: 620 }
-    case 3: return { frames: bubbleFrames(), speed: 380 }
-    case 4: return { frames: selectionFrames(), speed: 380 }
-    case 5: return { frames: insertionFrames(), speed: 380 }
-    case 7: return { frames: [frame(ids), frame(sortedIds, { left: N })], speed: 900 }
-    default: return { frames: [frame(sortedIds, { left: N })], speed: 0 }
+    case 1: return { frames: [still(ids), still(sortedIds, { left: N })], speed: 1500 }
+    case 2: return { frames: sortFrames(VALUES, 'bubble', LINES[2]!), speed: 620 }
+    case 3: return { frames: sortFrames(VALUES, 'bubble', LINES[3]!), speed: 480 }
+    case 4: return { frames: sortFrames(VALUES, 'selection', LINES[4]!), speed: 480 }
+    case 5: return { frames: sortFrames(VALUES, 'insertion', LINES[5]!), speed: 480 }
+    case 7: return { frames: [still(ids), still(sortedIds, { left: N })], speed: 900 }
+    default: return { frames: [still(sortedIds, { left: N })], speed: 0 }
   }
 })
 
@@ -209,6 +146,9 @@ onBeforeUnmount(() => {
   window.removeEventListener('keydown', onKey)
 })
 
+/** The code line this frame is running, or the stage's fixed one. */
+const lit = computed(() => (now.value.line ? [now.value.line] : current.value.focus))
+
 /** A bar's role in this frame, which is all the colour it needs. */
 const roleOf = (id: number) => {
   const place = places.value[id]!
@@ -228,7 +168,7 @@ const roleOf = (id: number) => {
     :code="current.code"
     :variant="stage === 2 ? 'pseudo' : 'python'"
     :file="t('sorting.file')"
-    :focus="current.focus"
+    :focus="lit"
     :output="current.output"
     :output-from="current.outputFrom"
     :dense="stage === 3 || stage === 5"
