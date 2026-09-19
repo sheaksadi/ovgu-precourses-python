@@ -187,12 +187,33 @@ export function tokenizeCode(source: string): CodeLine[] {
           if (text === '(' || text === '[' || text === '{') bracketDepth += 1
         }
 
-        const link = conceptOf(finalKind, text)
-        const base = link ?? `${finalKind}:${text}`
-        const occurrence = (seen.get(base) ?? 0) + 1
-        seen.set(base, occurrence)
+        const push = (piece: string, pieceKind: TokenKind, pieceDepth?: number) => {
+          const link = conceptOf(pieceKind, piece)
+          const base = link ?? `${pieceKind}:${piece}`
+          const occurrence = (seen.get(base) ?? 0) + 1
+          seen.set(base, occurrence)
+          tokens.push({ text: piece, kind: pieceKind, link, depth: pieceDepth, key: `${base}#${occurrence}` })
+        }
 
-        tokens.push({ text, kind: finalKind, link, depth, key: `${base}#${occurrence}` })
+        // An f-string is two things at once: the text, and the values dropped
+        // into it. Colouring the whole thing as a string hides the names, and a
+        // name that looks like part of the text is the one thing this slide has
+        // to show, so the braces and what is inside them are split back out.
+        if (finalKind === 'string' && /^[fF]/.test(text)) {
+          for (const piece of text.split(/(\{[^{}]*\})/).filter(Boolean)) {
+            if (!/^\{[^{}]*\}$/.test(piece)) {
+              push(piece, 'string')
+              continue
+            }
+            push('{', 'bracket', bracketDepth)
+            const inner = piece.slice(1, -1)
+            if (inner) push(inner, PY_KEYWORDS.has(inner) ? 'keyword' : 'name')
+            push('}', 'bracket', bracketDepth)
+          }
+          break
+        }
+
+        push(text, finalKind, depth)
         break
       }
 
