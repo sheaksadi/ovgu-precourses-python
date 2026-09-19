@@ -272,8 +272,31 @@ const who = computed(() => {
     : t('intro.spunBy', { name: shownName.value })
 })
 
-/** Who spun before the one on the reel, newest first. */
-const earlier = computed(() => spins.history.value.filter(record => record.sequence !== shown.value?.sequence).slice(0, 6))
+/**
+ * Who has spun already: each person once, most recent first. Spinning twice
+ * does not put a name on the list twice — the list answers "whose turn has
+ * been", not "how many spins were there".
+ */
+/**
+ * Keyed by the shown name, not by the device: the list says who has had a turn,
+ * and two phones that call themselves the same thing are one turn to the room.
+ */
+const whoOf = (record: SpinRecord) => spins.nameOf(record).trim().toLowerCase()
+
+const earlier = computed(() => {
+  const seen = new Set<string>()
+  // While the credit under the reel names them, they are not "earlier" yet.
+  if (credited.value && shown.value) seen.add(whoOf(shown.value))
+  const out: SpinRecord[] = []
+  for (const record of spins.history.value) {
+    const who = whoOf(record)
+    if (seen.has(who)) continue
+    seen.add(who)
+    out.push(record)
+    if (out.length === 6) break
+  }
+  return out
+})
 
 /* ─── Events ─────────────────────────────────────────────────────────── */
 const onKey = (event: KeyboardEvent) => {
