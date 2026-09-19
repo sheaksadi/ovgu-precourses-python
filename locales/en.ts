@@ -1477,6 +1477,8 @@ else:
     output: 'Output',
     noOutput: 'no output yet',
     animals: ['Momo', 'Bello', 'Hoppel'],
+    fileName: 'tiere.txt',
+    fileWords: { whole: 'all at once', line: 'line by line', strip: 'strip() cuts this off', text: 'text' },
     stages: [
       {
         headline: 'Python has a shelf full of books.',
@@ -1503,6 +1505,24 @@ else:
         code: 'from math import sqrt\nimport statistics as st\n\nprint(sqrt(25))\nprint(st.mean([2, 4, 9]))',
         focus: [],
         output: ['5.0', '5'],
+        outputFrom: 0,
+      },
+      {
+        headline: 'Reading a file.',
+        note: '`open` opens the file, `read` fetches the whole text. The `with` closes it again by itself – which is why it is written this way and not another.',
+        tally: 'open · read',
+        code: 'with open("tiere.txt") as datei:\n    text = datei.read()\n\nprint(text)',
+        focus: [2],
+        output: ['Momo', 'Bello', 'Hoppel'],
+        outputFrom: 0,
+      },
+      {
+        headline: 'Line by line through the file.',
+        note: 'An open file can be walked like a list: every pass is one line. `strip()` cuts off the invisible line break at the end.',
+        tally: 'for zeile in datei',
+        code: 'with open("tiere.txt") as datei:\n    for zeile in datei:\n        print(zeile.strip())',
+        focus: [2, 3],
+        output: ['Momo', 'Bello', 'Hoppel'],
         outputFrom: 0,
       },
     ],
@@ -1963,7 +1983,7 @@ else:
     catapi: {
       title: 'How do you know the address?',
       steps: ['Search for the API', 'Open the documentation', 'Read the response shape'],
-      tip: 'Every API has a page like this: the address, the options, and what the answer looks like. The shape below is exactly what arrives in Python next.',
+      tip: 'Every API has a page like this: the address, the options, and what the answer looks like. The shape below is exactly what arrived in Python a moment ago.',
     },
     builtins: {
       title: 'How do you know what exists?',

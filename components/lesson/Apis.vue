@@ -14,7 +14,7 @@
  * Stage 4 is the only slide in the deck that goes online. Without a network it
  * shows Momo and says so. Words come from `apis.*` in `locales/`.
  */
-import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useI18n } from '~/composables/useI18n'
 import { useDeckRole } from '~/composables/useDeckRole'
 import { useWebSocket } from '~/composables/useWebSocket'
@@ -53,6 +53,7 @@ const cats = useCats()
 const canAsk = computed(() => props.stage === 4 && isViewer.value && !isPeek.value && !isProjector.value)
 
 const image = computed(() => cats.current.value?.url ?? null)
+const pending = computed(() => cats.pending.value)
 const imageId = computed(() => cats.current.value?.id ?? '')
 const failed = computed(() => cats.failed.value)
 const loading = computed(() => cats.waiting.value)
@@ -82,6 +83,8 @@ const shorten = (url: string) => (url.length > 44 ? `${url.slice(0, 26)}…${url
 
 const output = computed(() => {
   if (props.stage !== 4) return current.value.output
+  // While the request is out, the panel waits with the code.
+  if (pending.value) return ['…']
   if (failed.value && !image.value) return [words.value.offline]
   return image.value ? [imageId.value, shorten(image.value)] : ['…']
 })
@@ -90,10 +93,58 @@ const outputDelays = computed(() => {
   switch (props.stage) {
     case 2: return [2.4]
     case 3: return [2.6, 3.0]
-    case 4: return [0.1, 0.2]
+    // The two printed lines land with the two `print` lines of the trace.
+    case 4: return [TRACE_PRINT, TRACE_PRINT + 0.5]
     default: return undefined
   }
 })
+
+/* ─── Stage 4: the interpreter, traced against a real request ───────────
+   The room presses the button, the request goes out, and the answer comes
+   back when it comes back. So the trace is not a timed script: it walks to
+   the `requests.get` line, waits there for as long as the network takes,
+   and only then carries on to the two `print` lines. */
+const TRACE_PRINT = 0.35
+/** How long the walk out to the request line takes. */
+const TRACE_OUT = 0.5
+const traced = ref(0)
+let traceTimers: ReturnType<typeof setTimeout>[] = []
+/** When the request line is reached, so a fast answer cannot overtake it. */
+let outUntil = 0
+
+const clearTrace = () => {
+  traceTimers.forEach(clearTimeout)
+  traceTimers = []
+}
+
+/** Schedule steps. Steps already waiting stay: they are earlier in the run. */
+const walk = (steps: Array<{ at: number, line: number }>) => {
+  steps.forEach((step) => {
+    traceTimers.push(setTimeout(() => { traced.value = step.line }, step.at * 1000))
+  })
+}
+
+// Out: the import, the address, and then the call, where it stops.
+watch(pending, (now) => {
+  if (props.stage !== 4 || !now) return
+  clearTrace()
+  traced.value = 1
+  outUntil = Date.now() + TRACE_OUT * 1000
+  walk([{ at: TRACE_OUT / 2, line: 3 }, { at: TRACE_OUT, line: 4 }])
+})
+
+// Back: the answer arrived, so the two prints run — unless it failed, in
+// which case the request line keeps the highlight and the panel says why.
+watch(() => cats.answers.value, () => {
+  if (props.stage !== 4 || !traced.value) return
+  if (failed.value) { clearTrace(); traced.value = 4; return }
+  // An answer that comes back in a few milliseconds still waits for the walk
+  // out to finish, so the room sees the request leave before it returns.
+  const hold = Math.max(0, outUntil - Date.now()) / 1000
+  walk([{ at: hold + TRACE_PRINT, line: 5 }, { at: hold + TRACE_PRINT + 0.5, line: 6 }])
+})
+
+onBeforeUnmount(clearTrace)
 </script>
 
 <template>
@@ -106,7 +157,7 @@ const outputDelays = computed(() => {
     :code="current.code"
     :variant="current.variant ?? 'python'"
     :file="t('apis.file')"
-    :focus="current.focus"
+    :focus="traced ? [traced] : current.focus"
     :output="output"
     :output-from="current.outputFrom"
     :output-delays="outputDelays"

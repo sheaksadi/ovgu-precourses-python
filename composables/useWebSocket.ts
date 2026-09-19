@@ -201,6 +201,9 @@ export const useWebSocket = () => {
         else if (data.type === 'cat_state') {
           cats.applyState(data)
         }
+        else if (data.type === 'cat_pending') {
+          cats.markPending()
+        }
         else if (data.type === 'cat_busy') {
           cats.clearWaiting()
         }

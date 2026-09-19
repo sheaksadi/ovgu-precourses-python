@@ -29,6 +29,8 @@ export default defineEventHandler(async (event) => {
 
   // The live cat is fetched here too, so every screen shows the same one.
   if (isSlideAction && body.action === 'cat') {
+    // The room traces the request line while it is out; say that it started.
+    if (!catRoom.busy()) wsManager.broadcast({ type: 'cat_pending', by: null, at: Date.now() })
     const cat = await catRoom.next(null)
     if (cat) wsManager.broadcast(cat)
     return cat ?? { type: 'cat_busy' }

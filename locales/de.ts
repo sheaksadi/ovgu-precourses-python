@@ -1481,6 +1481,8 @@ else:
     output: 'Ausgabe',
     noOutput: 'noch keine Ausgabe',
     animals: ['Momo', 'Bello', 'Hoppel'],
+    fileName: 'tiere.txt',
+    fileWords: { whole: 'alles auf einmal', line: 'Zeile für Zeile', strip: 'strip() schneidet das ab', text: 'text' },
     stages: [
       {
         headline: 'Python hat ein Regal voller Bücher.',
@@ -1507,6 +1509,24 @@ else:
         code: 'from math import sqrt\nimport statistics as st\n\nprint(sqrt(25))\nprint(st.mean([2, 4, 9]))',
         focus: [],
         output: ['5.0', '5'],
+        outputFrom: 0,
+      },
+      {
+        headline: 'Eine Datei lesen.',
+        note: '`open` macht die Datei auf, `read` holt den ganzen Text. Das `with` schließt sie hinterher von selbst – deshalb schreibt man es so und nicht anders.',
+        tally: 'open · read',
+        code: 'with open("tiere.txt") as datei:\n    text = datei.read()\n\nprint(text)',
+        focus: [2],
+        output: ['Momo', 'Bello', 'Hoppel'],
+        outputFrom: 0,
+      },
+      {
+        headline: 'Zeile für Zeile durch die Datei.',
+        note: 'Eine offene Datei lässt sich wie eine Liste durchlaufen: Jeder Durchgang ist eine Zeile. `strip()` schneidet den unsichtbaren Zeilenumbruch am Ende ab.',
+        tally: 'for zeile in datei',
+        code: 'with open("tiere.txt") as datei:\n    for zeile in datei:\n        print(zeile.strip())',
+        focus: [2, 3],
+        output: ['Momo', 'Bello', 'Hoppel'],
         outputFrom: 0,
       },
     ],
@@ -1967,7 +1987,7 @@ else:
     catapi: {
       title: 'Woher kennst du die Adresse?',
       steps: ['Nach der API suchen', 'Die Doku öffnen', 'Antwortformat lesen'],
-      tip: 'Jede API hat so eine Seite: die Adresse, die Optionen, und wie die Antwort aussieht. Das Format unten ist genau das, was gleich in Python ankommt.',
+      tip: 'Jede API hat so eine Seite: die Adresse, die Optionen, und wie die Antwort aussieht. Das Format unten ist genau das, was eben in Python angekommen ist.',
     },
     builtins: {
       title: 'Woher weißt du, was es gibt?',

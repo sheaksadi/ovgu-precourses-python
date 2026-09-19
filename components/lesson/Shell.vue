@@ -166,7 +166,7 @@ const columnWidth = computed(() => `${Math.max(...props.output.map(line => line.
         >
           <span
             v-for="(line, index) in output"
-            :key="`${stage}-${index}`"
+            :key="`${stage}-${index}-${line}`"
             class="out-line"
             :class="{ 'is-new': index >= outputFrom }"
             :style="{ animationDelay: `${outputDelays?.[index] ?? 0.45 + (index - outputFrom) * 0.35}s` }"

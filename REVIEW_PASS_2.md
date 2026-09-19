@@ -37,11 +37,11 @@ time: look at the code first, then build.
 
 ## C. Modules and APIs
 
-- [ ] **9. Module section** (PRE-0124 to PRE-0126): add reading a text file,
+- [x] **9. Module section** (PRE-0124 to PRE-0126): add reading a text file,
       and a second stage that loops over its lines.
-- [ ] **10. Move PRE-0150** ("Nachschlagen: die Katzen-API") to after the API
+- [x] **10. Move PRE-0150** ("Nachschlagen: die Katzen-API") to after the API
       section instead of in the middle of it.
-- [ ] **11. Live cat slide** (PRE-0135): while a fetch runs, trace the lines the
+- [x] **11. Live cat slide** (PRE-0135): while a fetch runs, trace the lines the
       way the loop lessons do — hold on the request line until the answer
       arrives, then carry on.
 

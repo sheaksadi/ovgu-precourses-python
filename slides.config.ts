@@ -854,6 +854,20 @@ export const slides: SlideEntry[] = [
     teleprompter: 'Zwei Varianten: from math import sqrt holt nur eine Funktion. import statistics as st gibt einen Spitznamen – das sehen wir gleich bei numpy als np und pandas als pd, so schreibt das die ganze Welt.',
   },
   {
+    id: 'PRE-0203',
+    title: 'Module – Datei lesen',
+    parent: 'PRE-0124',
+    transition: 'none',
+    teleprompter: 'Daten kommen oft aus einer Datei. open macht sie auf, read holt den ganzen Text. Das with schließt sie hinterher automatisch – ohne with vergisst man das close. Die Datei liegt neben der py-Datei im Projekt.',
+  },
+  {
+    id: 'PRE-0204',
+    title: 'Module – Zeile für Zeile',
+    parent: 'PRE-0124',
+    transition: 'none',
+    teleprompter: 'Eine offene Datei lässt sich wie eine Liste durchlaufen: Jeder Durchgang ist eine Zeile. strip schneidet den Zeilenumbruch ab, den man nicht sieht. Frag: Was passiert ohne strip? Dann steht zwischen den Namen eine Leerzeile.',
+  },
+  {
     id: 'PRE-0127',
     title: 'Bibliotheken für KI und ML',
     subtitle: 'pip, NumPy, pandas, matplotlib, scikit-learn',
@@ -925,13 +939,6 @@ export const slides: SlideEntry[] = [
     teleprompter: 'Letztes Kapitel: Programme, die mit anderen Programmen reden. Eine API ist wie ein Kellner: Wir bestellen, er bringt die Bestellung in die Küche und kommt mit der Antwort zurück. Wie die Küche arbeitet, ist uns egal.',
   },
   {
-    id: 'PRE-0150',
-    title: 'Nachschlagen: die Katzen-API',
-    subtitle: 'Doku finden, bevor der Code kommt',
-    duration: 4,
-    teleprompter: 'Bevor wir Code schreiben: Woher weiß man die Adresse? Nach der API suchen, die Doku öffnen. Dort steht die Adresse, welche Optionen es gibt – und ganz wichtig, wie die Antwort aussieht. Genau dieses Format lesen wir gleich in Python aus: eine Liste mit einem Dictionary darin.',
-  },
-  {
     id: 'PRE-0133',
     title: 'APIs – requests',
     parent: 'PRE-0132',
@@ -952,6 +959,13 @@ export const slides: SlideEntry[] = [
     transition: 'none',
     presenterAction: { label: 'New cat', command: 'cat' },
     teleprompter: 'Die Folie fragt The Cat API wirklich. Neu ist: Die Studierenden holen die Katze selbst – auf dem eigenen Gerät steht ein Knopf, und alle Bildschirme zeigen dieselbe Katze und dieselbe Ausgabe. Ohne Handy geht es über den Knopf hier im Presenter oder auf der Fernbedienung. Braucht Internet am Laptop; ohne Netz bleibt die letzte Katze stehen.',
+  },
+  {
+    id: 'PRE-0150',
+    title: 'Nachschlagen: die Katzen-API',
+    subtitle: 'Doku finden, wenn du selbst weitermachst',
+    duration: 4,
+    teleprompter: 'Woher kam eigentlich die Adresse? Nach der API suchen, die Doku öffnen. Dort steht die Adresse, welche Optionen es gibt – und ganz wichtig, wie die Antwort aussieht. Genau das Format haben wir eben in Python ausgelesen: eine Liste mit einem Dictionary darin. Für jede andere API geht es genauso.',
   },
   {
     id: 'PRE-0166',

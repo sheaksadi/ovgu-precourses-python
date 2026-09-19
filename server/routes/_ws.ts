@@ -117,6 +117,9 @@ export default defineWebSocketHandler({
         // A follow-along device asks the room for a new cat; the server fetches it.
         const who = wsManager.getIdentity(peer)
         if (!who) return
+        // Tell the room the request is on its way, so every screen can hold on
+        // the `requests.get` line for exactly as long as the request takes.
+        if (!catRoom.busy()) wsManager.broadcast({ type: 'cat_pending', by: who.name, at: Date.now() })
         const cat = await catRoom.next(who)
         if (cat) wsManager.broadcast(cat)
         else peer.send(JSON.stringify({ type: 'cat_busy' }))

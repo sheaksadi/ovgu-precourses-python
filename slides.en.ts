@@ -454,6 +454,14 @@ export const slidesEn: Record<string, SlideText> = {
     title: 'Modules - from and as',
     teleprompter: 'Two variants: from math import sqrt takes only one function. import statistics as st gives it a nickname - which we see in a moment with numpy as np and pandas as pd, the way the whole world writes it.',
   },
+  'PRE-0203': {
+    title: 'Modules - reading a file',
+    teleprompter: 'Data often comes from a file. open opens it, read fetches the whole text. The with closes it again afterwards - without with people forget the close. The file sits next to the py file in the project.',
+  },
+  'PRE-0204': {
+    title: 'Modules - line by line',
+    teleprompter: 'An open file can be walked like a list: every pass is one line. strip cuts off the line break you cannot see. Ask: what happens without strip? Then there is a blank line between the names.',
+  },
   'PRE-0127': {
     title: 'Libraries for AI and ML',
     subtitle: 'pip, NumPy, pandas, matplotlib, scikit-learn',
@@ -500,8 +508,8 @@ export const slidesEn: Record<string, SlideText> = {
   },
   'PRE-0150': {
     title: 'Looking things up: the Cat API',
-    subtitle: 'Find the docs before the code',
-    teleprompter: 'Before we write code: how do you know the address? Search for the API, open the documentation. It has the address, which options exist - and most importantly what the answer looks like. That is exactly the format we read out in Python in a moment: a list with a dictionary inside it.',
+    subtitle: 'Find the docs when you carry on alone',
+    teleprompter: 'Where did that address come from? Search for the API, open the documentation. It has the address, which options exist - and most importantly what the answer looks like. That is exactly the format we just read out in Python: a list with a dictionary inside it. Every other API works the same way.',
   },
   'PRE-0133': {
     title: 'APIs - requests',

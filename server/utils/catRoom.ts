@@ -64,6 +64,9 @@ export const catRoom = {
     }
   },
 
+  /** True while the lock holds, so a request already on its way is not doubled. */
+  busy: () => Date.now() < lockedUntil,
+
   /** The first cat, when the room reaches the slide. Null if one is already up. */
   ensure: async () => (current ? null : catRoom.next(null)),
 

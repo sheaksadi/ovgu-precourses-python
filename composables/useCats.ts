@@ -24,9 +24,18 @@ export function useCats() {
   const failed = useState<boolean>('room-cat-failed', () => false)
   /** This device asked and is waiting for the room's answer. */
   const waiting = useState<boolean>('room-cat-waiting', () => false)
+  /**
+   * A request is on its way, for the whole room — the server says so as it
+   * starts, so every screen can hold on the `requests.get` line while it runs.
+   */
+  const pending = useState<boolean>('room-cat-pending', () => false)
+  /** Counts up on every answer, so a scene can replay even for the same cat. */
+  const answers = useState<number>('room-cat-answers', () => 0)
 
   const apply = (payload: RoomCat & { failed?: boolean }) => {
     waiting.value = false
+    pending.value = false
+    answers.value++
     failed.value = !!payload.failed
     count.value = payload.count
     if (!payload.failed && payload.url) {
@@ -39,17 +48,22 @@ export function useCats() {
     count.value = state.count ?? 0
     failed.value = false
     waiting.value = false
+    pending.value = false
   }
 
   const markWaiting = () => { waiting.value = true }
-  const clearWaiting = () => { waiting.value = false }
+  const clearWaiting = () => { waiting.value = false; pending.value = false }
+  const markPending = () => { pending.value = true }
 
   return {
     current: computed(() => current.value),
     count: computed(() => count.value),
     failed: computed(() => failed.value),
     waiting: computed(() => waiting.value),
+    pending: computed(() => pending.value),
+    answers: computed(() => answers.value),
     apply,
+    markPending,
     applyState,
     markWaiting,
     clearWaiting,
