@@ -3,13 +3,16 @@
  * "Funktionen für Mathe und Physik". Auto-imported as `<LessonFunctionsMath :stage="1" />`.
  *
  * Four slides (PRE-0104 and its three sub-slides), each a formula from school
- * written once as a function and called several times:
+ * written once as a function:
  *
  *   1. circle area: the circle grows with r, the area follows
- *   2. Celsius to Fahrenheit: one thermometer, two scales
- *   3. speed = distance / time: Momo and Bello race the same 100 m
- *   4. functions calling functions: kinetic energy uses square, and the call
- *      stack grows and shrinks
+ *   2. the same function again, but with `PI` and `quadrat` — so the body reads
+ *      like the formula on the board instead of like arithmetic
+ *   3. Celsius to Fahrenheit: one thermometer, two scales
+ *   4. comments: `c * 9 / 5 + 32` says nothing, so two `#` lines say it, and
+ *      Python skips exactly those lines
+ *
+ * The physics half of this block continues in `FunctionsCombine.vue`.
  *
  * Scenes stay one extra stage to clear away. Beats are computed here and
  * handed to CSS as `--t`. Words come from `functions.math.*` in `locales/`.
@@ -35,13 +38,14 @@ const { t, tm } = useI18n()
 const stages = computed(() => tm<Stage[]>('functions.math.stages'))
 const current = computed(() => stages.value[props.stage - 1]!)
 const n = computed(() => tm<Record<'square' | 'energy' | 'stack' | 'track', string>>('functions.math.names'))
+const w = computed(() => tm<Record<'before' | 'after' | 'reads' | 'human' | 'skipped' | 'runs', string>>('functions.math.words'))
 
 /* 1: circles */
 const RADII = [1, 2, 3]
 const AREAS = ['3.14', '12.57', '28.27']
 const circleAt = (k: number) => 0.8 + k * 1.3
 
-/* 2: thermometer — tube spans −10 °C to 110 °C */
+/* 3: thermometer — tube spans −10 °C to 110 °C */
 const TEMPS = [
   { c: 0, f: '32.0' },
   { c: 37, f: '98.6' },
@@ -50,15 +54,20 @@ const TEMPS = [
 const tempAt = (k: number) => 0.8 + k * 1.4
 const level = (c: number) => (c + 10) / 120
 
-/* 3: race */
-const RACE_START = 0.8
+/**
+ * 4: the lesson's own code, shortened to what fits the scene card. The real
+ * comments are longer and live in the code panel; these carry the same point.
+ */
+const NOTE_LINES = computed(() => tm<{ text: string, note: boolean }[]>('functions.math.noteLines'))
+/** The reader passes one line per beat, after they have all arrived. */
+const readAt = (k: number) => 1.8 + k * 0.7
 
 const outputDelays = computed(() => {
   switch (props.stage) {
     case 1: return RADII.map((_, k) => circleAt(k) + 0.6)
-    case 2: return TEMPS.map((_, k) => tempAt(k) + 0.7)
-    case 3: return [RACE_START + 2.6, RACE_START + 2.9]
-    case 4: return [10.5]
+    case 2: return [4.4]
+    case 3: return TEMPS.map((_, k) => tempAt(k) + 0.7)
+    case 4: return [readAt(NOTE_LINES.value.length) + 0.4]
     default: return undefined
   }
 })
@@ -113,8 +122,34 @@ const shown = (own: number) => props.stage === own || props.stage === own + 1
         </span>
       </div>
 
-      <!-- ═══ 2: thermometer ═══ -->
-      <div v-if="shown(2)" class="part thermo" :class="phase(2)">
+      <!-- ═══ 2: the same function, written to be read ═══ -->
+      <div v-if="stage === 2" class="part rewrite is-active">
+        <div class="formula">
+          <code class="formula-flat">A =</code>
+          <code class="formula-part is-pi">π</code>
+          <code class="formula-flat">·</code>
+          <code class="formula-part is-sq">r²</code>
+        </div>
+
+        <span class="line-label label-before">{{ w.before }}</span>
+        <code class="old-line">
+          <span class="is-pi-ink">3.14159</span> * <span class="is-sq-ink">r * r</span>
+        </code>
+
+        <div class="maps">
+          <code class="map map-pi"><span class="map-from">3.14159</span> → <span class="map-to">PI</span></code>
+          <code class="map map-sq"><span class="map-from">r * r</span> → <span class="map-to">{{ n.square }}(r)</span></code>
+        </div>
+
+        <span class="line-label label-after">{{ w.after }}</span>
+        <code class="new-line">
+          <span class="is-pi-ink">PI</span> * <span class="is-sq-ink">{{ n.square }}(r)</span>
+        </code>
+        <span class="reads">{{ w.reads }}</span>
+      </div>
+
+      <!-- ═══ 3: thermometer ═══ -->
+      <div v-if="shown(3)" class="part thermo" :class="phase(3)">
         <div class="tube">
           <span class="fill" :style="{ '--l0': level(0), '--l1': level(37), '--l2': level(100) }"></span>
           <span v-for="(temp, k) in TEMPS" :key="k" class="tick" :style="{ '--l': level(temp.c) }">
@@ -135,43 +170,24 @@ const shown = (own: number) => props.stage === own || props.stage === own + 1
         </span>
       </div>
 
-      <!-- ═══ 3: race ═══ -->
-      <div v-if="shown(3)" class="part race" :class="phase(3)">
-        <span class="finish-line"></span>
-        <code class="track-label">{{ n.track }}</code>
-        <div v-for="lane in ['momo', 'bello']" :key="lane" class="lane" :class="`lane-${lane}`">
-          <span class="lane-line"></span>
-          <div class="runner">
-            <ArtSprite
-              :name="lane === 'momo' ? 'cat-stand' : 'dog'"
-              :color="lane === 'momo' ? 'coral' : 'sun'"
-              :accent="lane === 'momo' ? 'rose' : 'text'"
-              :size="96"
-              class="runner-art"
-            />
-          </div>
-          <code class="lane-time">{{ lane === 'momo' ? '20 s' : '10 s' }}</code>
-          <code class="lane-speed">{{ lane === 'momo' ? '5.0 m/s' : '10.0 m/s' }}</code>
-        </div>
-      </div>
-
-      <!-- ═══ 4: call stack ═══ -->
-      <div v-if="stage === 4" class="part stack-scene is-active">
-        <code class="stack-title">{{ n.stack }}</code>
-        <div class="frame frame-energy">
-          <code class="frame-call">{{ n.energy }}(4, 3)</code>
-          <span class="frame-body">
-            <code class="frame-step step-wait">0.5 * 4 * {{ n.square }}(3)</code>
-            <code class="frame-step step-fill">0.5 * 4 * 9</code>
-            <code class="frame-step step-return">return 18.0</code>
+      <!-- ═══ 4: what Python reads, and what it steps over ═══ -->
+      <div v-if="stage === 4" class="part notes is-active">
+        <div class="sheet">
+          <span
+            v-for="(line, k) in NOTE_LINES"
+            :key="k"
+            class="note-line"
+            :class="line.note ? 'is-note' : 'is-code'"
+            :style="{ '--t': `${0.4 + k * 0.15}s`, '--r': `${readAt(k)}s` }"
+          >
+            <code class="note-text">{{ line.text }}</code>
+            <span class="note-tag">{{ line.note ? w.skipped : w.runs }}</span>
           </span>
         </div>
-        <div class="frame frame-square">
-          <code class="frame-call">{{ n.square }}(3)</code>
-          <code class="frame-step step-square">return 9</code>
-        </div>
-        <span class="back back-9"><span class="text-trim">9</span></span>
-        <span class="result"><span class="text-trim">18.0</span></span>
+        <span class="hash">
+          <code class="hash-mark">#</code>
+          <span class="hash-says">{{ w.human }}</span>
+        </span>
       </div>
     </div>
   </LessonShell>
@@ -304,7 +320,133 @@ code {
   color: var(--text);
 }
 
-/* ═══ 2: thermometer ═══════════════════════════════════════════════════ */
+/* ═══ 2: the rewrite ═══════════════════════════════════════════════════
+   The formula on top, the old line under it, the two swaps, the new line.
+   Colour carries the mapping: π and PI coral, r² and quadrat(r) sky. */
+.rewrite {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 8vh 4% 2vh;
+}
+.formula {
+  display: flex;
+  align-items: baseline;
+  gap: 0.8vh;
+  animation: swap-in 0.4s cubic-bezier(0.22, 1, 0.36, 1) 0.4s both;
+}
+.formula-flat,
+.formula-part {
+  font-size: clamp(1rem, 3.4vh, 2.2rem);
+  font-weight: 800;
+  color: var(--text);
+}
+.formula-part {
+  padding: 0 0.6vh;
+  border-radius: 0.6vh;
+}
+.formula-part.is-pi {
+  background: color-mix(in srgb, var(--coral) 28%, var(--bg));
+}
+.formula-part.is-sq {
+  background: color-mix(in srgb, var(--sky) 32%, var(--bg));
+}
+
+.line-label {
+  margin-top: 2.4vh;
+  font-size: clamp(0.42rem, 1.1vh, 0.7rem);
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+.label-before {
+  animation: appear 0.3s ease 0.9s both;
+}
+.label-after {
+  margin-top: 2.2vh;
+  animation: appear 0.3s ease 3.6s both;
+}
+
+.old-line,
+.new-line {
+  margin-top: 0.6vh;
+  padding: 0.7vh 1.2vh;
+  border-radius: 0.9vh;
+  font-weight: 800;
+  white-space: nowrap;
+}
+.old-line {
+  background: var(--bg-off);
+  border: 2px dashed var(--border);
+  font-size: clamp(0.62rem, 1.8vh, 1.15rem);
+  color: var(--text-dim);
+  animation: swap-in 0.35s ease 1s both;
+}
+.new-line {
+  background: var(--bg);
+  border: 3px solid var(--text);
+  font-size: clamp(0.72rem, 2.1vh, 1.35rem);
+  color: var(--text);
+  animation: pop 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) 3.7s both;
+}
+.is-pi-ink {
+  color: var(--coral);
+}
+.is-sq-ink {
+  color: var(--sky);
+}
+.old-line .is-pi-ink,
+.old-line .is-sq-ink {
+  opacity: 0.85;
+}
+
+.maps {
+  margin-top: 1.6vh;
+  display: flex;
+  flex-direction: column;
+  gap: 0.7vh;
+}
+.map {
+  padding: 0.45vh 1vh;
+  border-radius: 999px;
+  background: var(--bg);
+  border: 2px solid var(--border);
+  font-size: clamp(0.55rem, 1.5vh, 0.95rem);
+  font-weight: 800;
+  white-space: nowrap;
+  color: var(--text);
+}
+.map-from {
+  color: var(--text-muted);
+}
+.map-pi {
+  border-color: var(--coral);
+  animation: swap-in 0.35s ease 1.9s both;
+}
+.map-pi .map-to {
+  color: var(--coral);
+}
+.map-sq {
+  border-color: var(--sky);
+  animation: swap-in 0.35s ease 2.7s both;
+}
+.map-sq .map-to {
+  color: var(--sky);
+}
+
+.reads {
+  margin-top: 1.4vh;
+  padding: calc(0.3vh + 0.3em) 1.1vh;
+  border-radius: 999px;
+  background: var(--mint);
+  font-size: clamp(0.48rem, 1.3vh, 0.85rem);
+  font-weight: 800;
+  color: var(--text);
+  animation: pop 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) 4.4s both;
+}
+
+/* ═══ 3: thermometer ═══════════════════════════════════════════════════ */
 .tube {
   position: absolute;
   top: 7vh;
@@ -388,224 +530,96 @@ code {
   color: var(--text);
 }
 
-/* ═══ 3: race ══════════════════════════════════════════════════════════ */
-.finish-line {
-  position: absolute;
-  top: 9vh;
-  bottom: 8vh;
-  left: 86%;
-  width: 0.8vh;
-  background: repeating-linear-gradient(to bottom, var(--text) 0 1vh, var(--bg) 1vh 2vh);
+/* ═══ 4: comments ══════════════════════════════════════════════════════
+   The four lines arrive, then Python passes over them one per beat: the
+   code lines light up, the `#` lines get stepped over and stay dim. */
+.notes {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3vh;
+  padding: 6vh 4% 2vh;
 }
-.track-label {
-  position: absolute;
-  top: 7vh;
-  left: 47%;
-  translate: -50% 0;
-  padding: calc(0.25vh + 0.3em) 1vh;
-  border-radius: 999px;
-  background: var(--bg);
-  border: 2px solid var(--text);
-  font-size: clamp(0.5rem, 1.35vh, 0.9rem);
-  font-weight: 800;
-  color: var(--text);
-}
-.lane {
-  position: absolute;
-  left: 0;
-  right: 0;
-  height: 13vh;
-}
-.lane-momo {
-  top: 12vh;
-}
-.lane-bello {
-  top: 27vh;
-}
-.lane-line {
-  position: absolute;
-  left: 6%;
-  right: 10%;
-  bottom: 1vh;
-  height: 0.6vh;
-  border-radius: 999px;
-  background: var(--border);
-}
-.runner {
-  position: absolute;
-  bottom: 1.4vh;
-  left: 10%;
-  width: 9vh;
-  height: 9vh;
-  translate: -50% 0;
-}
-.runner-art {
+.sheet {
   width: 100%;
-  height: 100%;
-}
-.lane-time,
-.lane-speed {
-  position: absolute;
-  top: 0.4vh;
-  padding: calc(0.25vh + 0.3em) 0.9vh;
-  border-radius: 999px;
-  font-size: clamp(0.5rem, 1.35vh, 0.9rem);
-  font-weight: 800;
-  white-space: nowrap;
-}
-.lane-time {
-  left: 4%;
-  background: var(--bg);
-  border: 2px solid var(--border);
-  color: var(--text-dim);
-}
-.lane-speed {
-  right: 3%;
-  background: var(--mint);
-  color: #FFFFFF;
-  opacity: 0;
-}
-.is-active .lane-momo .runner {
-  animation: race 2.4s linear 0.8s both;
-}
-.is-active .lane-bello .runner {
-  animation: race 1.2s linear 0.8s both;
-}
-.is-active .runner-art {
-  animation: bob 0.2s ease-in-out 0.8s 12 alternate;
-}
-.is-active .lane-momo .lane-speed {
-  animation: pop 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) 3.3s both;
-}
-.is-active .lane-bello .lane-speed {
-  animation: pop 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) 2.1s both;
-}
-.is-leaving .runner {
-  left: 86%;
-}
-.is-leaving .lane-speed {
-  opacity: 1;
-}
-
-/* ═══ 4: call stack ════════════════════════════════════════════════════ */
-/* One beat at a time, with a pause after each: call, wait, call, return, fill in, return. */
-.stack-title {
-  position: absolute;
-  top: 7vh;
-  left: 8%;
-  padding: calc(0.25vh + 0.3em) 1vh;
-  border-radius: 999px;
-  background: var(--bg);
-  border: 2px solid var(--border);
-  font-size: clamp(0.5rem, 1.35vh, 0.9rem);
-  font-weight: 800;
-  color: var(--text-dim);
-}
-.frame {
-  position: absolute;
-  left: 8%;
-  width: 60%;
   display: flex;
   flex-direction: column;
   gap: 0.8vh;
-  padding: 1.2vh 1.4vh;
+  padding: 1.6vh 1.4vh;
   border-radius: 1.4vh;
   background: var(--bg);
   border: 3px solid var(--text);
-  opacity: 0;
 }
-.frame-energy {
-  top: 29vh;
-  border-color: var(--lavender);
-  animation: push 0.6s cubic-bezier(0.22, 1, 0.36, 1) 0.8s both;
+.note-line {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1vh;
+  padding: 0.6vh 0.9vh;
+  border-radius: 0.8vh;
+  border: 2px solid transparent;
+  animation: swap-in 0.3s ease var(--t) both;
 }
-.frame-square {
-  top: 15vh;
-  left: 14%;
-  border-color: var(--sky);
-  animation:
-    push 0.6s cubic-bezier(0.22, 1, 0.36, 1) 3s both,
-    pop-off 0.6s ease-in 6.6s forwards;
-}
-.frame-call {
-  font-size: clamp(0.6rem, 1.7vh, 1.1rem);
-  font-weight: 800;
-  color: var(--text);
-}
-.frame-body {
-  display: inline-grid;
-}
-.frame-step {
-  grid-area: 1 / 1;
-  justify-self: start;
-  padding: calc(0.2vh + 0.3em) 0.8vh;
-  border-radius: 0.7vh;
-  background: var(--bg-off);
-  font-size: clamp(0.55rem, 1.5vh, 1rem);
+.note-text {
+  font-size: clamp(0.5rem, 1.45vh, 0.95rem);
   font-weight: 700;
   white-space: nowrap;
-  color: var(--text-dim);
+  color: var(--text);
 }
-.step-wait {
+.note-tag {
+  flex: none;
+  padding: calc(0.15vh + 0.25em) 0.7vh;
+  border-radius: 999px;
+  font-size: clamp(0.38rem, 1vh, 0.62rem);
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  opacity: 0;
+  animation: appear 0.3s ease var(--r) both;
+}
+/* A line Python runs: it lights up as the reader reaches it. */
+.is-code {
   animation:
-    appear 0.35s ease 1.8s both,
-    vanish 0.2s ease 7.4s forwards;
+    swap-in 0.3s ease var(--t) both,
+    light 0.5s ease var(--r) both;
 }
-.step-fill {
-  opacity: 0;
-  animation:
-    swap-in 0.35s ease 7.5s both,
-    vanish 0.2s ease 9s forwards;
+.is-code .note-tag {
+  background: var(--mint);
+  color: var(--text);
 }
-.step-return {
-  opacity: 0;
-  background: var(--lavender);
-  color: #FFFFFF;
-  animation: swap-in 0.35s ease 9.1s both;
+/* A note for people: it fades back as the reader steps over it. The fade sits
+   on the text, not the row, so it cannot fight the row's own entrance. */
+.is-note .note-text {
+  color: var(--text-muted);
+  animation: fade-back 0.5s ease var(--r) both;
 }
-.step-square {
-  opacity: 0;
-  background: var(--sky);
-  color: #FFFFFF;
-  animation: swap-in 0.35s ease 4.4s both;
+.is-note .note-tag {
+  background: var(--bg-off);
+  border: 2px solid var(--border);
+  color: var(--text-muted);
 }
-.back {
-  position: absolute;
-  top: 22vh;
-  left: 44%;
-  display: grid;
-  place-items: center;
-  width: 4.4vh;
-  height: 4.4vh;
+
+.hash {
+  display: flex;
+  align-items: center;
+  gap: 1vh;
+  padding: 0.7vh 1.3vh;
   border-radius: 999px;
   background: var(--sun);
-  border: 3px solid var(--text);
-  font-family: var(--font-code);
-  font-size: clamp(0.6rem, 1.7vh, 1.1rem);
-  font-weight: 900;
-  color: var(--text);
-  opacity: 0;
-  animation: fall 1s cubic-bezier(0.55, 0, 0.45, 1) 5.6s both;
+  animation: pop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) 0.9s both;
 }
-.result {
-  position: absolute;
-  top: 31vh;
-  left: 84%;
-  display: grid;
-  place-items: center;
-  min-width: 7vh;
-  height: 5vh;
-  padding: 0 1.2vh;
-  border-radius: 999px;
-  background: var(--mint);
-  border: 3px solid var(--text);
-  font-family: var(--font-code);
-  font-size: clamp(0.7rem, 2vh, 1.3rem);
+.hash-mark {
+  font-size: clamp(0.8rem, 2.4vh, 1.5rem);
   font-weight: 900;
   color: var(--text);
-  translate: -50% 0;
-  opacity: 0;
-  animation: pop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) 10.3s both;
+}
+.hash-says {
+  font-size: clamp(0.5rem, 1.4vh, 0.9rem);
+  font-weight: 800;
+  color: var(--text);
 }
 
 /* ─── Keyframes ──────────────────────────────────────────────────────── */
@@ -629,6 +643,14 @@ code {
   from { opacity: 0; transform: scale(0.6); }
   to { opacity: 1; transform: none; }
 }
+@keyframes light {
+  from { background: transparent; border-color: transparent; }
+  to { background: color-mix(in srgb, var(--mint) 20%, var(--bg)); border-color: var(--mint); }
+}
+@keyframes fade-back {
+  from { opacity: 1; }
+  to { opacity: 0.45; }
+}
 /* The mercury rises to 0 °C, then 37 °C, then 100 °C. */
 @keyframes temps {
   0% { height: 0; }
@@ -637,27 +659,5 @@ code {
   43% { height: calc(var(--l1) * 100%); }
   67% { height: calc(var(--l1) * 100%); }
   77%, 100% { height: calc(var(--l2) * 100%); }
-}
-@keyframes race {
-  from { left: 10%; }
-  to { left: 86%; }
-}
-@keyframes bob {
-  from { transform: translateY(0); }
-  to { transform: translateY(-0.8vh); }
-}
-@keyframes push {
-  from { opacity: 0; transform: translateY(-4vh); }
-  to { opacity: 1; transform: none; }
-}
-@keyframes pop-off {
-  from { opacity: 1; transform: none; }
-  to { opacity: 0; transform: translateY(-4vh); }
-}
-@keyframes fall {
-  0% { opacity: 0; transform: scale(0.5); }
-  25% { opacity: 1; transform: none; }
-  85% { opacity: 1; transform: translateY(8vh); }
-  100% { opacity: 0; transform: translateY(9vh) scale(0.6); }
 }
 </style>

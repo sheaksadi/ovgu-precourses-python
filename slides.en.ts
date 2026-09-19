@@ -329,17 +329,30 @@ export const slidesEn: Record<string, SlideText> = {
     subtitle: 'Formulas as functions',
     teleprompter: 'Functions are like formulas from school: write them down once, use them often. The area of a circle for three radii - the circle grows, the formula stays. Ask: how big is the area at r = 10?',
   },
+  'PRE-0198': {
+    title: 'Functions for maths and physics - readable',
+    teleprompter: 'The same function, written twice. 3.14159 * r * r is correct and says nothing. With PI and square the formula from the board is back inside the function. Ask: which of the two lines would you still understand in six months?',
+  },
   'PRE-0105': {
     title: 'Functions for maths and physics - temperature',
     teleprompter: 'Converting is a typical case: the formula sits inside the function, and the name says what it does. 37 degrees Celsius is 98.6 Fahrenheit - body temperature.',
   },
+  'PRE-0199': {
+    title: 'Functions for maths and physics - comments',
+    teleprompter: 'Where does the 9 / 5 + 32 come from? A hash mark starts a note for humans. Python does not read the line at all - it is only for whoever reads the code later. A comment may also sit behind code.',
+  },
   'PRE-0106': {
-    title: 'Functions for maths and physics - speed',
-    teleprompter: 'Two parameters: distance and time. Both run 100 metres, Bello is twice as fast. The order of the arguments matters: geschwindigkeit(20, 100) would be wrong.',
+    title: 'Functions built on functions',
+    subtitle: 'Calls inside calls',
+    teleprompter: 'Two parameters: distance and time. Both run 100 metres, Bello is twice as fast. The order of the arguments matters: speed(20, 100) would be wrong.',
   },
   'PRE-0107': {
-    title: 'Functions for maths and physics - the call stack',
-    teleprompter: 'Functions may use other functions. kinetische_energie calls quadrat, waits for the 9 and then carries on. The stack shows that Python remembers where it has to continue. That is how large programs are built out of small parts.',
+    title: 'Functions built on functions - inside out',
+    teleprompter: 'A call may sit inside a call. Python works from the inside out: first the two accelerations, then the average. Ask first: what does Python compute here to begin with?',
+  },
+  'PRE-0200': {
+    title: 'Functions built on functions - stopping distance',
+    teleprompter: 'The rule of thumb from driving school. Reaction distance and braking distance are one small function each, stopping_distance only adds them up. The bars show it: twice the speed, more than three times the distance. That is the blueprint for everything bigger - small functions that use other functions.',
   },
   'PRE-0144': {
     title: 'Puzzle: Bello\'s sprints',
@@ -347,21 +360,9 @@ export const slidesEn: Record<string, SlideText> = {
     teleprompter: 'Puzzle on maths and physics. Two lists: distance and time for 30 runs. Part 1 counts the runs over 5 m/s, part 2 adds up their distances. It works without a function, using range(len(strecken)) - but anyone who writes tempo(strecke, zeit) reads the loop like a sentence. That is exactly the point: functions make your own solution readable.',
   },
   'PRE-0108': {
-    title: 'Animals that talk to each other',
-    subtitle: 'Functions with data',
-    teleprompter: 'Now functions work with animals. An animal is a list: name at position 0, hunger at position 1. Ask: how do I get at Bello hunger? bello[1].',
-  },
-  'PRE-0109': {
-    title: 'Animals that talk to each other - meeting',
-    teleprompter: 'treffen takes two animals. a is the first argument, b the second. On the second call Bello is a. The labels show who is a and who is b right now.',
-  },
-  'PRE-0110': {
-    title: 'Animals that talk to each other - eating',
-    teleprompter: 'fressen changes the animal list directly. That is different from numbers: the function gets the same list, not a copy. Which is why Momo is fuller outside the function too.',
-  },
-  'PRE-0111': {
-    title: 'Animals that talk to each other - playing',
-    teleprompter: 'Small functions become bigger ones: spielen calls treffen. The loop plays three days. A bridge to what comes next: momo[1] is awkward, you have to remember what position 1 means - dictionaries fix that.',
+    title: 'Functions and lists',
+    subtitle: 'A list that changes',
+    teleprompter: 'So far numbers went in and out. Here a list goes in: animal is not a copy, it is the same list as momo. That is why Momo is less hungry outside the call too. And position 1 is the hunger only because we said so - which is exactly what dictionaries fix later.',
   },
   'PRE-0112': {
     title: 'Now you: functions',

@@ -1,7 +1,7 @@
 <script setup lang="ts">
-/** PRE-0108 — animals that talk to each other, stage 1 of 4. The scene lives in components/lesson/FunctionsAnimals.vue. */
+/** PRE-0108 — a function that changes a list. The scene lives in components/lesson/FunctionsLists.vue. */
 </script>
 
 <template>
-  <LessonFunctionsAnimals :stage="1" />
+  <LessonFunctionsLists />
 </template>

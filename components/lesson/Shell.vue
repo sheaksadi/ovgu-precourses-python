@@ -112,6 +112,13 @@ onBeforeUnmount(() => {
 /** Split `backtick` spans out of a sentence, so they render as code. */
 const segments = (text: string) => text.split('`').map((part, index) => ({ part, code: index % 2 === 1 }))
 
+/**
+ * A long sample plus its output would reach past the takeaway, which sits at a
+ * fixed height. Ten lines is where that starts, so from there the panel takes
+ * one more size down instead of running into the sentence below it.
+ */
+const tall = computed(() => props.code.split('\n').length >= 10)
+
 const columns = computed(() => !props.stackOutput && props.output.length > 4 && props.output.every(line => line.length <= 8))
 /** Column width: the longest line plus a gap, so neighbours never touch. */
 const columnWidth = computed(() => `${Math.max(...props.output.map(line => line.length), 1) + 2}ch`)
@@ -122,7 +129,8 @@ const columnWidth = computed(() => `${Math.max(...props.output.map(line => line.
     <header class="shell-head">
       <div class="shell-progress">
         <span class="shell-eyebrow">{{ eyebrow }}</span>
-        <span class="shell-dots" aria-hidden="true">
+        <!-- A lesson of one slide has no progress to show. -->
+        <span v-if="stages > 1" class="shell-dots" aria-hidden="true">
           <span
             v-for="n in stages"
             :key="n"
@@ -130,7 +138,7 @@ const columnWidth = computed(() => `${Math.max(...props.output.map(line => line.
             :class="{ 'is-done': n < stage, 'is-now': n === stage }"
           ></span>
         </span>
-        <span class="shell-count">{{ stage }} / {{ stages }}</span>
+        <span v-if="stages > 1" class="shell-count">{{ stage }} / {{ stages }}</span>
       </div>
       <h2 class="shell-headline">
         <template v-for="(bit, index) in segments(headline)" :key="index">
@@ -144,7 +152,7 @@ const columnWidth = computed(() => `${Math.max(...props.output.map(line => line.
       <slot />
     </section>
 
-    <section class="shell-code" :class="{ 'is-dense': dense }">
+    <section class="shell-code" :class="{ 'is-dense': dense, 'is-tall': tall }">
       <CodePanel :code="code" :variant="variant" :filename="variant === 'python' ? file : undefined" :focus="focus" />
 
       <div class="shell-output">
@@ -322,6 +330,19 @@ const columnWidth = computed(() => `${Math.max(...props.output.map(line => line.
 }
 .shell-code.is-dense .out-line {
   font-size: clamp(0.7rem, 1.8vh, 1.1rem);
+}
+
+/* Ten lines or more: one size further down, so the panel clears the takeaway. */
+.shell-code.is-tall :deep(.py-4) {
+  padding-block: 0.9vh;
+  font-size: clamp(0.6rem, 1.5vh, 0.82rem);
+}
+.shell-code.is-tall .shell-output {
+  gap: 0.4vh;
+  padding-block: 1vh;
+}
+.shell-code.is-tall .out-line {
+  font-size: clamp(0.6rem, 1.55vh, 0.95rem);
 }
 
 /* ─── Takeaway ───────────────────────────────────────────────────────── */
