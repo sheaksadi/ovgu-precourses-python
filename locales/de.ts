@@ -55,6 +55,32 @@ const de = {
     joinIn: 'Mitmachen',
   },
 
+  me: {
+    eyebrow: 'Kurz zu mir',
+    name: 'Sheak Sadi',
+    role: 'Bilingual Informatics, OVGU – drittes Semester von sieben',
+    lines: [
+      'Angefangen habe ich ohne Vorwissen: 2020, im Lockdown, mit Minecraft-Mods in Java.',
+      'Seitdem ist einiges dazugekommen – heute schreibe ich meistens Rust und TypeScript, als HiWi hier an der Uni und für eigene Sachen.',
+      'Was ihr in den nächsten Tagen lernt, ist genau der Anfang, den ich damals hatte.',
+    ],
+    pathLabel: 'Der Weg dahin',
+    path: [
+      { year: '2020', what: 'Minecraft-Mods', how: 'Java, im Lockdown, aus Langeweile' },
+      { year: '2022', what: 'Webseiten', how: 'JavaScript, dann TypeScript' },
+      { year: '2023', what: 'Erste bezahlte Arbeit', how: 'Dashboards für eine Firma in Berlin' },
+      { year: '2025', what: 'Studium in Magdeburg', how: 'endlich die Begriffe zu dem, was ich schon tat' },
+      { year: 'heute', what: 'Rust und Go', how: 'HiWi an der Uni, Daten und Anomalien' },
+    ],
+    chipsLabel: 'Sonst so',
+    chips: [
+      { icon: 'lucide:terminal', text: 'Linux und Neovim, eigene Server' },
+      { icon: 'lucide:gamepad-2', text: 'Game Jams: 48 Stunden, ein Spiel' },
+      { icon: 'lucide:waves', text: 'Schwimmen und Badminton' },
+      { icon: 'lucide:printer', text: 'Ein verfluchter 3D-Drucker' },
+    ],
+    note: 'Diese Folien sind übrigens auch selbst gebaut – mit Nuxt, dem gleichen Kram wie oben.',
+  },
   intro: {
     eyebrow: 'Vorstellungsrunde',
     title: 'Wer bist du?',

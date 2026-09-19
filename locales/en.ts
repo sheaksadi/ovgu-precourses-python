@@ -54,6 +54,32 @@ const en: Messages = {
     joinIn: 'Join in',
   },
 
+  me: {
+    eyebrow: 'A quick hello',
+    name: 'Sheak Sadi',
+    role: 'Bilingual Informatics, OVGU - third semester of seven',
+    lines: [
+      'I started with nothing: 2020, lockdown, Minecraft mods in Java.',
+      'A lot has been added since - these days it is mostly Rust and TypeScript, as a student assistant here and for my own things.',
+      'What you learn in the next days is exactly the start I had back then.',
+    ],
+    pathLabel: 'How it went',
+    path: [
+      { year: '2020', what: 'Minecraft mods', how: 'Java, in lockdown, out of boredom' },
+      { year: '2022', what: 'Websites', how: 'JavaScript, then TypeScript' },
+      { year: '2023', what: 'First paid work', how: 'dashboards for a company in Berlin' },
+      { year: '2025', what: 'Studying in Magdeburg', how: 'finally the words for what I was already doing' },
+      { year: 'today', what: 'Rust and Go', how: 'student assistant here, data and anomalies' },
+    ],
+    chipsLabel: 'Off the clock',
+    chips: [
+      { icon: 'lucide:terminal', text: 'Linux and Neovim, my own servers' },
+      { icon: 'lucide:gamepad-2', text: 'Game jams: 48 hours, one game' },
+      { icon: 'lucide:waves', text: 'Swimming and badminton' },
+      { icon: 'lucide:printer', text: 'One cursed 3D printer' },
+    ],
+    note: 'These slides are self built too - Nuxt, the same kind of thing as above.',
+  },
   intro: {
     eyebrow: 'Introductions',
     title: 'Who are you?',

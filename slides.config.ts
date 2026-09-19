@@ -63,6 +63,13 @@ export const slides: SlideEntry[] = [
     teleprompter: 'Welcome to the Python pre-course. Scan the code in the corner to open the slides on your own device: you can follow along, move at your own pace, and the sync button brings you back to where we are.',
   },
   {
+    id: 'PRE-0185',
+    title: 'Kurz zu mir',
+    subtitle: 'Wer hier vorne steht, und wie das anfing',
+    duration: 3,
+    teleprompter: 'Kurz vorstellen, bevor die Runde dran ist: Name, Studiengang, und wie das mit dem Programmieren angefangen hat. Der Weg auf der rechten Seite ist der eigentliche Punkt – angefangen mit Minecraft-Mods im Lockdown, ohne Vorwissen, und der Rest kam Stück für Stück. Das nimmt die Angst vor der Frage, ob man dafür ein Genie sein muss. Kurz halten: eine Minute, höchstens zwei, dann sind die anderen dran.',
+  },
+  {
     id: 'PRE-0038',
     title: 'Vorstellungsrunde',
     subtitle: 'Name sagen, kurz vorstellen, Frage drehen',
