@@ -14,6 +14,12 @@
  * buttons still, so a second tap cannot cut the animation off halfway. The
  * presenter view ignores it and keeps its controls: whoever is talking must be
  * able to move on at any time.
+ *
+ * `nonce` is how a scene with no JavaScript of its own replays. Most lesson
+ * scenes are CSS animations that run once when they mount, so the slide layouts
+ * key their content on it: a replay remounts the scene and every animation
+ * starts from the top. Slides carrying a puzzle or a code task are left alone —
+ * remounting those would throw away what somebody is typing.
  */
 import { computed, onBeforeUnmount, onMounted } from 'vue'
 import { useState } from '#app'
@@ -23,6 +29,8 @@ export function useDemos() {
   const until = useState<number>('deck-demo-until', () => 0)
   /** Ticks while a demo runs, so `busy` re-evaluates without a timer per button. */
   const now = useState<number>('deck-demo-now', () => 0)
+  /** Counts replays, so a keyed scene remounts and its animations start again. */
+  const nonce = useState<number>('deck-demo-nonce', () => 0)
 
   let timer: ReturnType<typeof setInterval> | null = null
 
@@ -43,13 +51,20 @@ export function useDemos() {
   onMounted(() => { if (until.value > Date.now() && !timer) timer = setInterval(tick, 200) })
   onBeforeUnmount(() => { if (timer) { clearInterval(timer); timer = null } })
 
+  /** The shortest a replay holds the buttons, for a scene that reports nothing. */
+  const MIN_HOLD = 1200
+
   return {
     busy: computed(() => now.value < until.value),
+    nonce: computed(() => nonce.value),
     /** How long the demo that is running still has, for anything that wants to wait. */
     remaining: computed(() => Math.max(0, until.value - now.value)),
     hold,
     /** The room heard a replay: play from the top and hold the buttons. */
-    applyRemote: (event: { forMs?: number }) => hold(Number(event?.forMs) || 0),
+    applyRemote: (event: { forMs?: number }) => {
+      nonce.value++
+      hold(Math.max(Number(event?.forMs) || 0, MIN_HOLD))
+    },
     clear: () => { until.value = 0; now.value = Date.now() },
   }
 }

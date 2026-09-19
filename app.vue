@@ -200,7 +200,7 @@ onUnmounted(() => {
 
     <DeckToastStack />
 
-    <ProblemsDock />
+    <DeckReplayDock />
 
     <DeckDebugBar />
 

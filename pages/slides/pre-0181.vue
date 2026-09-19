@@ -8,10 +8,15 @@ import { useI18n } from '~/composables/useI18n'
 
 const { t } = useI18n()
 const joinUrl = ref('')
+const puzzleUrl = ref('')
 const shortUrl = (value: string) => value.replace(/^https?:\/\//, '')
 
 // After mount, so the server render and the first client render agree.
-onMounted(() => { joinUrl.value = `${window.location.origin}/join` })
+onMounted(() => {
+  joinUrl.value = `${window.location.origin}/join`
+  // The puzzles outlive the talk, so the last slide says where they live.
+  puzzleUrl.value = `${window.location.origin}/puzzles`
+})
 </script>
 
 <template>
@@ -35,12 +40,36 @@ onMounted(() => { joinUrl.value = `${window.location.origin}/join` })
       <p class="thanks-note">{{ t('outro.thanks.note') }}</p>
 
       <p v-if="joinUrl" class="thanks-url">{{ shortUrl(joinUrl) }}</p>
+      <p v-if="puzzleUrl" class="thanks-puzzles">
+        <span class="puzzles-label">{{ t('puzzles.open') }}</span>
+        <span class="puzzles-url">{{ shortUrl(puzzleUrl) }}</span>
+      </p>
       <p class="thanks-sign">{{ t('outro.thanks.sign') }}</p>
     </div>
   </div>
 </template>
 
 <style scoped>
+.thanks-puzzles {
+  margin-top: 1.4vh;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.9vh;
+}
+.puzzles-label {
+  font-size: clamp(0.5rem, 1.35vh, 0.9rem);
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+.puzzles-url {
+  font-family: var(--font-code);
+  font-size: clamp(0.62rem, 1.8vh, 1.15rem);
+  font-weight: 800;
+  color: var(--text);
+}
+
 .thanks-slide {
   background: var(--bg);
 }

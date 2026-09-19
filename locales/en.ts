@@ -1736,6 +1736,18 @@ else:
       sign: 'Good luck in your first semester!',
     },
   },
+  replay: {
+    label: 'Play it again',
+    running: 'running …',
+    hint: 'Plays the animation again on every screen.',
+  },
+  puzzles: {
+    title: 'Your puzzles',
+    intro: 'Everything you have opened – carry on with it here while the talk goes on.',
+    empty: 'Nothing opened yet. Puzzles show up here once one has come round.',
+    back: 'Back to the talk',
+    open: 'Open puzzles',
+  },
   problems: {
     eyebrow: 'Puzzle',
     part: 'Part {n}',

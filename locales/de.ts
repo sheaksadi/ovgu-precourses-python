@@ -1740,6 +1740,18 @@ else:
       sign: 'Viel Erfolg im ersten Semester!',
     },
   },
+  replay: {
+    label: 'Nochmal zeigen',
+    running: 'läuft …',
+    hint: 'Zeigt die Animation auf allen Bildschirmen noch einmal.',
+  },
+  puzzles: {
+    title: 'Deine Rätsel',
+    intro: 'Alles, was du geöffnet hast – hier kannst du in Ruhe weiterrechnen, während der Vortrag weitergeht.',
+    empty: 'Noch nichts geöffnet. Die Rätsel erscheinen hier, sobald eins dran war.',
+    back: 'Zurück zum Vortrag',
+    open: 'Rätsel öffnen',
+  },
   problems: {
     eyebrow: 'Rätsel',
     part: 'Teil {n}',

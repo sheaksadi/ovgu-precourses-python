@@ -4,6 +4,10 @@ import { spinRoom } from '../utils/spinRoom'
 import { problemRoom } from '../utils/problemRoom'
 import { catRoom } from '../utils/catRoom'
 
+/** Taps inside this window share one replay, so a scene cannot be restarted mid-run. */
+const DEMO_LOCK_MS = 1200
+let demoLockedUntil = 0
+
 /** Pointer ids per connection, keyed by `peer.id` for the same reason. */
 const peerClientIds = new Map<string, Set<string>>()
 
@@ -128,8 +132,14 @@ export default defineWebSocketHandler({
         // Somebody asked a demo to play again. It plays again everywhere: the
         // projector is the screen the room is watching, and a replay that only
         // runs on the phone that tapped it is no use to anyone.
+        //
+        // Thirty phones tapping at once is one replay, not thirty: requests
+        // inside the lock are dropped here, the same way the spin works.
+        const now = Date.now()
+        if (now < demoLockedUntil) return
         const forMs = Math.min(Math.max(Number(data.forMs) || 0, 0), 60_000)
-        wsManager.broadcast({ type: 'demo', at: Date.now(), forMs })
+        demoLockedUntil = now + DEMO_LOCK_MS
+        wsManager.broadcast({ type: 'demo', at: now, forMs })
       }
       else if (data.type === 'command') {
         // Room commands use POST /api/command. WebSocket is broadcast-only.

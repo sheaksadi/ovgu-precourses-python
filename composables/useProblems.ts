@@ -73,7 +73,6 @@ export function useProblems() {
   const room = useState<Record<string, RoomProblem>>('problems-room', () => ({}))
   const mine = useState<Record<string, MyProblem>>('problems-mine', () => ({}))
   const opened = useState<string[]>('problems-opened', () => [])
-  const sheetOpen = useState<boolean>('problems-sheet', () => false)
 
   const restoreOpened = () => {
     try {
@@ -164,7 +163,6 @@ export function useProblems() {
     room: computed(() => room.value),
     mine: computed(() => mine.value),
     opened: computed(() => opened.value),
-    sheetOpen,
     load,
     submit,
     submitCode,

@@ -11,6 +11,7 @@ import { computed, onMounted, onUnmounted, ref } from 'vue'
 import { usePresentation } from '~/composables/usePresentation'
 import { useSlideData } from '~/composables/useSlideData'
 import { useWebSocket } from '~/composables/useWebSocket'
+import { useDemos } from '~/composables/useDemos'
 import { useKeyBindings } from '~/composables/useKeyBindings'
 import SlidePreview from '~/components/presenter/SlidePreview.vue'
 import { useSpins } from '~/composables/useSpins'
@@ -125,6 +126,18 @@ const runSlideAction = () => {
 }
 
 const spins = useSpins()
+
+/**
+ * Play the slide's animation again, everywhere. The presenter view keeps its
+ * own controls while a demo runs, so this is the one button that is held: two
+ * taps in a row would cut the scene off halfway.
+ */
+const demos = useDemos()
+const replay = () => {
+  if (demos.busy.value) return
+  ws.sendDemoReplay(0)
+}
+const canReplay = computed(() => !!current.value && !current.value.problem && !current.value.interactive)
 
 const followingCount = computed(() => Math.max(0, store.presence.viewers - store.presence.detached))
 
@@ -288,6 +301,17 @@ onUnmounted(() => {
             class="flex-1 touch-manipulation rounded-xl bg-amber-500 hover:bg-amber-400 active:bg-amber-300 border border-amber-400 text-gray-950 font-bold flex items-center justify-center gap-2"
           >
             <Icon name="lucide:refresh-cw" /> {{ current.presenterAction.label }}
+          </button>
+
+          <!-- Play the scene again, on every screen in the room. -->
+          <button
+            v-if="canReplay"
+            type="button"
+            :disabled="demos.busy.value"
+            @click="replay"
+            class="flex-1 touch-manipulation rounded-xl bg-gray-800 hover:bg-gray-700 active:bg-gray-600 border border-gray-700 font-medium flex items-center justify-center gap-2 disabled:opacity-40"
+          >
+            <Icon name="lucide:rotate-ccw" /> {{ demos.busy.value ? 'Running…' : 'Replay' }}
           </button>
 
           <button

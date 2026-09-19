@@ -49,7 +49,7 @@ time: look at the code first, then build.
 
 - [x] **12. Sound:** look at what the portfolio project uses and reuse the same
       sounds where they fit the deck.
-- [ ] **13. Replay for everyone:** every animation can be restarted from the
+- [x] **13. Replay for everyone:** every animation can be restarted from the
       presenter view and from any follow-along device, with the same spam
       protection the spinner has. On a device the button takes the place the
       puzzle dock has now; in the presenter view it sits in the middle of the

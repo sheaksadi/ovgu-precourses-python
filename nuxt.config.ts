@@ -65,7 +65,10 @@ export default defineNuxtConfig({
         'lucide:projector',
         'lucide:presentation',
         'lucide:layout-dashboard',
-        'lucide:smartphone'
+        'lucide:smartphone',
+        // The replay button on a phone, and its twin in the presenter view.
+        'lucide:rotate-ccw',
+        'lucide:puzzle'
       ]
     }
   },

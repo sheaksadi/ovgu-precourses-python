@@ -212,22 +212,23 @@ check('join lands on the room slide', (await waitForPath(audience, PUZZLE.route)
 const puzzleInput = await waitForText(audience, '.ws-input')
 check('the device gets its own puzzle input', !!puzzleInput && puzzleInput.includes('['),
   JSON.stringify(puzzleInput?.slice(0, 40)))
-check('no dock on the puzzle slide itself', (await evaluate(audience, '!!document.querySelector(".dock")')) === false)
+check('no replay button on the puzzle slide itself', (await evaluate(audience, '!!document.querySelector(".replay")')) === false)
 await shot(audience, '07-puzzle-workspace', 430, 900)
 
 // --- The room moves on; the device keeps its puzzle ---------------------
 await clickText(control, 'button', 'Next')
 check('the device follows to the leaderboard', (await waitForPath(audience, BOARD.route)) === BOARD.route,
   `device at ${await path(audience)}`)
-const dock = await waitForText(audience, '.dock')
-check('the dock offers the puzzle on any other slide', !!dock, JSON.stringify(dock))
 
-await clickSelector(audience, '.dock')
-const sheetTitle = await waitForText(audience, '.sheet .ws-title')
-check('the dock opens the workspace again', !!sheetTitle, JSON.stringify(sheetTitle))
-await shot(audience, '08-puzzle-dock', 430, 900)
-await clickSelector(audience, '.sheet-close')
-await wait(500)
+// The puzzle lives at /puzzles now, and the corner it used to sit in offers a replay.
+const replayLabel = await waitForText(audience, '.replay')
+check('a device can replay the room animation', !!replayLabel, JSON.stringify(replayLabel))
+
+const puzzles = await openPage(browser, `${BASE}/puzzles`, 430, 900)
+const puzzleTitle = await waitForText(puzzles, '.ws-title')
+check('/puzzles keeps the opened puzzle', !!puzzleTitle, JSON.stringify(puzzleTitle))
+await shot(puzzles, '08-puzzles-page', 430, 900)
+await wait(300)
 
 // --- The presenter's previews track the room ----------------------------
 // They are same-origin frames, so the check can read where each one sits.
