@@ -65,12 +65,6 @@ const drawFor = computed(() => path.value.length * STEP + 0.3)
         </h2>
 
         <p class="me-role">{{ t('me.role') }}</p>
-        <p class="me-kicker">{{ t('me.kicker') }}</p>
-
-        <p class="me-punch">
-          <span class="punch-mark" aria-hidden="true"></span>
-          {{ t('me.punch') }}
-        </p>
 
         <div class="me-chips">
           <span
@@ -101,7 +95,7 @@ const drawFor = computed(() => path.value.length * STEP + 0.3)
             <span class="step-year">{{ step.year }}</span>
             <span class="step-body">
               <span class="step-what">{{ step.what }}</span>
-              <span class="step-how">{{ step.how }}</span>
+              <span v-if="step.how" class="step-how">{{ step.how }}</span>
             </span>
           </li>
         </ol>
@@ -226,43 +220,12 @@ const drawFor = computed(() => path.value.length * STEP + 0.3)
   color: var(--text-dim);
   animation: rise 0.5s cubic-bezier(0.22, 1, 0.36, 1) 0.6s both;
 }
-.me-kicker {
-  margin-top: 1.4vh;
-  font-size: clamp(0.75rem, 2.2vh, 1.4rem);
-  font-weight: 600;
-  line-height: 1.35;
-  color: var(--text);
-  animation: rise 0.5s cubic-bezier(0.22, 1, 0.36, 1) 0.75s both;
-}
-
-.me-punch {
-  position: relative;
-  margin-top: 2.2vh;
-  padding-left: 1.6vh;
-  max-width: 34ch;
-  font-size: clamp(0.68rem, 2vh, 1.25rem);
-  font-weight: 700;
-  line-height: 1.35;
-  color: var(--text);
-  animation: rise 0.5s cubic-bezier(0.22, 1, 0.36, 1) 1.1s both;
-}
-.punch-mark {
-  position: absolute;
-  left: 0;
-  top: 0.35em;
-  bottom: 0.2em;
-  width: 0.45vh;
-  border-radius: 999px;
-  background: var(--coral);
-  transform-origin: top center;
-  animation: grow-down 0.45s cubic-bezier(0.22, 1, 0.36, 1) 1.25s both;
-}
 
 .me-chips {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.7vh;
-  margin-top: 2.6vh;
+  gap: 0.8vh;
+  margin-top: 3.4vh;
 }
 .chip {
   display: inline-flex;
