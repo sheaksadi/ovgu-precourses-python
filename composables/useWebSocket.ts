@@ -5,6 +5,7 @@ import { useDeckRole } from '~/composables/useDeckRole'
 import { useSlideData } from '~/composables/useSlideData'
 import { useAudience } from '~/composables/useAudience'
 import { SPIN_MS, useSpins } from '~/composables/useSpins'
+import { useSound } from '~/composables/useSound'
 import { useDemos } from '~/composables/useDemos'
 import { useProblems } from '~/composables/useProblems'
 import { useCats } from '~/composables/useCats'
@@ -46,6 +47,7 @@ export const useWebSocket = () => {
   const problems = useProblems()
   const cats = useCats()
   const toasts = useToasts()
+  const sound = useSound()
   const { t, tm, locale } = useI18n()
   const route = useRoute()
   const onSlideRoute = computed(() => !!getSlideByRoute(route.path))
@@ -171,6 +173,7 @@ export const useWebSocket = () => {
             // the question while it is still rolling gives the spin away.
             const lands = Math.max(0, data.at + SPIN_MS - Date.now())
             setTimeout(() => {
+              sound.land()
               toasts.push({
                 tone: 'lavender',
                 name: data.by ? who : undefined,
@@ -197,6 +200,7 @@ export const useWebSocket = () => {
         }
         else if (data.type === 'cat') {
           cats.apply(data)
+          if (!data.failed) sound.land()
         }
         else if (data.type === 'cat_state') {
           cats.applyState(data)

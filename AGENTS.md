@@ -208,6 +208,22 @@ Course text is German or English, chosen per device like the view mode.
 - Language is never sent to the server and never changes another screen.
 - Design-system slides and the notes in `slides.config.ts` stay untranslated.
 
+## Sound
+
+`composables/useSound.ts` is a small synthesised cue layer, the same one the
+portfolio site uses: no audio files, four cues (a slide moving, something the
+room waited for arriving, a notification, a press), one dulled sine each with a
+few milliseconds of filtered noise on the attack.
+
+- Only the projector makes a sound. Thirty phones answering a slide change at
+  once is a rattle, and the room's speakers are on the machine driving the big
+  screen.
+- `m` mutes and unmutes it there; the choice is kept in `deck:<PREFIX>:sound`.
+- `plugins/sound.client.ts` fires the slide and notification cues; an answer the
+  room waited for plays its cue where it is handled, in `useWebSocket`.
+- Browsers refuse audio before a real gesture, so the first cue after a reload
+  may be silent. Clicking the projector once arms it.
+
 ## Follow-along devices
 
 The title slide's QR code opens `/join`, which is read-only: the device picks a

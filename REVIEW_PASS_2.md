@@ -47,7 +47,7 @@ time: look at the code first, then build.
 
 ## D. Across the deck
 
-- [ ] **12. Sound:** look at what the portfolio project uses and reuse the same
+- [x] **12. Sound:** look at what the portfolio project uses and reuse the same
       sounds where they fit the deck.
 - [ ] **13. Replay for everyone:** every animation can be restarted from the
       presenter view and from any follow-along device, with the same spam
