@@ -1,11 +1,16 @@
 <script setup lang="ts">
 /**
- * Sync control, top right of every slide layout.
+ * Sync control, at the right end of the strip under the slide.
  *
  * A slide view keeps its own local position, so it can fall behind or run ahead
  * of the room. This says how far off it is, offers a peek at the room's slide,
  * syncs in one tap, and can keep syncing by itself. Controllers never see it:
  * they own the room's position. Peek frames never see it either.
+ *
+ * It rides in the same strip as the replay button and the language switch
+ * (`components/deck/ReplayDock.vue`), so no control of a follow-along device is
+ * ever laid over the slide. What it opens — the peek at the room's slide, the
+ * auto-sync box — stacks upwards out of the strip, and only while it is open.
  */
 import { computed, ref } from 'vue'
 import { usePresentation } from '~/composables/usePresentation'
@@ -39,7 +44,10 @@ const sync = () => {
 </script>
 
 <template>
-  <div v-if="detached || showFollowing" class="absolute top-4 right-4 z-[60] flex flex-col items-end gap-2">
+  <div
+    v-if="detached || showFollowing"
+    class="sync-dock fixed right-3 bottom-0 z-[71] h-14 flex flex-col-reverse items-end justify-center gap-2"
+  >
     <template v-if="detached">
       <div class="flex items-center gap-1.5">
         <button
@@ -98,12 +106,28 @@ const sync = () => {
       </label>
     </template>
 
-    <div
-      v-else
-      class="flex items-center gap-2 px-3 py-1.5 rounded-full bg-black/30 border border-white/10 backdrop-blur-sm text-gray-400"
-    >
-      <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+    <!-- In step with the room: a quiet line in the strip, not a badge on the slide. -->
+    <div v-else class="sync-following flex items-center gap-2" style="color: var(--text-muted);">
+      <span class="w-1.5 h-1.5 rounded-full" style="background: var(--mint);"></span>
       <span class="text-[11px] font-medium">Following presenter</span>
     </div>
   </div>
 </template>
+
+<style scoped>
+/*
+ * A narrow screen has no room for a line of status beside the replay button in
+ * the same strip, so in step with the room says nothing there, and being off
+ * sync — which is the half that has something to do — stacks above the strip
+ * instead of sharing it.
+ */
+@media (max-width: 560px) {
+  .sync-dock {
+    bottom: 3.5rem;
+    height: auto;
+  }
+  .sync-following {
+    display: none;
+  }
+}
+</style>

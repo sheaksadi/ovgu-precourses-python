@@ -4,12 +4,14 @@
  *
  * Steps on the left, ticking off as `stage` advances, one tip per step and an
  * optional `aside` at the bottom; the demo frame (default slot) on the right
- * with a replay button under it. Used by the walk-throughs in `components/pycharm/`,
+ * with its controls under it. Used by the walk-throughs in `components/pycharm/`,
  * which drive it with `useDemoPlayer`.
  *
  * A demo that does not play on its own passes `started: false` and a `start`
- * label. The frame then waits behind one big button, and whoever presses it
- * starts the animation on every screen in the room at once.
+ * label. Its button is the same button in the same row, only labelled to start
+ * rather than to replay; whoever presses it starts the animation on every
+ * screen in the room at once. Nothing is ever laid over the frame: a control
+ * that covers the thing it controls is the one place a viewer cannot look.
  */
 import { computed } from 'vue'
 import { useDeckRole } from '~/composables/useDeckRole'
@@ -84,21 +86,21 @@ const isDone = (step: number) => !waiting.value && (step < props.stage || (step 
     <section class="walk-demo">
       <slot />
 
-      <!-- Nothing has played yet: one button, where the demo will be. -->
-      <div v-if="waiting" class="walk-start">
-        <button v-if="!isProjector" type="button" class="walk-start-button" :disabled="held" @click="emit('replay')">
-          <Icon name="lucide:play" />
-          <span class="text-trim">{{ start || replay }}</span>
+      <!-- One row under the frame: start it, or play it again. -->
+      <div v-if="!isProjector || waiting" class="walk-controls">
+        <button
+          v-if="!isProjector"
+          type="button"
+          class="walk-replay"
+          :class="{ 'is-start': waiting }"
+          :disabled="held"
+          @click="emit('replay')"
+        >
+          <Icon :name="waiting ? 'lucide:play' : 'lucide:rotate-ccw'" />
+          <span class="text-trim">{{ waiting ? (start || replay) : replay }}</span>
         </button>
         <span v-else class="walk-start-badge">{{ start || replay }}</span>
-      </div>
-
-      <div v-if="!isProjector && !waiting" class="walk-controls">
-        <button type="button" class="walk-replay" :disabled="held" @click="emit('replay')">
-          <Icon name="lucide:rotate-ccw" />
-          <span class="text-trim">{{ replay }}</span>
-        </button>
-        <span class="walk-hint">{{ hint }}</span>
+        <span v-if="!isProjector" class="walk-hint">{{ hint }}</span>
       </div>
     </section>
   </div>
@@ -251,41 +253,17 @@ const isDone = (step: number) => !waiting.value && (step < props.stage || (step 
   gap: 2.2vh;
 }
 
-/* The veil sits over the still frame, so the frame is the promise of the demo. */
-.walk-start {
-  position: absolute;
-  inset: 0;
-  display: grid;
-  place-items: center;
-  border-radius: 1.6vh;
-  background: color-mix(in srgb, var(--bg) 62%, transparent);
-  backdrop-filter: blur(2px);
-  animation: appear 0.3s ease both;
-}
-
-.walk-start-button,
+/* The room's screen says what is about to happen; it carries no buttons. */
 .walk-start-badge {
   display: inline-flex;
   align-items: center;
   gap: 1.2vh;
-  padding: calc(1.6vh + 0.3em) 3.2vh;
-  border-radius: 999px;
+  padding: calc(1vh + 0.25em) 2.4vh;
+  border-radius: 1.2vh;
   background: var(--text);
-  font-size: clamp(0.95rem, 2.6vh, 1.8rem);
-  font-weight: 900;
+  font-size: clamp(0.8rem, 1.8vh, 1.2rem);
+  font-weight: 800;
   color: var(--bg);
-  box-shadow: 0 1.2vh 3vh rgba(0, 0, 0, 0.18);
-}
-.walk-start-button {
-  cursor: pointer;
-  transition: transform 0.15s ease;
-}
-.walk-start-button:hover:not(:disabled) {
-  transform: scale(1.03);
-}
-.walk-start-button:disabled {
-  opacity: 0.45;
-  cursor: default;
 }
 
 .walk-controls {
@@ -309,6 +287,11 @@ const isDone = (step: number) => !waiting.value && (step < props.stage || (step 
   font-weight: 800;
   color: var(--text);
   cursor: pointer;
+}
+/* Nothing has played yet, so this is the one thing to press. */
+.walk-replay.is-start {
+  background: var(--text);
+  color: var(--bg);
 }
 
 .walk-hint {
@@ -389,11 +372,10 @@ const isDone = (step: number) => !waiting.value && (step < props.stage || (step 
     font-size: 0.8rem;
   }
 
-  .walk-start-button,
   .walk-start-badge {
     gap: 0.6rem;
-    padding: 0.9rem 1.6rem;
-    font-size: 1.05rem;
+    padding: 0.7rem 1.2rem;
+    font-size: 0.95rem;
   }
 }
 

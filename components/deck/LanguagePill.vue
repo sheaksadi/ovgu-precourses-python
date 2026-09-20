@@ -6,6 +6,11 @@
  * screen with a keyboard switches with the `l` key. Controllers and peek frames
  * never show it, and neither does the projector: its language comes from the
  * link the start page opens.
+ *
+ * It sits at the left end of the strip `components/deck/ReplayDock.vue` puts
+ * under the slide, which is why it is fixed rather than placed in a corner of
+ * the scene: a device's controls all live in the same row, and none of them
+ * covers the slide.
  */
 import { useDeckRole } from '~/composables/useDeckRole'
 import { useI18n } from '~/composables/useI18n'
@@ -31,12 +36,15 @@ const { locale, locales, setLocale, t } = useI18n()
 </template>
 
 <style scoped>
+/* Docked at the left end of the device's strip, never over the slide. */
 .lang-pill {
-  position: absolute;
-  left: 1rem;
-  bottom: 1rem;
-  z-index: 60;
+  position: fixed;
+  left: 0.75rem;
+  bottom: 0;
+  height: 3.5rem;
+  z-index: 71;
   display: none;
+  align-items: center;
   gap: 2px;
   padding: 3px;
   border-radius: 999px;

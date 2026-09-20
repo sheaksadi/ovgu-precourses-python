@@ -7,6 +7,9 @@
  * slide it shows has an interactive part, this offers it instead of switching
  * the device on its own; tapping it turns on interactive mode for this device.
  * Only touch screens show it, so the projector stays clean.
+ *
+ * It docks in the strip `components/deck/ReplayDock.vue` puts under the slide,
+ * in the middle, where the replay button sits on the slides that offer one.
  */
 import { computed } from 'vue'
 import { useRoute, useRouter } from '#app'
@@ -37,12 +40,14 @@ const joinIn = () => {
 </template>
 
 <style scoped>
+/* In the middle of the device's strip, where the replay button sits on the
+   slides that have one. An interactive slide has no replay, so they never meet. */
 .interactive-hint {
-  position: absolute;
+  position: fixed;
   left: 50%;
-  bottom: 1rem;
+  bottom: 0.75rem;
   translate: -50% 0;
-  z-index: 60;
+  z-index: 71;
   display: none;
   align-items: center;
   gap: 0.6rem;

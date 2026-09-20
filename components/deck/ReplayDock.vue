@@ -1,19 +1,25 @@
 <script setup lang="ts">
 /**
- * "Play it again", on a follow-along device. Mounted once, in `app.vue`.
+ * The follow-along device's own strip, under the slide. Mounted once, in
+ * `app.vue`, and it holds "play it again" in the middle.
  *
  * Every animated slide can be replayed by anybody in the room, not only by the
  * person at the laptop: the request goes over the WebSocket and comes back as a
  * broadcast, so the projector and every phone start from the top together —
  * replaying only the phone in your hand would be no use to anyone.
  *
- * On a phone it is a bar under the slide, not a button floating over it: the
- * corner it would sit in is the corner a scene tends to fill, so it costs the
- * slide those few rems instead (`--deck-dock`, see `assets/css/main.css`,
- * applied by the `.deck-stage` height every slide layout uses).
+ * It is a bar at every size, never a button in a corner. A slide fills its
+ * corners — a counter, a QR code, the tallest bar of a run — so a control
+ * parked in one covers the thing it controls. The bar costs the slide its own
+ * height instead (`--deck-dock`, see `assets/css/main.css`, applied by the
+ * `.deck-stage` height every slide layout uses), and that is the same deal the
+ * spin button and the walk-through replay take: a row under the scene.
  *
- * A wider screen keeps the button in the corner. There is room there, and a bar
- * across a laptop is a band of nothing under a slide that already fits.
+ * The device's other controls dock into the same strip from their own
+ * components: the language switch at its left edge
+ * (`components/deck/LanguagePill.vue`), the "join in" hint in the middle
+ * (`components/deck/InteractiveHint.vue`) and how far this screen is from the
+ * room at its right (`components/slides/SyncPill.vue`).
  *
  * While a replay runs the button holds, and the server ignores a second request
  * inside its own lock, the same way the icebreaker spin does.
@@ -21,7 +27,7 @@
  * Never on the projector, a peek frame, a controller — or on a slide somebody
  * is working in, where a replay would remount their answer away.
  */
-import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { computed, onBeforeUnmount, onMounted, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { useI18n } from '~/composables/useI18n'
 import { useDeckRole } from '~/composables/useDeckRole'
@@ -38,43 +44,39 @@ const route = useRoute()
 
 const slide = computed(() => getSlideByRoute(route.path))
 
-const show = computed(() =>
-  isViewer.value && !isPeek.value && !isProjector.value
-  && !!slide.value && !slide.value.problem && !slide.value.interactive
+/** A screen somebody is holding: the only one that carries controls at all. */
+const onDevice = computed(() =>
+  isViewer.value && !isPeek.value && !isProjector.value && !!slide.value,
+)
+
+const replayable = computed(() =>
+  onDevice.value && !slide.value!.problem && !slide.value!.interactive
   // A walk-through carries its own replay, under the frame it belongs to.
   && !demos.ownsReplay.value,
 )
 
-/** The width at which the button becomes a bar. Also in this file's styles. */
-const PHONE = '(orientation: portrait) and (max-width: 760px)'
-const narrow = ref(false)
-let media: MediaQueryList | null = null
-const onWidth = (event: MediaQueryListEvent) => { narrow.value = event.matches }
+/**
+ * The strip is there for the whole talk, not only where there is something to
+ * replay: it also holds the language switch, the join-in hint and how far this
+ * screen is from the room. A row that comes and goes under a thumb is worse
+ * than a row that is always in the same place.
+ */
+const show = computed(() => onDevice.value)
 
 /**
- * The slide gives up the height the bar takes, so nothing of the scene ends up
- * behind it. The class carries it rather than a style on one element, because
- * every layout reads the same variable — and only where there is a bar, so a
- * laptop keeps the whole screen.
+ * The slide gives up the height the strip takes, so nothing of the scene ends
+ * up behind it. The class carries it rather than a style on one element,
+ * because every layout reads the same variable — and only while there is a
+ * strip, so the projector keeps the whole screen.
  */
-const dock = () => {
+const dock = (on: boolean) => {
   if (import.meta.server) return
-  document.body.classList.toggle('has-deck-dock', show.value && narrow.value)
+  document.body.classList.toggle('has-deck-dock', on)
 }
-watch([show, narrow], dock)
+watch(show, dock)
 
-onMounted(() => {
-  media = window.matchMedia(PHONE)
-  narrow.value = media.matches
-  media.addEventListener('change', onWidth)
-  dock()
-})
-
-onBeforeUnmount(() => {
-  media?.removeEventListener('change', onWidth)
-  narrow.value = false
-  dock()
-})
+onMounted(() => dock(show.value))
+onBeforeUnmount(() => dock(false))
 
 /** Zero: every screen holds for its own scene, and at least the floor in `useDemos`. */
 const replay = () => {
@@ -86,6 +88,7 @@ const replay = () => {
 <template>
   <div v-if="show" class="dock">
     <button
+      v-if="replayable"
       type="button"
       class="replay"
       :class="{ 'is-busy': demos.busy.value }"
@@ -100,12 +103,20 @@ const replay = () => {
 </template>
 
 <style scoped>
-/* Wide enough for a corner: the button sits in one, over the slide. */
 .dock {
   position: fixed;
-  right: 1rem;
-  bottom: 2.75rem;
+  left: 0;
+  right: 0;
+  bottom: 0;
   z-index: 70;
+  /* Also `--deck-dock` in `assets/css/main.css`: the slide gives up this much. */
+  height: 3.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 1rem;
+  background: var(--bg);
+  border-top: 2px solid var(--border);
 }
 
 .replay {
@@ -123,22 +134,6 @@ const replay = () => {
 }
 .replay.is-busy {
   opacity: 0.45;
-}
-
-/* A phone held upright: a bar of its own, and the slide gives up its height. */
-@media (orientation: portrait) and (max-width: 760px) {
-  .dock {
-    left: 0;
-    right: 0;
-    bottom: 0;
-    height: 3.5rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0 1rem;
-    background: var(--bg);
-    border-top: 2px solid var(--border);
-  }
 }
 .replay-icon {
   font-size: 1rem;
