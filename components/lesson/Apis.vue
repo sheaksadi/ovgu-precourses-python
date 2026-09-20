@@ -93,8 +93,9 @@ const outputDelays = computed(() => {
   switch (props.stage) {
     case 2: return [2.4]
     case 3: return [2.6, 3.0]
-    // The two printed lines land with the two `print` lines of the trace.
-    case 4: return [TRACE_PRINT, TRACE_PRINT + 0.5]
+    // The two printed lines land with the two `print` lines of the trace, and
+    // the trace waits for the walk out, so these have to wait with it.
+    case 4: return [printsAt.value, printsAt.value + 0.5]
     default: return undefined
   }
 })
@@ -108,6 +109,15 @@ const TRACE_PRINT = 0.35
 /** How long the walk out to the request line takes. */
 const TRACE_OUT = 0.5
 const traced = ref(0)
+/**
+ * When the first `print` line runs, in seconds from now.
+ *
+ * The output card animates from the moment its lines are rendered, which is the
+ * moment the answer arrives — but the trace may still be walking out to the
+ * request line, and output that appears before the `print` that made it reads
+ * backwards. Both are driven from this one number.
+ */
+const printsAt = ref(TRACE_PRINT)
 let traceTimers: ReturnType<typeof setTimeout>[] = []
 /** When the request line is reached, so a fast answer cannot overtake it. */
 let outUntil = 0
@@ -129,6 +139,8 @@ watch(pending, (now) => {
   if (props.stage !== 4 || !now) return
   clearTrace()
   traced.value = 1
+  // The waiting "…" is not a printed line, so it may show at once.
+  printsAt.value = 0.15
   outUntil = Date.now() + TRACE_OUT * 1000
   walk([{ at: TRACE_OUT / 2, line: 3 }, { at: TRACE_OUT, line: 4 }])
 })
@@ -141,7 +153,8 @@ watch(() => cats.answers.value, () => {
   // An answer that comes back in a few milliseconds still waits for the walk
   // out to finish, so the room sees the request leave before it returns.
   const hold = Math.max(0, outUntil - Date.now()) / 1000
-  walk([{ at: hold + TRACE_PRINT, line: 5 }, { at: hold + TRACE_PRINT + 0.5, line: 6 }])
+  printsAt.value = hold + TRACE_PRINT
+  walk([{ at: printsAt.value, line: 5 }, { at: printsAt.value + 0.5, line: 6 }])
 })
 
 onBeforeUnmount(clearTrace)
