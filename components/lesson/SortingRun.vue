@@ -5,23 +5,31 @@
  *
  * Every algorithm of the detour gets one of these right after its lesson slide,
  * because five bars next to a code panel show what the rule is and twenty bars
- * across a projector show what the rule *costs*. All three runs start from the
+ * across a projector show what the rule *costs*. All five runs start from the
  * same twenty numbers, so the comparison counters at the end can be read against
  * each other — which is the honest version of the "how much work" slide.
  *
- * The run is the real algorithm from `utils/sorting.ts`, played frame by frame.
- * Enter replays it. Reduced motion lands on the sorted row.
+ * Merge and quick sort only ever appear here, with no lesson slide and no code
+ * of their own: they are the two the room should have *seen* once, not written.
+ * So they carry their rule in three steps in the corner, and the run marks the
+ * stretch they are working on — plus the pivot, for quick sort.
+ *
+ * The run is the real algorithm from `utils/sorting.ts`, played frame by frame,
+ * and the projector puts a note under every frame: the value being looked at,
+ * pitched by how tall it is, louder when it moves. Enter replays it. Reduced
+ * motion lands on the sorted row, in silence.
  */
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useI18n } from '~/composables/useI18n'
 import { useDemos } from '~/composables/useDemos'
+import { useSound } from '~/composables/useSound'
 import { useWebSocket } from '~/composables/useWebSocket'
 import { sortFrames, type SortName } from '~/utils/sorting'
 
 const props = defineProps<{ algo: SortName }>()
 const { t, tm } = useI18n()
 
-/** The same twenty numbers for all three runs, so the counters compare. */
+/** The same twenty numbers for all five runs, so the counters compare. */
 const VALUES = [
   62, 14, 87, 33, 5, 71, 26, 94, 48, 9,
   57, 80, 21, 66, 38, 12, 75, 43, 29, 53,
@@ -29,7 +37,9 @@ const VALUES = [
 const TALLEST = 100
 const N = VALUES.length
 
-const info = computed(() => tm<{ name: string, rule: string }>(`sorting.big.${props.algo}`))
+const info = computed(() => tm<{ name: string, rule: string, steps?: string[] }>(`sorting.big.${props.algo}`))
+/** Only the two without a lesson slide carry their rule as steps in the corner. */
+const steps = computed(() => info.value.steps ?? [])
 
 const frames = computed(() => sortFrames(VALUES, props.algo))
 const index = ref(0)
@@ -44,7 +54,19 @@ const places = computed(() => {
   return spots
 })
 
-const SPEED = 55
+/**
+ * How fast a run plays, per algorithm. The three that walk the whole row take
+ * thousands of frames and want video speed; merge and quick are done in a few
+ * hundred, so at the same speed they would be over before the room looks up.
+ */
+const SPEED: Record<SortName, number> = {
+  bubble: 55,
+  selection: 55,
+  insertion: 55,
+  merge: 110,
+  quick: 110,
+}
+const speed = computed(() => SPEED[props.algo])
 
 let timer: ReturnType<typeof setTimeout> | null = null
 const stop = () => { if (timer) clearTimeout(timer); timer = null }
@@ -54,7 +76,7 @@ const step = () => {
   timer = setTimeout(() => {
     index.value++
     step()
-  }, SPEED)
+  }, speed.value)
 }
 
 const play = () => {
@@ -70,7 +92,7 @@ const play = () => {
 /** How long this run takes, so a replay can hold the room for that long. */
 const demos = useDemos()
 const ws = useWebSocket()
-const runsFor = () => frames.value.length * SPEED + 1200
+const runsFor = () => frames.value.length * speed.value + 1200
 
 /** Asked for by a person: the whole room watches it again, from the top. */
 const replay = () => {
@@ -78,6 +100,25 @@ const replay = () => {
   demos.hold(ms)
   ws.sendDemoReplay(ms)
 }
+
+/**
+ * The frame, heard. A comparison is the value being looked at, a swap the value
+ * that just moved, and the last frame is the room's "that arrived" cue. Silent
+ * everywhere but the projector, and silent there when it is muted.
+ */
+const sound = useSound()
+watch(index, (at) => {
+  const frame = frames.value[at]
+  if (!frame) return
+  if (at >= frames.value.length - 1) {
+    sound.land()
+    return
+  }
+  const place = (frame.swap || frame.b < 0) ? frame.a : frame.b
+  const id = place >= 0 ? frame.order[place] : undefined
+  if (id === undefined) return
+  sound.step(VALUES[id]! / TALLEST, frame.swap)
+})
 
 const onKey = (event: KeyboardEvent) => {
   if (event.key !== 'Enter') return
@@ -102,8 +143,13 @@ onBeforeUnmount(() => {
 
 const roleOf = (id: number) => {
   const place = places.value[id]!
-  if (place < now.value.left || place >= N - now.value.right) return 'done'
-  if (place === now.value.a || place === now.value.b) return now.value.swap ? 'swap' : 'compare'
+  const frame = now.value
+  if (place < frame.left || place >= N - frame.right) return 'done'
+  if (frame.fixed.includes(place)) return 'done'
+  if (place === frame.pivot) return 'pivot'
+  if (place === frame.a || place === frame.b) return frame.swap ? 'swap' : 'compare'
+  // Merge and quick sort work on one stretch at a time; the rest waits.
+  if (frame.lo >= 0 && (place < frame.lo || place > frame.hi)) return 'waiting'
   return 'idle'
 }
 </script>
@@ -117,23 +163,40 @@ const roleOf = (id: number) => {
         <p class="run-rule">{{ info.rule }}</p>
       </div>
 
-      <div class="run-counts">
-        <span class="count">
-          <span class="count-value">{{ now.compares }}</span>
-          <span class="count-label">{{ t('sorting.compares') }}</span>
-        </span>
-        <span class="count">
-          <span class="count-value">{{ now.swaps }}</span>
-          <span class="count-label">{{ t('sorting.big.swaps') }}</span>
-        </span>
-        <span class="count is-quiet">
-          <span class="count-value">{{ N }}</span>
-          <span class="count-label">{{ t('sorting.big.values') }}</span>
-        </span>
+      <div class="run-side">
+        <div class="run-counts">
+          <span class="count">
+            <span class="count-value">{{ now.compares }}</span>
+            <span class="count-label">{{ t('sorting.compares') }}</span>
+          </span>
+          <span class="count">
+            <span class="count-value">{{ now.swaps }}</span>
+            <span class="count-label">{{ t('sorting.big.swaps') }}</span>
+          </span>
+          <span class="count is-quiet">
+            <span class="count-value">{{ N }}</span>
+            <span class="count-label">{{ t('sorting.big.values') }}</span>
+          </span>
+        </div>
+
+        <!-- The two without a lesson slide say their rule here, in three steps. -->
+        <aside v-if="steps.length" class="idea">
+          <span class="idea-label">{{ t('sorting.big.idea') }}</span>
+          <ol class="idea-steps">
+            <li v-for="(line, at) in steps" :key="at">{{ line }}</li>
+          </ol>
+        </aside>
       </div>
     </header>
 
     <div class="run-bars">
+      <!-- The stretch merge or quick sort is working on right now. -->
+      <span
+        v-if="now.lo >= 0"
+        class="stretch"
+        :style="{ '--lo': now.lo, '--span': now.hi - now.lo + 1, '--n': N }"
+      ></span>
+
       <span
         v-for="(v, id) in VALUES"
         :key="id"
@@ -147,6 +210,9 @@ const roleOf = (id: number) => {
     </div>
 
     <footer class="run-foot">
+      <span v-if="algo === 'quick'" class="run-legend">
+        <span class="legend-dot"></span>{{ t('sorting.big.pivot') }}
+      </span>
       <div class="run-progress" :style="{ '--p': `${progress}%` }"></div>
       <span class="run-hint">{{ finished ? t('sorting.big.done') : t('sorting.big.running') }}</span>
     </footer>
@@ -158,10 +224,21 @@ const roleOf = (id: number) => {
   position: relative;
   width: 100%;
   height: 100%;
+  /*
+   * How long a bar takes to reach its new place. It has to be shorter than the
+   * frame, or a run smears: merge sort moves the whole rest of a stretch one
+   * place along with every value it writes, and those slides have to be over
+   * before the next one starts.
+   */
+  --move: 0.18s;
   padding: 6vh 5vw 7vh;
   display: flex;
   flex-direction: column;
   overflow: hidden;
+}
+
+.run.is-merge {
+  --move: 0.09s;
 }
 
 .run-head {
@@ -193,9 +270,49 @@ const roleOf = (id: number) => {
   color: var(--text-dim);
 }
 
+.run-side {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 1.4vh;
+}
 .run-counts {
   display: flex;
   gap: 1.2vw;
+}
+
+/* ─── The idea, in the corner ────────────────────────────────────────── */
+.idea {
+  max-width: 34ch;
+  padding: 1.2vh 1.6vh;
+  border-radius: 1vh;
+  background: var(--bg-off);
+  border: 2px dashed var(--border);
+  animation: idea-in 0.5s ease 0.2s both;
+}
+.idea-label {
+  display: block;
+  font-size: clamp(0.45rem, 1.15vh, 0.72rem);
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+.idea-steps {
+  margin: 0.8vh 0 0;
+  padding-left: 2.2ch;
+  list-style: decimal;
+  font-size: clamp(0.55rem, 1.5vh, 0.95rem);
+  line-height: 1.4;
+  color: var(--text-dim);
+}
+.idea-steps li + li {
+  margin-top: 0.4vh;
+}
+
+@keyframes idea-in {
+  from { opacity: 0; translate: 0 -0.8vh; }
+  to { opacity: 1; translate: 0 0; }
 }
 .count {
   display: flex;
@@ -233,6 +350,19 @@ const roleOf = (id: number) => {
   margin-top: 3vh;
   min-height: 0;
 }
+/* The stretch a divide-and-conquer run owns right now, behind its bars. */
+.stretch {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: calc(var(--lo) * (100% / var(--n)));
+  width: calc(var(--span) * (100% / var(--n)));
+  border-radius: 1vh;
+  background: color-mix(in srgb, var(--sky) 10%, transparent);
+  border: 2px dashed color-mix(in srgb, var(--sky) 55%, transparent);
+  transition: left 0.18s ease, width 0.18s ease;
+}
+
 .bar {
   position: absolute;
   bottom: 0;
@@ -246,7 +376,7 @@ const roleOf = (id: number) => {
   align-items: center;
   gap: 0.6vh;
   padding: 0 0.25vw;
-  transition: left 0.18s cubic-bezier(0.22, 1, 0.36, 1);
+  transition: left var(--move) cubic-bezier(0.22, 1, 0.36, 1);
 }
 .bar-body {
   width: 100%;
@@ -275,9 +405,18 @@ const roleOf = (id: number) => {
   background: color-mix(in srgb, var(--mint) 35%, var(--bg));
   border-color: var(--mint);
 }
+.bar.is-pivot .bar-body {
+  background: color-mix(in srgb, var(--sky) 55%, var(--bg));
+  border-color: var(--sky);
+}
+/* Outside the stretch: still there, not being touched. */
+.bar.is-waiting {
+  opacity: 0.45;
+}
 .bar.is-compare .bar-value,
 .bar.is-swap .bar-value,
-.bar.is-done .bar-value {
+.bar.is-done .bar-value,
+.bar.is-pivot .bar-value {
   color: var(--text);
 }
 
@@ -288,6 +427,23 @@ const roleOf = (id: number) => {
   align-items: center;
   gap: 1.2vh;
 }
+.run-legend {
+  display: flex;
+  align-items: center;
+  gap: 0.6vh;
+  font-size: clamp(0.5rem, 1.3vh, 0.85rem);
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+.legend-dot {
+  width: 1.2vh;
+  height: 1.2vh;
+  border-radius: 999px;
+  background: var(--sky);
+}
+
 .run-progress {
   position: relative;
   flex: 1;
@@ -323,8 +479,12 @@ const roleOf = (id: number) => {
 @media (prefers-reduced-motion: reduce) {
   .bar,
   .bar-body,
+  .stretch,
   .run-progress::after {
     transition: none;
+  }
+  .idea {
+    animation: none;
   }
 }
 </style>

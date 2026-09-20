@@ -601,6 +601,14 @@ export const slidesEn: Record<string, SlideText> = {
     title: 'Insertion sort at full size',
     teleprompter: 'The third rule, and the one with the nicest picture: every value slides left until it fits. Compare the three numbers at the end. Press Enter and watch again if you like - this is the part people get stuck on, in the good way.',
   },
+  'PRE-0206': {
+    title: 'Merge sort at full size',
+    teleprompter: 'The fourth rule, and the first one that no longer walks the row from end to end: split until every part holds one value, then merge half with half, in order. The idea is in three steps in the top corner. Watch the green blocks start small and grow. At the end point at the comparisons: far fewer than the first three, and the gap grows with the length of the list. Enter plays it again.',
+  },
+  'PRE-0207': {
+    title: 'Quick sort at full size',
+    teleprompter: 'The fifth: one value becomes the pivot - the blue bar - everything smaller moves to its left, everything bigger to its right. The pivot is then final, and both sides start over on their own. The dashed frame shows which piece is being worked on. Compare the comparisons with bubble sort here too. This is the sort that runs most often in practice. Enter plays it again.',
+  },
   'PRE-0161': {
     title: 'Sorting - how much work?',
     teleprompter: 'Do not count seconds, count comparisons. With 10 values it is about 100, with 100 about 10,000, with 1000 about a million: twice the data means four times the work. The built-in sort grows far more slowly. Anyone who wants more should search for big O notation - that is first semester material.',
@@ -630,7 +638,7 @@ export const slidesEn: Record<string, SlideText> = {
   'PRE-0179': {
     title: 'Worth watching',
     subtitle: 'Channels that explain it better than any slide',
-    teleprompter: 'Recommendations, not homework. 3Blue1Brown makes maths visible - the series on neural networks is the best free introduction to the topic there is. Sebastian Lague builds things and shows what programming feels like when it is fun. Computerphile for the theory, CS50 for a complete course, Corey Schafer and ArjanCodes for Python itself. Say which of them you watch yourself.',
+    teleprompter: 'Recommendations, not homework. 3Blue1Brown makes maths visible - the series on neural networks is the best free introduction to the topic there is. Sebastian Lague builds things and shows what programming feels like when it is fun. Computerphile for the theory, CS50 for a complete course. Say which of them you watch yourself.',
   },
   'PRE-0180': {
     title: 'Keep going',

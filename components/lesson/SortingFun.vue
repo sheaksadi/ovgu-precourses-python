@@ -8,11 +8,14 @@
  *   3. sleep sort, miracle sort and quantum bogosort as three cards
  *
  * Same bars as `Sorting.vue`, same catch, so the joke lands against something
- * the room already recognises. Words come from `sorting.fun.*` in `locales/`.
+ * the room already recognises, and the projector hears it too: a shuffle is one
+ * note per try, a value that falls off the row is a low one. Words come from
+ * `sorting.fun.*` in `locales/`.
  */
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useI18n } from '~/composables/useI18n'
 import { useDemos } from '~/composables/useDemos'
+import { useSound } from '~/composables/useSound'
 import { useWebSocket } from '~/composables/useWebSocket'
 
 type StageNumber = 1 | 2 | 3
@@ -112,6 +115,31 @@ const replay = () => {
   demos.hold(ms)
   ws.sendDemoReplay(ms)
 }
+
+/**
+ * The step, heard, and only on the projector. Bogosort gets one note per try,
+ * taken from the value that happens to land in front — the shuffle is the whole
+ * joke, so it should sound different every time and go nowhere. Stalin sort
+ * gets the value it is looking at, and a low, fuller note when one falls off.
+ */
+const sound = useSound()
+watch(index, (at) => {
+  if (props.stage === 3) {
+    sound.note()
+    return
+  }
+  if (props.stage === 1) {
+    const front = SHUFFLES[at]?.[0]
+    if (front !== undefined) sound.step(value(front) / TALLEST)
+    return
+  }
+  const walk = stalinSteps.value[at]
+  if (!walk) return
+  const before = stalinSteps.value[at - 1]?.dropped.length ?? 0
+  const fell = walk.dropped.length > before
+  const id = ids[walk.at]!
+  sound.step(fell ? 0.05 : value(id) / TALLEST, fell)
+})
 
 const onKey = (event: KeyboardEvent) => {
   if (event.key !== 'Enter') return

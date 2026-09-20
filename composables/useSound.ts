@@ -1,11 +1,12 @@
 /**
- * The room's sound layer: four cues, all synthesised.
+ * The room's sound layer: five cues, all synthesised.
  *
  *   const sound = useSound()
  *   sound.move(true)   // the deck moved on
  *   sound.land()       // something the room asked for arrived
  *   sound.note()       // a notification came up
  *   sound.press()      // a person pressed something on this screen
+ *   sound.step(0.4)    // one value of a running demo, pitched by its size
  *
  * Ported from the same layer as the portfolio site, kept to one palette. There
  * are no audio files: every cue is a dulled sine with a few milliseconds of
@@ -43,6 +44,13 @@ const ROOT = 500
 /** The shortest gap between two cues, so a held arrow key does not rattle. */
 const GAP_MS = 55
 
+/**
+ * The same for `step`, which is the only cue a demo fires on its own clock. It
+ * has to be shorter, because a sorting run plays one per frame, and it is kept
+ * apart from `GAP_MS` so a fast run can never swallow the slide's own cue.
+ */
+const STEP_GAP_MS = 22
+
 /** Length of the noise the transient half of a cue is excited with. */
 const NOISE_SEC = 1
 
@@ -56,6 +64,7 @@ let ctx: AudioContext | undefined
 let master: GainNode | undefined
 let noiseBuf: AudioBuffer | undefined
 let lastCue = 0
+let lastStep = 0
 let wired = false
 
 interface Cue {
@@ -238,6 +247,28 @@ export function useSound() {
   })
 
   /**
+   * One value of a running demo, heard: `ratio` is how tall it is against the
+   * tallest one, and that is the whole cue. Low values sound low, high values
+   * sound high, so a sorting run turns into the rising scale everybody knows
+   * from the videos — the picture and the sound carry the same thing.
+   *
+   * `strong` is for the moment a value actually moves. It is a touch louder and
+   * carries a scrap of the transient, so a swap is heard over the comparisons
+   * around it without becoming a second melody.
+   */
+  const step = (ratio: number, strong = false) => {
+    if (import.meta.server || !audible.value) return
+    const now = performance.now()
+    if (now - lastStep < STEP_GAP_MS) return
+    lastStep = now
+
+    const height = Math.min(Math.max(ratio, 0), 1)
+    const freq = ROOT * (0.5 + height * 1.5)
+    tone(freq, (strong ? 0.042 : 0.026) * RECIPE.tone, (strong ? 0.07 : 0.05) * RECIPE.hold, freq * 2.6, RECIPE.attack)
+    if (strong) transient(freq * 3, 0.24 * RECIPE.noise, 0.012, RECIPE.q, 800)
+  }
+
+  /**
    * Read the stored choice and arm the gesture that starts the audio. Runs once
    * per client, however many places call this composable.
    */
@@ -265,5 +296,6 @@ export function useSound() {
     land,
     note,
     press,
+    step,
   }
 }

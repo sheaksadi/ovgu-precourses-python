@@ -18,12 +18,15 @@
  * Every stage is a real run: `frames()` executes the algorithm and records the
  * array after each comparison and each swap, and the player walks those frames.
  * Bars are keyed by value id and placed by index, so a swap is one transition
- * rather than a re-render. Reduced motion lands on the last frame. Enter replays.
- * Words come from `sorting.*` in `locales/`.
+ * rather than a re-render. The projector also hears the run: one note per frame,
+ * pitched by the value being looked at, fuller when it moves. Reduced motion
+ * lands on the last frame, in silence. Enter replays. Words come from
+ * `sorting.*` in `locales/`.
  */
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useI18n } from '~/composables/useI18n'
 import { useDemos } from '~/composables/useDemos'
+import { useSound } from '~/composables/useSound'
 import { useWebSocket } from '~/composables/useWebSocket'
 import { sortFrames, type SortFrame, type SortLines } from '~/utils/sorting'
 
@@ -81,6 +84,10 @@ const still = (order: number[], rest: Partial<SortFrame> = {}): SortFrame => ({
   swap: false,
   left: 0,
   right: 0,
+  lo: -1,
+  hi: -1,
+  pivot: -1,
+  fixed: [],
   compares: 0,
   swaps: 0,
   pass: 0,
@@ -145,6 +152,25 @@ const replay = () => {
   demos.hold(ms)
   ws.sendDemoReplay(ms)
 }
+
+/**
+ * The frame, heard, and only on the projector: the value being compared, or the
+ * one that just moved. The two still stages have nothing to compare, so they
+ * only get the cue that the row has landed.
+ */
+const sound = useSound()
+watch(index, (at) => {
+  const frame = run.value.frames[at]
+  if (!frame) return
+  if (at >= run.value.frames.length - 1) {
+    sound.land()
+    return
+  }
+  const place = (frame.swap || frame.b < 0) ? frame.a : frame.b
+  const id = place >= 0 ? frame.order[place] : undefined
+  if (id === undefined) return
+  sound.step(value(id) / TALLEST, frame.swap)
+})
 
 const onKey = (event: KeyboardEvent) => {
   if (event.key !== 'Enter') return
