@@ -49,8 +49,8 @@ const ink = (token: CodeToken) => codeInk(props.variant, token)
 
 const tabName = computed(() => props.filename || (isPython.value ? 'main.py' : 'plan.txt'))
 const gutterWidth = computed(() => `${String(lines.value.length).length + 1}ch`)
-const isFocused = (index: number) => !props.focus?.length || props.focus.includes(index + 1)
-const isLit = (index: number) => Boolean(props.focus?.length) && isFocused(index)
+/** The line the lesson is on. Nothing else changes; the rest stays readable. */
+const isLit = (index: number) => Boolean(props.focus?.length) && props.focus!.includes(index + 1)
 </script>
 
 <template>
@@ -80,16 +80,16 @@ const isLit = (index: number) => Boolean(props.focus?.length) && isFocused(index
         v-for="(line, index) in lines"
         :key="line.key"
         class="code-line flex items-start px-5"
-        :class="{ 'code-line-dim': !isFocused(index), 'code-line-lit': isLit(index), 'code-line-reveal': reveal }"
+        :class="{ 'code-line-lit': isLit(index), 'code-line-reveal': reveal }"
         :style="{
           ...(reveal ? { animationDelay: `${Math.min(index, 8) * 0.06}s` } : {}),
-          ...(isLit(index) ? { boxShadow: `inset 2px 0 0 ${accent}` } : {}),
+          ...(isLit(index) ? { boxShadow: `inset 3px 0 0 ${accent}` } : {}),
         }"
       >
         <span
           v-if="gutter"
           class="code-gutter shrink-0 text-right select-none"
-          :style="{ width: gutterWidth, opacity: isLit(index) ? 0.9 : 0.4 }"
+          :style="{ width: gutterWidth, opacity: isLit(index) ? 1 : 0.55 }"
         >{{ index + 1 }}</span>
 
         <span class="code-content flex-1 whitespace-pre-wrap">
@@ -127,11 +127,17 @@ const isLit = (index: number) => Boolean(props.focus?.length) && isFocused(index
   line-height: 1.9;
   transition: opacity 0.3s ease, background 0.3s ease;
 }
-.code-line-dim {
-  opacity: 0.32;
-}
+/*
+ * Every line stays readable, highlighted or not.
+ *
+ * The panel used to fade the rest of the sample to a third, which reads as
+ * "ignore this" — but the room is often still reading the line above, and on a
+ * projector a third of black is barely there at all. The line that is running
+ * is marked instead of the others being hidden: a tinted band, the accent rail
+ * down its left edge, and its line number at full strength.
+ */
 .code-line-lit {
-  background: rgba(0, 0, 0, 0.035);
+  background: rgba(0, 0, 0, 0.06);
 }
 .code-line-reveal {
   animation: fade-in 0.35s ease both;
