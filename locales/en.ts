@@ -1480,6 +1480,7 @@ else:
     output: 'Output',
     noOutput: 'no output yet',
     animals: ['Momo', 'Bello', 'Hoppel'],
+    fileBook: 'files',
     fileName: 'tiere.txt',
     fileWords: { whole: 'all at once', line: 'line by line', strip: 'strip() cuts this off', text: 'text' },
     stages: [

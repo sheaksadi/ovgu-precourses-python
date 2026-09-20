@@ -1484,6 +1484,7 @@ else:
     output: 'Ausgabe',
     noOutput: 'noch keine Ausgabe',
     animals: ['Momo', 'Bello', 'Hoppel'],
+    fileBook: 'Dateien',
     fileName: 'tiere.txt',
     fileWords: { whole: 'alles auf einmal', line: 'Zeile für Zeile', strip: 'strip() schneidet das ab', text: 'text' },
     stages: [

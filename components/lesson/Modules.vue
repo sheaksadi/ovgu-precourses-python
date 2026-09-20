@@ -11,9 +11,10 @@
  *   4. a text file read whole, with `with open(...)`
  *   5. the same file walked line by line, and what `strip()` takes off
  *
- * The shelf stays for the first three; the last two put a sheet of paper on the
- * table instead, because a file is not a book from the shelf. Words come from
- * `modules.*` in `locales/`.
+ * The shelf carries all five slides. The last two take one more book off it —
+ * the one about files — and what comes out of that one is not a list of
+ * functions but the file itself, so the page opens where the book did. Words
+ * come from `modules.*` in `locales/`.
  */
 import { computed } from 'vue'
 import { useI18n } from '~/composables/useI18n'
@@ -43,15 +44,21 @@ const fileWords = computed(() => tm<Record<'whole' | 'line' | 'strip' | 'text', 
 const FILE_LINES = ['Momo', 'Bello', 'Hoppel']
 const lineAt = (k: number) => 1.6 + k * 0.9
 
-const BOOKS = [
+const BOOKS = computed(() => [
   { name: 'math', color: 'sky' },
   { name: 'random', color: 'coral' },
   { name: 'statistics', color: 'mint' },
   { name: 'datetime', color: 'sun' },
   { name: 'json', color: 'lavender' },
-]
-/** The book taken off the shelf on each stage that has one. */
-const TAKEN: Record<number, number> = { 1: 0, 2: 1, 3: 2 }
+  // The last book is the one the file slides open; `open` needs no import,
+  // which is the point the slide makes out loud.
+  { name: t('modules.fileBook'), color: 'rose' },
+])
+const FILE_BOOK = 5
+
+/** The book taken off the shelf on each stage. */
+const TAKEN: Record<number, number> = { 1: 0, 2: 1, 3: 2, 4: FILE_BOOK, 5: FILE_BOOK }
+/** Stages 1–3 open a book of functions; 4–5 open the file instead. */
 const onShelf = computed(() => props.stage <= 3)
 
 const TOOLS: Record<number, Array<{ name: string, result: string }>> = {
@@ -99,8 +106,8 @@ const line = useLineClock(() => SCHEDULE[props.stage] ?? [], () => props.stage)
     <div class="scene" :class="`stage-${stage}`">
       <span :key="stage" class="tally"><span class="text-trim">{{ current.tally }}</span></span>
 
-      <!-- The shelf -->
-      <div v-if="onShelf" class="shelf">
+      <!-- The shelf, on every stage: a different book leaves it each time -->
+      <div class="shelf">
         <span
           v-for="(book, k) in BOOKS"
           :key="book.name"
@@ -131,8 +138,8 @@ const line = useLineClock(() => SCHEDULE[props.stage] ?? [], () => props.stage)
       <!-- 3: one tool fetched on its own -->
       <code v-if="stage === 3" class="fetched">from math import sqrt</code>
 
-      <!-- 4–5: a text file on the table -->
-      <div v-if="stage >= 4" class="paper">
+      <!-- 4–5: what the file book opens on is the file itself -->
+      <div v-if="stage >= 4" class="paper" :style="{ '--c': `var(--${BOOKS[FILE_BOOK]!.color})` }">
         <code class="paper-name">{{ t('modules.fileName') }}</code>
         <div
           v-for="(text, k) in FILE_LINES"
@@ -350,11 +357,13 @@ code {
 }
 
 /* ─── 4–5: the file ──────────────────────────────────────────────────── */
+/* The file opens where a book opens, and is bound in the same colour. */
 .paper {
   position: absolute;
-  top: 9vh;
-  left: 6%;
-  width: 40%;
+  top: 7vh;
+  left: 42%;
+  right: 5%;
+  border-left: 1.2vh solid var(--c);
   display: flex;
   flex-direction: column;
   gap: 0.7vh;
@@ -362,7 +371,7 @@ code {
   border-radius: 1.2vh;
   background: var(--bg);
   border: 3px solid var(--text);
-  animation: rise 0.45s cubic-bezier(0.22, 1, 0.36, 1) 0.3s both;
+  animation: open 0.5s cubic-bezier(0.22, 1, 0.36, 1) 0.7s both;
 }
 .paper-name {
   margin-bottom: 0.4vh;
@@ -395,8 +404,8 @@ code {
 
 .whole {
   position: absolute;
-  top: 14vh;
-  left: 54%;
+  top: 30vh;
+  left: 42%;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -429,8 +438,8 @@ code {
 
 .walk {
   position: absolute;
-  top: 12vh;
-  left: 54%;
+  top: 29vh;
+  left: 42%;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
