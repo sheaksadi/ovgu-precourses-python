@@ -92,8 +92,18 @@ const send = (method, params = {}) => new Promise((resolve) => {
   pending.set(n, resolve)
   ws.send(JSON.stringify({ id: n, method, params }))
 })
-const evaluate = async expression =>
-  (await send('Runtime.evaluate', { expression, returnByValue: true, awaitPromise: true })).result?.value
+/**
+ * One slide that never answers must not take the sweep with it: a page busy in
+ * a loop, or a tab that died, simply reports as not measured.
+ */
+const EVAL_TIMEOUT = 8000
+const evaluate = async (expression) => {
+  const answer = await Promise.race([
+    send('Runtime.evaluate', { expression, returnByValue: true, awaitPromise: true }),
+    wait(EVAL_TIMEOUT).then(() => null),
+  ])
+  return answer?.result?.value
+}
 
 await send('Page.enable')
 await send('Runtime.enable')
@@ -148,7 +158,8 @@ for (const slide of wanted) {
   await wait(WAIT)
   let measured = { out: -1, under: -1, tiny: -1, worst: 'not measured', lowest: '' }
   try {
-    measured = JSON.parse(await evaluate(MEASURE))
+    const raw = await evaluate(MEASURE)
+    if (raw) measured = JSON.parse(raw)
   }
   catch { /* left as not measured */ }
   const row = { ...slide, ...measured }

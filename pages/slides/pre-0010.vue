@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full h-full flex flex-col items-center justify-center p-16 text-center">
+  <div class="guide-page w-full h-full flex flex-col items-center justify-center p-16 text-center">
     <div class="max-w-3xl flex flex-col items-center gap-6">
       <!-- Python colored bar -->
       <div class="flex gap-1">

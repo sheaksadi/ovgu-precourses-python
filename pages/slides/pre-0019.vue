@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full h-full flex flex-col px-8 py-10 md:px-24 md:py-16">
+  <div class="guide-page w-full h-full flex flex-col px-8 py-10 md:px-24 md:py-16">
     <header class="mb-8 shrink-0">
       <h2 class="text-3xl md:text-5xl font-black tracking-tight" style="color: var(--text);">
         Title Cards & Layouts
@@ -13,7 +13,7 @@
     <div class="flex-grow grid grid-cols-1 md:grid-cols-3 gap-5 overflow-auto">
       <!-- slide-bare -->
       <div class="rounded-2xl overflow-hidden flex flex-col" style="border: 2px solid var(--border);">
-        <div class="h-40 flex flex-col items-center justify-center p-4 relative" style="background: var(--bg-warm);">
+        <div class="h-40 flex flex-col items-center justify-center p-4 relative" aria-hidden="true" style="background: var(--bg-warm);">
           <div class="w-10 h-1.5 rounded-full mb-3" style="background: var(--coral);"></div>
           <span class="text-2xl font-black" style="color: var(--text);">Python</span>
           <span class="text-xs mt-1" style="color: var(--text-dim);">Pre-Courses</span>
@@ -32,7 +32,7 @@
 
       <!-- slide -->
       <div class="rounded-2xl overflow-hidden flex flex-col" style="border: 2px solid var(--border);">
-        <div class="h-40 flex flex-col justify-center p-4 relative" style="background: var(--bg);">
+        <div class="h-40 flex flex-col justify-center p-4 relative" aria-hidden="true" style="background: var(--bg);">
           <span class="absolute top-2 left-3 text-[7px] font-bold uppercase tracking-widest" style="color: var(--text-muted);">Python for Beginners</span>
           <span class="text-lg font-black" style="color: var(--text);">Variables</span>
           <div class="mt-1 h-1 w-8 rounded-full" style="background: var(--coral);"></div>
@@ -56,7 +56,7 @@
 
       <!-- slide-section -->
       <div class="rounded-2xl overflow-hidden flex flex-col" style="border: 2px solid var(--border);">
-        <div class="h-40 flex flex-col items-center justify-center p-4 relative" style="background: var(--bg);">
+        <div class="h-40 flex flex-col items-center justify-center p-4 relative" aria-hidden="true" style="background: var(--bg);">
           <div class="absolute top-0 left-0 w-full h-1.5" style="background: var(--coral);"></div>
           <span class="text-2xl font-black" style="color: var(--text);">Q & A</span>
           <span class="text-xs mt-1" style="color: var(--text-dim);">Thank You</span>

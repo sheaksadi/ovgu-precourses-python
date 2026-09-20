@@ -7,7 +7,7 @@ const replay = ref(0)
 </script>
 
 <template>
-  <div class="w-full h-full flex flex-col px-8 py-10 md:px-24 md:py-16">
+  <div class="guide-page w-full h-full flex flex-col px-8 py-10 md:px-24 md:py-16">
     <header class="mb-8 shrink-0">
       <h2 class="text-3xl md:text-5xl font-black tracking-tight" style="color: var(--text);">
         Animation &amp; Motion
@@ -81,7 +81,8 @@ const replay = ref(0)
 <style scoped>
 .label {
   margin-bottom: 0.9rem;
-  font-size: 10px;
+  /* 11px, not 10: below that a label stops being read on a phone. */
+  font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;

@@ -214,7 +214,8 @@ const status = computed(() => {
   gap: 0.5rem;
 }
 .task-label {
-  font-size: 0.68rem;
+  /* 0.7rem, not less: below 11px a label stops being read on a phone. */
+  font-size: 0.7rem;
   font-weight: 700;
   letter-spacing: 0.16em;
   text-transform: uppercase;

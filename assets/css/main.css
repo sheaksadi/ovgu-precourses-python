@@ -96,6 +96,34 @@ body.has-deck-dock {
   height: calc(100vh - var(--deck-dock));
 }
 
+/* ─── The style guide ────────────────────────────────────────────────────
+ *
+ * The pages behind `/slides/pre-0010` are reference sheets rather than lesson
+ * slides: rows of swatches, type scales and spacing samples, written as Tailwind
+ * grids. They cannot stack into a story the way a lesson does, so on a phone
+ * they simply scroll, and their smallest labels come up to reading size.
+ *
+ * The class is doubled to win against the Tailwind padding on the same element
+ * without reaching for `!important`.
+ */
+@media (orientation: portrait) and (max-width: 760px) {
+  .guide-page.guide-page {
+    height: 100%;
+    padding: 3.5rem 1rem 6rem;
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+  .guide-page [class*="text-[9px]"],
+  .guide-page [class*="text-[10px]"],
+  .guide-page [class*="text-[11px]"] {
+    font-size: 0.7rem;
+  }
+  /* A label hung on the edge of a box to measure it must stay inside the page. */
+  .guide-page [class*="left-0"][class*="-translate-x-1/2"] {
+    left: 2.5rem;
+  }
+}
+
 /* ─── Keyframes shared by components ─────────────────────────────────── */
 @keyframes fade-in {
   from { opacity: 0; }

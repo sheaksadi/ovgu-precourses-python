@@ -24,7 +24,7 @@ print(average([90, 72, 88]))`
 </script>
 
 <template>
-  <div class="w-full h-full flex flex-col px-8 py-10 md:px-24 md:py-16" @click.self="link.clear()">
+  <div class="guide-page w-full h-full flex flex-col px-8 py-10 md:px-24 md:py-16" @click.self="link.clear()">
     <header class="mb-8 shrink-0">
       <h2 class="text-3xl md:text-5xl font-black tracking-tight" style="color: var(--text);">
         Code &amp; Keyword Links

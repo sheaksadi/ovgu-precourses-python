@@ -22,7 +22,7 @@ const poses = [
 </script>
 
 <template>
-  <div class="w-full h-full flex flex-col px-8 py-10 md:px-24 md:py-16">
+  <div class="guide-page w-full h-full flex flex-col px-8 py-10 md:px-24 md:py-16">
     <header class="mb-8 shrink-0">
       <h2 class="text-3xl md:text-5xl font-black tracking-tight" style="color: var(--text);">
         Cast: Critters
