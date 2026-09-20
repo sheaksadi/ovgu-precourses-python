@@ -4,7 +4,10 @@
  * internet: the room's Wi-Fi often has none, and every phone would otherwise
  * fetch 13 MB from a CDN.
  *
- * Runs after `npm install` (see `postinstall`). The copy is generated, not
+ * Runs before `dev`, `build` and `generate` (see the `pre` scripts in
+ * `package.json`), not after `npm install`: an image build installs from
+ * `package.json` alone, with no `scripts/` beside it yet, and a postinstall
+ * that reaches for this file fails the build. The copy is generated, not
  * committed: `public/pyodide` is in `.gitignore`.
  */
 import { cpSync, existsSync, mkdirSync, statSync } from 'node:fs'
