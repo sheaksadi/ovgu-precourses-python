@@ -153,4 +153,60 @@ const steps = computed(() => tm<string[]>('tryit.steps'))
   right: 6vw;
   width: 50vw;
 }
+
+/* ─── A phone held upright ───────────────────────────────────────────── */
+/* See "A phone held upright" in AGENTS.md. The QR code is the point of this
+   slide on a phone — it opens the compiler on the device already in hand — so
+   it comes before the demo, and the demo goes last. */
+@media (orientation: portrait) and (max-width: 760px) {
+  .tryit {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    padding: 3.5rem 1rem 5rem;
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+
+  .tryit-copy,
+  .tryit-demo {
+    position: static;
+    inset: auto;
+    width: auto;
+  }
+
+  .tryit-title {
+    font-size: clamp(1.7rem, 8vw, 2.4rem);
+  }
+
+  .tryit-steps {
+    margin-top: 1.6rem;
+    gap: 0.8rem;
+  }
+  .tryit-step {
+    gap: 0.75rem;
+    font-size: 1rem;
+  }
+  .tryit-num {
+    width: 1.9rem;
+    height: 1.9rem;
+    font-size: 0.85rem;
+  }
+
+  .tryit-link {
+    margin-top: 1.6rem;
+    gap: 1rem;
+  }
+  .tryit-qr {
+    width: 7.5rem;
+    padding: 0.6rem;
+    border-radius: 0.9rem;
+  }
+  .tryit-scan {
+    font-size: 0.95rem;
+  }
+  .tryit-url {
+    font-size: 0.8rem;
+  }
+}
 </style>

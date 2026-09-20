@@ -178,4 +178,71 @@ const steps = computed(() => tm<string[]>('pycharm.turn.steps'))
   height: 14vh;
   margin-top: 2vh;
 }
+
+/* ─── A phone held upright ───────────────────────────────────────────── */
+/* See "A phone held upright" in AGENTS.md. The QR code goes first here: it is
+   what a phone is for on this slide, and the steps are read afterwards. */
+@media (orientation: portrait) and (max-width: 760px) {
+  .turn {
+    display: flex;
+    flex-direction: column-reverse;
+    justify-content: flex-end;
+    gap: 1.25rem;
+    padding: 3.5rem 1rem 5rem;
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+
+  .turn-copy,
+  .turn-link {
+    position: static;
+    inset: auto;
+    width: auto;
+  }
+
+  .turn-title {
+    font-size: clamp(1.7rem, 8vw, 2.4rem);
+  }
+  .turn-lead {
+    margin-top: 0.8rem;
+    font-size: 1rem;
+  }
+
+  .turn-steps {
+    margin-top: 1.4rem;
+    gap: 0.8rem;
+  }
+  .turn-step {
+    gap: 0.75rem;
+    font-size: 1rem;
+  }
+  .turn-num {
+    width: 1.9rem;
+    height: 1.9rem;
+    font-size: 0.85rem;
+  }
+
+  .turn-help {
+    margin-top: 1.4rem;
+    gap: 0.6rem;
+    font-size: 0.95rem;
+  }
+
+  .turn-qr {
+    width: 11rem;
+    padding: 0.8rem;
+    border-radius: 1.2rem;
+  }
+  .turn-scan {
+    margin-top: 0.6rem;
+    font-size: 0.95rem;
+  }
+  .turn-url {
+    font-size: 0.8rem;
+  }
+  /* The cat is a flourish, and a phone has no room for a flourish. */
+  .turn-cat {
+    display: none;
+  }
+}
 </style>
