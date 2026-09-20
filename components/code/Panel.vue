@@ -179,4 +179,24 @@ const isLit = (index: number) => Boolean(props.focus?.length) && props.focus!.in
   background: color-mix(in srgb, currentColor 16%, transparent);
   outline-color: color-mix(in srgb, currentColor 40%, transparent);
 }
+
+/* ─── A phone held upright ───────────────────────────────────────────── */
+/* See "A phone held upright" in AGENTS.md. A sample written for a projector
+   is wider than a phone, so the panel scrolls sideways rather than the slide:
+   the line is a flex row, and a flex item refuses to be narrower than its
+   content until it is told it may. */
+@media (orientation: portrait) and (max-width: 760px) {
+  .code-panel {
+    overflow-x: auto;
+  }
+
+  .code-content {
+    min-width: 0;
+  }
+
+  /* 10px is below reading size at this width. */
+  .code-tabbar span {
+    font-size: 0.7rem;
+  }
+}
 </style>

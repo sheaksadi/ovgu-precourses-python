@@ -460,6 +460,13 @@ const columnWidth = computed(() => `${Math.max(...props.output.map(line => line.
   .note-rail {
     width: 0.25rem;
   }
+
+  /* `1.3vh` of a tall narrow screen is 11px, which is where reading stops. */
+  .shell-eyebrow,
+  .shell-count,
+  .output-label {
+    font-size: 0.72rem;
+  }
 }
 
 /* ─── 4:3 projectors ─────────────────────────────────────────────────── */

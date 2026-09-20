@@ -7,12 +7,13 @@
  * measures, inside the slide itself:
  *
  *   out     pixels an element sticks out past the left or right edge
- *   under   pixels the content runs past the bottom without a way to scroll
+ *   under   pixels the content runs past the bottom
  *   tiny    pieces of text drawn below 11px, which is where reading stops
  *
- * `under` is only counted when nothing on the way up can scroll: a lesson that
- * stacks into one scrolling column on a phone is fine, a fixed slide that
- * simply cuts its takeaway off is not.
+ * Neither `out` nor `under` is counted when something on the way up can scroll
+ * that way: a lesson that stacks into one scrolling column is fine, and so is a
+ * long code line inside a panel that scrolls sideways. A fixed slide that simply
+ * cuts its takeaway off is not.
  *
  * Prerequisites: the app is running, and Chromium is reachable. Usage:
  *
@@ -103,10 +104,14 @@ const MEASURE = `(() => {
   const vw = window.innerWidth
   const vh = window.innerHeight
   const slide = document.querySelector('main') || document.body
-  const scrolls = (el) => {
+  const scrolls = (el, axis) => {
+    const over = axis === 'x' ? 'overflowX' : 'overflowY'
     for (let node = el; node && node !== document.body; node = node.parentElement) {
       const style = getComputedStyle(node)
-      if (/auto|scroll/.test(style.overflowY) && node.scrollHeight > node.clientHeight + 2) return true
+      const room = axis === 'x'
+        ? node.scrollWidth > node.clientWidth + 2
+        : node.scrollHeight > node.clientHeight + 2
+      if (/auto|scroll/.test(style[over]) && room) return true
     }
     return false
   }
@@ -117,12 +122,12 @@ const MEASURE = `(() => {
     const box = el.getBoundingClientRect()
     if (box.width < 1 || box.height < 1) continue
     const past = Math.max(0, Math.round(box.right - vw), Math.round(-box.left))
-    if (past > out.out) {
+    if (past > out.out && !scrolls(el, 'x')) {
       out.out = past
       out.worst = (typeof el.className === 'string' ? el.className : el.tagName).slice(0, 44)
     }
     const below = Math.round(box.bottom - vh)
-    if (below > out.under && !scrolls(el)) {
+    if (below > out.under && !scrolls(el, 'y')) {
       out.under = below
       out.lowest = (typeof el.className === 'string' ? el.className : el.tagName).slice(0, 44)
     }
