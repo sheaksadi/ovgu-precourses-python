@@ -1,20 +1,26 @@
 <script setup lang="ts">
 /**
- * Start page: one button per view of the deck.
+ * Start page: the two doors the room needs, and one for the person talking.
  *
  *   Projector      the slides, big, following the room (stage mode)
- *   Presenter      live and next slide, notes, pacing, audience
- *   Control panel  the dashboard: remote QR code, slide list, room state
  *   Follow along   the read-only view for phones, in German or English
+ *   Admin          asks for a word, then shows the three views that drive the
+ *                  talk: the presenter view, the control panel and the remote
  *
- * Text lives in `home.*` in `locales/`.
+ * Forty people open this page, and three of those views move the slide for all
+ * of them. So the page offers what a student needs and keeps the rest behind
+ * `useAdmin`; the pages themselves ask the same word, so a typed URL is the
+ * same door.
+ *
+ * Text lives in `home.*` and `admin.*` in `locales/`.
  */
-import { computed, onMounted } from 'vue'
+import { computed, onMounted, ref, nextTick } from 'vue'
 import { usePresentationStore } from '~/stores/presentationStore'
 import { useSlideData } from '~/composables/useSlideData'
 import { useI18n } from '~/composables/useI18n'
 import { useFont } from '~/composables/useFont'
 import { useDebug } from '~/composables/useDebug'
+import { useAdmin } from '~/composables/useAdmin'
 import { slideIdToRoute } from '~/utils/slideId'
 
 definePageMeta({ layout: false })
@@ -25,7 +31,35 @@ const { t, locale, locales, setLocale } = useI18n()
 const { font, fonts, setFont } = useFont()
 // A switcher for trying the deck out alone; off for everyone else.
 const debug = useDebug()
-onMounted(() => debug.adopt())
+const admin = useAdmin()
+onMounted(() => {
+  debug.adopt()
+  admin.adopt()
+})
+
+// The password form, opened by the admin card and closed by the right word.
+const asking = ref(false)
+const password = ref('')
+const wrong = ref(false)
+const field = ref<HTMLInputElement | null>(null)
+
+const ask = async () => {
+  asking.value = true
+  wrong.value = false
+  await nextTick()
+  field.value?.focus()
+}
+
+const submit = () => {
+  if (admin.unlock(password.value)) {
+    password.value = ''
+    asking.value = false
+    wrong.value = false
+    return
+  }
+  wrong.value = true
+  password.value = ''
+}
 
 /** The room's slide while a talk runs, otherwise the first slide, with current language. */
 const projectorTarget = computed(() => {
@@ -33,13 +67,18 @@ const projectorTarget = computed(() => {
   return slide ? { path: slide.route, query: { mode: 'stage', lang: locale.value, screen: 'projector' } } : '/'
 })
 
+/** What anyone in the room may open. */
 const views = computed(() => [
   { key: 'projector', to: projectorTarget.value, icon: 'lucide:projector', color: 'coral' },
+  { key: 'follow', to: '/join', icon: 'lucide:users', color: 'mint' },
+])
+
+/** What drives the talk, shown once the word is right. */
+const adminViews = [
   { key: 'presenter', to: '/presenter', icon: 'lucide:presentation', color: 'sky' },
   { key: 'control', to: '/dashboard', icon: 'lucide:layout-dashboard', color: 'lavender' },
   { key: 'remote', to: '/control', icon: 'lucide:smartphone', color: 'purple' },
-  { key: 'follow', to: '/join', icon: 'lucide:users', color: 'mint' },
-])
+]
 
 const styleGuide = slideIdToRoute('PRE-0010')
 </script>
@@ -76,6 +115,52 @@ const styleGuide = slideIdToRoute('PRE-0010')
           </span>
           <Icon name="lucide:arrow-right" class="home-arrow" />
         </NuxtLink>
+
+        <template v-if="admin.unlocked.value">
+          <NuxtLink v-for="view in adminViews" :key="view.key" :to="view.to" class="home-card">
+            <span class="home-icon" :style="{ background: `var(--${view.color})` }">
+              <Icon :name="view.icon" />
+            </span>
+            <span class="home-card-text">
+              <span class="home-card-title">{{ t(`home.views.${view.key}.title`) }}</span>
+              <span class="home-card-desc">{{ t(`home.views.${view.key}.desc`) }}</span>
+            </span>
+            <Icon name="lucide:arrow-right" class="home-arrow" />
+          </NuxtLink>
+        </template>
+
+        <!-- One door for the person talking. Students need nothing behind it. -->
+        <button v-else-if="!asking" type="button" class="home-card home-admin" @click="ask">
+          <span class="home-icon" style="background: var(--text);">
+            <Icon name="lucide:lock" />
+          </span>
+          <span class="home-card-text">
+            <span class="home-card-title">{{ t('home.views.admin.title') }}</span>
+            <span class="home-card-desc">{{ t('home.views.admin.desc') }}</span>
+          </span>
+          <Icon name="lucide:arrow-right" class="home-arrow" />
+        </button>
+
+        <form v-else class="home-card home-ask" :class="{ 'is-wrong': wrong }" @submit.prevent="submit">
+          <span class="home-icon" style="background: var(--text);">
+            <Icon name="lucide:lock" />
+          </span>
+          <span class="home-ask-text">
+            <input
+              ref="field"
+              v-model="password"
+              class="home-ask-input"
+              type="password"
+              inputmode="numeric"
+              autocomplete="off"
+              :aria-label="t('admin.label')"
+              :placeholder="t('admin.placeholder')"
+              @input="wrong = false"
+            >
+            <span class="home-card-desc">{{ wrong ? t('admin.wrong') : t('admin.lead') }}</span>
+          </span>
+          <button type="submit" class="home-ask-go">{{ t('admin.enter') }}</button>
+        </form>
       </div>
 
       <footer class="home-foot">
@@ -84,6 +169,7 @@ const styleGuide = slideIdToRoute('PRE-0010')
           {{ t('home.screens', { n: store.presence.viewers }) }}
         </span>
         <NuxtLink to="/print" class="home-link">{{ t('home.print') }}</NuxtLink>
+        <button v-if="admin.unlocked.value" type="button" class="home-link" @click="admin.lock()">{{ t('admin.lock') }}</button>
         <NuxtLink :to="styleGuide" class="home-link">{{ t('home.styleGuide') }}</NuxtLink>
         <span class="home-prefs">
         <span class="home-lang" role="group" :aria-label="t('home.font')">
@@ -301,6 +387,52 @@ const styleGuide = slideIdToRoute('PRE-0010')
   border-right: 2px solid var(--text);
   border-bottom: 2px solid var(--text);
   transform: rotate(45deg);
+}
+
+/* The admin door and the form it becomes sit in the same card shape. */
+.home-admin {
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+}
+
+.home-ask.is-wrong {
+  border-color: var(--coral);
+}
+
+.home-ask-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  min-width: 0;
+}
+
+.home-ask-input {
+  width: 100%;
+  padding: 0.45rem 0.7rem;
+  border-radius: 0.7rem;
+  background: var(--bg);
+  border: 2px solid var(--border);
+  font-family: var(--font-code);
+  font-size: 1rem;
+  letter-spacing: 0.3em;
+  color: var(--text);
+}
+.home-ask-input:focus {
+  outline: none;
+  border-color: var(--text);
+}
+
+.home-ask-go {
+  margin-left: auto;
+  flex: none;
+  padding: 0.6rem 1.1rem;
+  border-radius: 999px;
+  background: var(--text);
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: var(--bg);
+  cursor: pointer;
 }
 
 /* ─── Footer ─────────────────────────────────────────────────────────── */

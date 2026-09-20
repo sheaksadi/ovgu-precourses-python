@@ -118,144 +118,146 @@ definePageMeta({
 </script>
 
 <template>
-<div class="h-dvh min-h-dvh bg-black text-white flex flex-col font-sans touch-none selection:bg-none select-none overflow-hidden relative">
-    <!-- QR Modal Overlay -->
-    <div v-if="showQrModal" class="absolute inset-0 bg-black/95 z-[60] flex flex-col items-center justify-center p-6">
-      <button @click="showQrModal = false" class="absolute top-6 right-6 p-2 bg-gray-800 rounded-full hover:bg-gray-700">
-        <Icon name="lucide:x" class="text-2xl" />
-      </button>
-      <h2 class="text-2xl font-bold mb-8">Scan to Control</h2>
-      <QRCodeDisplay />
-    </div>
-
-    <!-- ===== Top Nav Bar ===== -->
-    <header class="flex-none p-3 border-b border-gray-800 bg-black z-50">
-      <div class="flex items-center gap-2 min-w-0">
-        <span class="shrink-0 text-sm text-blue-400 font-bold">PRESENTATION</span>
-        <span class="text-gray-700 text-xs shrink-0">/</span>
-        <span class="truncate text-sm font-semibold text-white">{{ currentSlideData?.title || 'Ready to Present' }}</span>
+  <DeckAdminGate>
+  <div class="h-dvh min-h-dvh bg-black text-white flex flex-col font-sans touch-none selection:bg-none select-none overflow-hidden relative">
+      <!-- QR Modal Overlay -->
+      <div v-if="showQrModal" class="absolute inset-0 bg-black/95 z-[60] flex flex-col items-center justify-center p-6">
+        <button @click="showQrModal = false" class="absolute top-6 right-6 p-2 bg-gray-800 rounded-full hover:bg-gray-700">
+          <Icon name="lucide:x" class="text-2xl" />
+        </button>
+        <h2 class="text-2xl font-bold mb-8">Scan to Control</h2>
+        <QRCodeDisplay />
       </div>
-      <button @click="menuOpen = !menuOpen" class="shrink-0 text-gray-300 hover:text-white p-1" :aria-label="menuOpen ? 'Close menu' : 'Open menu'">
-        <Icon :name="menuOpen ? 'lucide:x' : 'lucide:menu'" class="text-2xl" />
-      </button>
-    </header>
 
-    <!-- Menu Overlay -->
-    <div v-if="menuOpen" class="absolute inset-0 top-[60px] bg-black/95 z-40 flex flex-col pb-6 px-6 overflow-y-auto">
-      <div class="flex flex-col gap-4 mt-6">
-        <button @click="() => { sendCommand('goto_dashboard'); menuOpen = false }" class="w-full py-4 bg-gray-800 hover:bg-gray-700 rounded-xl text-left px-6 text-lg font-bold flex items-center gap-4 transition-colors">
-          <Icon name="lucide:layout-dashboard" /> Go to Dashboard
-        </button>
-        <button @click="() => { showQrModal = true; menuOpen = false }" class="w-full py-4 bg-gray-800 hover:bg-gray-700 rounded-xl text-left px-6 text-lg font-bold flex items-center gap-4 transition-colors">
-          <Icon name="lucide:qr-code" /> Show QR Code
-        </button>
-        <button @click="() => { store.isPresenting = true; goToIndex(0); menuOpen = false }" class="w-full py-4 bg-gray-800 hover:bg-gray-700 rounded-xl text-left px-6 text-lg font-bold flex items-center gap-4 transition-colors">
-          <Icon name="lucide:rotate-ccw" /> Restart Presentation
-        </button>
-
-        <div class="text-gray-500 text-xs font-bold uppercase tracking-wider pb-1">Jump to Slide</div>
-        <button 
-          v-for="(slide, index) in flatSlides" :key="slide.id"
-          @click="() => { store.isPresenting = true; goToSlide(slide.id); menuOpen = false }"
-          class="w-full py-3 bg-gray-900 border hover:bg-gray-800 rounded-xl text-left px-6 text-base flex items-center gap-4 transition-colors"
-          :class="currentIndex === index ? 'border-blue-500 text-blue-400' : 'border-gray-800'"
-        >
-          <span class="font-mono text-gray-500 shrink-0 w-10">{{ slide.pageLabel }}</span>
-          <span class="truncate">{{ slide.title }}</span>
-        </button>
-      </div>
-    </div>
-
-    <!-- ===== Main Content ===== -->
-    <div class="flex-1 flex flex-col min-h-0">
-      <!-- Always show controls — no "ready to present" gate -->
-      <div class="flex-1 flex flex-col justify-end min-h-0">
-        <!-- Scrollable Notes -->
-        <div class="flex-1 min-h-0 overflow-y-auto px-5 pt-3 pb-2">
-          <div v-if="currentSlideData?.teleprompter" class="text-lg leading-relaxed text-gray-200">
-            {{ currentSlideData.teleprompter }}
-          </div>
-          <div v-else class="text-gray-600 italic text-center py-8">No notes for this slide</div>
+      <!-- ===== Top Nav Bar ===== -->
+      <header class="flex-none p-3 border-b border-gray-800 bg-black z-50">
+        <div class="flex items-center gap-2 min-w-0">
+          <span class="shrink-0 text-sm text-blue-400 font-bold">PRESENTATION</span>
+          <span class="text-gray-700 text-xs shrink-0">/</span>
+          <span class="truncate text-sm font-semibold text-white">{{ currentSlideData?.title || 'Ready to Present' }}</span>
         </div>
+        <button @click="menuOpen = !menuOpen" class="shrink-0 text-gray-300 hover:text-white p-1" :aria-label="menuOpen ? 'Close menu' : 'Open menu'">
+          <Icon :name="menuOpen ? 'lucide:x' : 'lucide:menu'" class="text-2xl" />
+        </button>
+      </header>
 
-        <!-- Fixed Controls -->
-        <div class="flex-none border-t border-gray-800 bg-black">
-          <!-- Slide action: the icebreaker spin -->
-          <div v-if="currentSlideData?.presenterAction" class="px-4 pt-3">
-            <button
-              type="button"
-              @click="runSlideAction"
-              class="w-full py-4 rounded-2xl bg-amber-500 active:bg-amber-400 border border-amber-400 text-gray-950 font-bold flex items-center justify-center gap-2"
-            >
-              <Icon name="lucide:refresh-cw" class="text-xl" /> {{ currentSlideData.presenterAction.label }}
-            </button>
-            <p v-if="currentSlideData.presenterAction.command === 'spin'" class="mt-2 text-xs text-gray-400 text-center truncate">
-              {{ spins.latestLine.value }}
-            </p>
+      <!-- Menu Overlay -->
+      <div v-if="menuOpen" class="absolute inset-0 top-[60px] bg-black/95 z-40 flex flex-col pb-6 px-6 overflow-y-auto">
+        <div class="flex flex-col gap-4 mt-6">
+          <button @click="() => { sendCommand('goto_dashboard'); menuOpen = false }" class="w-full py-4 bg-gray-800 hover:bg-gray-700 rounded-xl text-left px-6 text-lg font-bold flex items-center gap-4 transition-colors">
+            <Icon name="lucide:layout-dashboard" /> Go to Dashboard
+          </button>
+          <button @click="() => { showQrModal = true; menuOpen = false }" class="w-full py-4 bg-gray-800 hover:bg-gray-700 rounded-xl text-left px-6 text-lg font-bold flex items-center gap-4 transition-colors">
+            <Icon name="lucide:qr-code" /> Show QR Code
+          </button>
+          <button @click="() => { store.isPresenting = true; goToIndex(0); menuOpen = false }" class="w-full py-4 bg-gray-800 hover:bg-gray-700 rounded-xl text-left px-6 text-lg font-bold flex items-center gap-4 transition-colors">
+            <Icon name="lucide:rotate-ccw" /> Restart Presentation
+          </button>
+
+          <div class="text-gray-500 text-xs font-bold uppercase tracking-wider pb-1">Jump to Slide</div>
+          <button 
+            v-for="(slide, index) in flatSlides" :key="slide.id"
+            @click="() => { store.isPresenting = true; goToSlide(slide.id); menuOpen = false }"
+            class="w-full py-3 bg-gray-900 border hover:bg-gray-800 rounded-xl text-left px-6 text-base flex items-center gap-4 transition-colors"
+            :class="currentIndex === index ? 'border-blue-500 text-blue-400' : 'border-gray-800'"
+          >
+            <span class="font-mono text-gray-500 shrink-0 w-10">{{ slide.pageLabel }}</span>
+            <span class="truncate">{{ slide.title }}</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- ===== Main Content ===== -->
+      <div class="flex-1 flex flex-col min-h-0">
+        <!-- Always show controls — no "ready to present" gate -->
+        <div class="flex-1 flex flex-col justify-end min-h-0">
+          <!-- Scrollable Notes -->
+          <div class="flex-1 min-h-0 overflow-y-auto px-5 pt-3 pb-2">
+            <div v-if="currentSlideData?.teleprompter" class="text-lg leading-relaxed text-gray-200">
+              {{ currentSlideData.teleprompter }}
+            </div>
+            <div v-else class="text-gray-600 italic text-center py-8">No notes for this slide</div>
           </div>
 
-          <!-- Laser -->
-          <div class="pt-3 pb-1">
-            <div class="text-gray-500 text-[10px] uppercase tracking-widest text-center mb-2">Laser</div>
-            <div 
-              ref="touchpadRef"
-              class="w-[calc(100%-2rem)] mx-auto h-28 bg-gray-900 border border-gray-800 rounded-2xl relative overflow-hidden flex items-center justify-center select-none"
-              @mousedown="handlePointerStart"
-              @mousemove.stop="handlePointerMove"
-              @mouseup="handlePointerEnd"
-              @mouseleave="handlePointerEnd"
-              @touchstart="handlePointerStart"
-              @touchmove="handlePointerMove"
-              @touchend="handlePointerEnd"
-            >
-              <div v-if="!pointerActive" class="text-gray-600 font-bold tracking-widest uppercase text-xs pointer-events-none flex flex-col items-center gap-2">
-                <Icon name="lucide:navigation" class="text-2xl opacity-50" />
-                <span>Tap to aim</span>
+          <!-- Fixed Controls -->
+          <div class="flex-none border-t border-gray-800 bg-black">
+            <!-- Slide action: the icebreaker spin -->
+            <div v-if="currentSlideData?.presenterAction" class="px-4 pt-3">
+              <button
+                type="button"
+                @click="runSlideAction"
+                class="w-full py-4 rounded-2xl bg-amber-500 active:bg-amber-400 border border-amber-400 text-gray-950 font-bold flex items-center justify-center gap-2"
+              >
+                <Icon name="lucide:refresh-cw" class="text-xl" /> {{ currentSlideData.presenterAction.label }}
+              </button>
+              <p v-if="currentSlideData.presenterAction.command === 'spin'" class="mt-2 text-xs text-gray-400 text-center truncate">
+                {{ spins.latestLine.value }}
+              </p>
+            </div>
+
+            <!-- Laser -->
+            <div class="pt-3 pb-1">
+              <div class="text-gray-500 text-[10px] uppercase tracking-widest text-center mb-2">Laser</div>
+              <div 
+                ref="touchpadRef"
+                class="w-[calc(100%-2rem)] mx-auto h-28 bg-gray-900 border border-gray-800 rounded-2xl relative overflow-hidden flex items-center justify-center select-none"
+                @mousedown="handlePointerStart"
+                @mousemove.stop="handlePointerMove"
+                @mouseup="handlePointerEnd"
+                @mouseleave="handlePointerEnd"
+                @touchstart="handlePointerStart"
+                @touchmove="handlePointerMove"
+                @touchend="handlePointerEnd"
+              >
+                <div v-if="!pointerActive" class="text-gray-600 font-bold tracking-widest uppercase text-xs pointer-events-none flex flex-col items-center gap-2">
+                  <Icon name="lucide:navigation" class="text-2xl opacity-50" />
+                  <span>Tap to aim</span>
+                </div>
+                <div v-else class="absolute w-14 h-14 rounded-full flex items-center justify-center pointer-events-none" :style="{ left: `${pointerX * 100}%`, top: `${pointerY * 100}%`, transform: 'translate(-50%, -50%)', backgroundColor: pointerColor + '33' }">
+                  <div class="w-3 h-3 rounded-full" :style="{ backgroundColor: pointerColor, boxShadow: `0 0 15px ${pointerColor}` }"></div>
+                </div>
               </div>
-              <div v-else class="absolute w-14 h-14 rounded-full flex items-center justify-center pointer-events-none" :style="{ left: `${pointerX * 100}%`, top: `${pointerY * 100}%`, transform: 'translate(-50%, -50%)', backgroundColor: pointerColor + '33' }">
-                <div class="w-3 h-3 rounded-full" :style="{ backgroundColor: pointerColor, boxShadow: `0 0 15px ${pointerColor}` }"></div>
+            </div>
+
+            <!-- Colors -->
+            <div class="flex justify-center gap-3 mb-2">
+              <button 
+                v-for="color in pointerColors" :key="color"
+                @click="pointerColor = color"
+                class="w-5 h-5 rounded-full border-2 transition-transform"
+                :class="pointerColor === color ? 'scale-125 border-white shadow-[0_0_8px_rgba(255,255,255,0.3)] z-10' : 'border-transparent opacity-50 hover:opacity-100'"
+                :style="{ backgroundColor: color }"
+              ></button>
+            </div>
+
+            <!-- Nav Buttons -->
+            <div class="pb-[max(1rem,env(safe-area-inset-bottom))] pt-1">
+              <div class="grid grid-cols-2 gap-3 px-4">
+                <button 
+                  @click="prevSlide()" 
+                  class="bg-gray-800 active:bg-gray-700 rounded-2xl flex flex-col items-center justify-center gap-1 py-4 transition-colors border border-gray-700"
+                  :class="{'opacity-50 pointer-events-none': currentIndex === 0}"
+                  :aria-label="'Previous slide'"
+                >
+                  <Icon name="lucide:arrow-left" class="text-3xl" />
+                  <span class="text-sm font-medium">Prev</span>
+                </button>
+                <button 
+                  @click="nextSlide()" 
+                  class="bg-blue-600 active:bg-blue-500 rounded-2xl flex flex-col items-center justify-center gap-1 py-4 transition-colors border border-blue-500"
+                  :class="{'opacity-50 pointer-events-none': currentIndex === flatSlides.length - 1}"
+                  :aria-label="'Next slide'"
+                >
+                  <Icon name="lucide:arrow-right" class="text-3xl text-white" />
+                  <span class="text-sm font-medium text-white">Next</span>
+                </button>
               </div>
             </div>
           </div>
-
-          <!-- Colors -->
-          <div class="flex justify-center gap-3 mb-2">
-            <button 
-              v-for="color in pointerColors" :key="color"
-              @click="pointerColor = color"
-              class="w-5 h-5 rounded-full border-2 transition-transform"
-              :class="pointerColor === color ? 'scale-125 border-white shadow-[0_0_8px_rgba(255,255,255,0.3)] z-10' : 'border-transparent opacity-50 hover:opacity-100'"
-              :style="{ backgroundColor: color }"
-            ></button>
-          </div>
-
-          <!-- Nav Buttons -->
-          <div class="pb-[max(1rem,env(safe-area-inset-bottom))] pt-1">
-            <div class="grid grid-cols-2 gap-3 px-4">
-              <button 
-                @click="prevSlide()" 
-                class="bg-gray-800 active:bg-gray-700 rounded-2xl flex flex-col items-center justify-center gap-1 py-4 transition-colors border border-gray-700"
-                :class="{'opacity-50 pointer-events-none': currentIndex === 0}"
-                :aria-label="'Previous slide'"
-              >
-                <Icon name="lucide:arrow-left" class="text-3xl" />
-                <span class="text-sm font-medium">Prev</span>
-              </button>
-              <button 
-                @click="nextSlide()" 
-                class="bg-blue-600 active:bg-blue-500 rounded-2xl flex flex-col items-center justify-center gap-1 py-4 transition-colors border border-blue-500"
-                :class="{'opacity-50 pointer-events-none': currentIndex === flatSlides.length - 1}"
-                :aria-label="'Next slide'"
-              >
-                <Icon name="lucide:arrow-right" class="text-3xl text-white" />
-                <span class="text-sm font-medium text-white">Next</span>
-              </button>
-            </div>
-          </div>
         </div>
       </div>
     </div>
-  </div>
+  </DeckAdminGate>
 </template>
 
 <style scoped>

@@ -3,6 +3,7 @@ import type { PeerRole } from '../utils/wsManager'
 import { spinRoom } from '../utils/spinRoom'
 import { problemRoom } from '../utils/problemRoom'
 import { catRoom } from '../utils/catRoom'
+import { deckDb } from '../utils/db'
 
 /** Taps inside this window share one replay, so a scene cannot be restarted mid-run. */
 const DEMO_LOCK_MS = 1200
@@ -81,6 +82,10 @@ export default defineWebSocketHandler({
           audienceId: data.audienceId,
           name: data.name
         })
+        // Everyone who joins is written down, not only the people who answer.
+        if (claimed === 'viewer' && typeof data.audienceId === 'string' && data.audienceId) {
+          deckDb.seeDevice(data.audienceId, typeof data.name === 'string' && data.name ? data.name : 'Anonym')
+        }
         peer.send(JSON.stringify({
           type: 'role',
           role: claimed,

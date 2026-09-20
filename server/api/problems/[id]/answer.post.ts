@@ -5,6 +5,7 @@ import { judgeAnswer } from '../../../utils/answers'
 import { audienceIdOf, audienceNameOf } from '../../../utils/audience'
 import { WRONG_COOLDOWN_MS, problemRoom } from '../../../utils/problemRoom'
 import { wsManager } from '../../../utils/wsManager'
+import { deckDb } from '../../../utils/db'
 
 /**
  * Check one answer.
@@ -13,6 +14,9 @@ import { wsManager } from '../../../utils/wsManager'
  * moment), `cooldown` (still locked), `locked` (Part 2 before Part 1),
  * `already` (solved before), `empty`. A correct answer is broadcast to the room
  * as `solve`, with the problem's new standings.
+ *
+ * Every answer that reaches the judge is written to the database, right or
+ * wrong: what the room got stuck on is the interesting half.
  */
 export default defineEventHandler(async (event) => {
   const problem = PROBLEMS[getRouterParam(event, 'id') ?? '']
@@ -35,12 +39,16 @@ export default defineEventHandler(async (event) => {
   if (!answer.trim()) return { result: 'empty' }
 
   const verdict = judgeAnswer(answer, problem.solve(inputFor(problem, audienceId), part as Part))
+  const who = audienceNameOf(event, body?.name)
+  deckDb.seeDevice(audienceId, who)
+  deckDb.recordAttempt({ problemId: problem.id, audienceId, name: who, part, given: answer, verdict })
+
   if (verdict !== 'correct') {
     problemRoom.startCooldown(problem.id, audienceId)
     return { result: verdict, cooldownMs: WRONG_COOLDOWN_MS }
   }
 
-  const name = audienceNameOf(event, body?.name)
+  const name = who
   const record = problemRoom.record(problem.id, { audienceId, name }, part as Part)
   if (!record) return { result: 'already' }
 

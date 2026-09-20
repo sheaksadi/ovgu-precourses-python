@@ -3,6 +3,7 @@ import { CODE_TASKS } from '../../../../utils/codeTasks'
 import { audienceIdOf, audienceNameOf } from '../../../utils/audience'
 import { problemRoom } from '../../../utils/problemRoom'
 import { wsManager } from '../../../utils/wsManager'
+import { deckDb } from '../../../utils/db'
 
 /**
  * A code task passed its tests.
@@ -27,6 +28,7 @@ export default defineEventHandler(async (event) => {
   if (problemRoom.solvedParts(task.id, audienceId)[1]) return { result: 'already' }
 
   const name = audienceNameOf(event, body?.name)
+  deckDb.recordAttempt({ problemId: task.id, audienceId, name, part: 1, given: `${passed}/${total}`, verdict: 'correct' })
   const record = problemRoom.record(task.id, { audienceId, name }, 1)
   if (!record) return { result: 'already' }
 

@@ -16,3 +16,6 @@ deck-shots
 .vscode
 .cortexkit
 .DS_Store
+
+# The room database: names of real people, one file per machine.
+.data

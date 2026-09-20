@@ -103,6 +103,7 @@ no chrome of their own. Prefer them over bespoke markup so slides stay consisten
 | Slide view (projector or audience device) | `/slides/pre-xxxx` | reads | writes |
 | Dashboard | `/dashboard` | reads | — |
 | Follow-along landing page (read-only, picks language) | `/join` | reads | — |
+| Puzzle workspace (whatever this device opened) | `/puzzles` | — | — |
 | Handout | `/print` | reads | — |
 | Preview frame inside the presenter view | `/slides/pre-xxxx?peek=1` | reads | driven by the presenter view |
 
@@ -231,6 +232,38 @@ language, switches to stage mode and follows the room. It does not turn on
 interactive mode. On a slide with an `interactive` entry, touch devices get the
 small `components/deck/InteractiveHint.vue` pill, and only tapping it switches
 that one device to interactive mode.
+
+## Admin: the three views that drive the talk
+
+The start page offers the room two doors — the projector and follow along — and keeps
+`/presenter`, `/dashboard` and `/control` behind a word. The three pages ask for it
+themselves (`components/deck/AdminGate.vue`), so a typed URL is the same door and the
+page behind it does not render, connect or claim a role until the word is right.
+
+The word lives in `utils/admin.ts`, in the source on purpose: nothing behind it is a
+secret, and what it stops is a student wandering into the remote and moving the talk for
+forty other people. Never put anything behind it that would hurt if a student typed it
+in. `?admin=<word>` unlocks without the form, which is how the check scripts get in.
+
+`useAdmin` remembers the answer per device, so it is asked once, not on every navigation
+between the presenter view and the dashboard. The footer of the start page locks it again.
+
+## What the room leaves behind
+
+`server/utils/db.ts` keeps one SQLite file, `.data/deck.sqlite`, through `node:sqlite` —
+no dependency, no server. It holds who joined (`devices`), when each round opened
+(`rounds`), every answer anyone typed, right or wrong (`attempts`), and every solved part
+(`solves`).
+
+The in-memory rooms stay the fast path. `problemRoom` reads the solves back when the
+server starts, so restarting mid-course does not empty the leaderboard, and writes each
+new one as it happens. Nothing in `db.ts` throws into a request: a course must not stop
+because a disk is read-only, so a failed write is logged and the room carries on from
+memory.
+
+The file holds the names of real people and is ignored by git. The presenter view has a
+button that empties it — two taps, because it cannot be undone — for a dry run before the
+room arrives.
 
 ## Presenter view
 

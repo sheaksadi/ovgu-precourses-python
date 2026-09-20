@@ -1,11 +1,18 @@
 import type { Part } from '../problems/types'
+import { deckDb } from './db'
 
 /**
- * Who solved which problem, and when. Forgotten with the room.
+ * Who solved which problem, and when.
  *
  * A round's clock starts when the room first reaches the problem's slide (or a
  * device first asks for its input), so times on the leaderboard mean "minutes
  * into the round", not "since the server started".
+ *
+ * These maps are the fast path, and `deckDb` is the copy that outlives the
+ * process: every solve is written there as it happens, and read back here when
+ * the server starts, so restarting mid-course does not empty the leaderboard.
+ * The cooldown after a wrong answer is the one thing that is not kept — it is
+ * five seconds long, and a restart takes longer than that.
  */
 export interface Standing {
   audienceId: string
@@ -38,9 +45,27 @@ const cooldowns = new Map<string, number>()
 
 const key = (problemId: string, audienceId: string) => `${problemId}:${audienceId}`
 
+/** Read the standings back out of the database, once, as the server starts. */
+const hydrate = () => {
+  for (const round of deckDb.rounds()) openedAt.set(round.problem_id, round.opened_at)
+  for (const row of deckDb.solves()) {
+    let byDevice = solves.get(row.problem_id)
+    if (!byDevice) solves.set(row.problem_id, byDevice = new Map())
+    const entry = byDevice.get(row.audience_id) ?? { name: row.name, parts: {} }
+    entry.name = row.name
+    entry.parts[row.part as Part] = row.at
+    byDevice.set(row.audience_id, entry)
+  }
+}
+
+hydrate()
+
 export const problemRoom = {
   markOpened: (problemId: string) => {
-    if (!openedAt.has(problemId)) openedAt.set(problemId, Date.now())
+    if (openedAt.has(problemId)) return
+    const at = Date.now()
+    openedAt.set(problemId, at)
+    deckDb.openRound(problemId, at)
   },
 
   solvedParts: (problemId: string, audienceId: string) => ({ ...solves.get(problemId)?.get(audienceId)?.parts }),
@@ -66,7 +91,10 @@ export const problemRoom = {
 
     const rank = [...byDevice.values()].filter(other => other.parts[part] !== undefined).length
     problemRoom.markOpened(problemId)
-    return { at, rank, first: rank === 1, elapsedMs: at - openedAt.get(problemId)! }
+    const record = { at, rank, first: rank === 1, elapsedMs: at - openedAt.get(problemId)! }
+    deckDb.seeDevice(who.audienceId, who.name)
+    deckDb.recordSolve({ problemId, audienceId: who.audienceId, part, name: who.name, at, rank, elapsedMs: record.elapsedMs })
+    return record
   },
 
   /** Most parts first, then whoever got there first. */
@@ -86,9 +114,11 @@ export const problemRoom = {
     }
   },
 
-  reset: () => {
+  /** Empty the room. `alsoStored` empties the database with it. */
+  reset: (alsoStored = false) => {
     solves.clear()
     openedAt.clear()
     cooldowns.clear()
+    if (alsoStored) deckDb.clear()
   },
 }

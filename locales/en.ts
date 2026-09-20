@@ -31,11 +31,24 @@ const en: Messages = {
       control: { title: 'Control panel', desc: 'Overview, remote control by QR code, and the audience.' },
       remote: { title: 'Remote control', desc: 'Navigate slides from your phone with swipe and laser pointer.' },
       follow: { title: 'Follow along', desc: 'The slides on your own device, in German or English.' },
+      admin: { title: 'Admin', desc: 'Presenter view, control panel and remote. Password needed.' },
     },
     screens: '{n} screens following',
     print: 'Print handout',
     styleGuide: 'Style guide',
     font: 'Font',
+  },
+
+  admin: {
+    title: 'Admin',
+    lead: 'The presenter view, the control panel and the remote move the talk for everyone. Hence the password.',
+    label: 'Password',
+    placeholder: '••••',
+    enter: 'Open',
+    wrong: 'Wrong password.',
+    lock: 'Lock again',
+    back: 'Back to the start page',
+    gate: 'This view drives the talk.',
   },
 
   follow: {

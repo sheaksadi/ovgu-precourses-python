@@ -15,17 +15,17 @@ before the next one starts.
 
 ## B — Everything a device sends is kept
 
-- [ ] A SQLite file holds the room: who joined, what they solved, when.
+- [x] A SQLite file holds the room: who joined, what they solved, when.
       `node:sqlite`, no dependency.
-- [ ] The standings survive a server restart.
-- [ ] The presenter view has a button that empties the database, for testing.
+- [x] The standings survive a server restart.
+- [x] The presenter view has a button that empties the database, for testing.
 
 ## C — The start page has two doors
 
-- [ ] Projector and Follow along are the only public views.
-- [ ] Admin asks for a password (1337 for now, hard-coded) and then shows the
+- [x] Projector and Follow along are the only public views.
+- [x] Admin asks for a password (1337 for now, hard-coded) and then shows the
       presenter view, the control panel and the remote.
-- [ ] Those three pages ask for the password themselves, so a typed URL is the
+- [x] Those three pages ask for the password themselves, so a typed URL is the
       same door.
 
 ## D — The follow-along views work on a phone

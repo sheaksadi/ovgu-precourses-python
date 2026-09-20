@@ -32,11 +32,24 @@ const de = {
       control: { title: 'Steuerung', desc: 'Übersicht, Fernbedienung per QR-Code und Publikum.' },
       remote: { title: 'Fernbedienung', desc: 'Folien vom Handy steuern mit Wischgesten und Laserpointer.' },
       follow: { title: 'Mitlesen', desc: 'Die Folien auf dem eigenen Gerät, auf Deutsch oder Englisch.' },
+      admin: { title: 'Admin', desc: 'Vortragsansicht, Steuerung und Fernbedienung. Mit Passwort.' },
     },
     screens: '{n} Bildschirme folgen',
     print: 'Handout drucken',
     styleGuide: 'Style Guide',
     font: 'Schrift',
+  },
+
+  admin: {
+    title: 'Admin',
+    lead: 'Vortragsansicht, Steuerung und Fernbedienung bewegen den Vortrag für alle. Deshalb das Passwort.',
+    label: 'Passwort',
+    placeholder: '••••',
+    enter: 'Öffnen',
+    wrong: 'Falsches Passwort.',
+    lock: 'Wieder abschließen',
+    back: 'Zurück zur Startseite',
+    gate: 'Diese Ansicht steuert den Vortrag.',
   },
 
   follow: {

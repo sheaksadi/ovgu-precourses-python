@@ -22,6 +22,8 @@ import { writeFileSync, mkdirSync } from 'node:fs'
 const BASE = process.env.DECK_URL || 'http://localhost:3000'
 const CDP = process.env.CDP_URL || 'http://localhost:9222'
 const OUT = process.env.OUT_DIR || 'deck-shots'
+/** Opens the presenter view, the control panel and the remote. */
+const ADMIN = '1337'
 mkdirSync(OUT, { recursive: true })
 
 const wait = (ms) => new Promise(r => setTimeout(r, ms))
@@ -143,8 +145,10 @@ const PUZZLE = { route: '/slides/pre-0137', title: 'Rätsel: Momos Fang' }
 const BOARD = { route: '/slides/pre-0138' }
 
 // --- Surfaces -----------------------------------------------------------
-const dashboard = await openPage(browser, `${BASE}/dashboard`, 1440, 1400)
-const presenter = await openPage(browser, `${BASE}/presenter`, 1600, 1000)
+// The three views that drive the talk ask for the admin word; `?admin=` is
+// the way in that needs no typing. See `utils/admin.ts`.
+const dashboard = await openPage(browser, `${BASE}/dashboard?admin=${ADMIN}`, 1440, 1400)
+const presenter = await openPage(browser, `${BASE}/presenter?admin=${ADMIN}`, 1600, 1000)
 const join = await openPage(browser, `${BASE}/join`, 480, 820)
 await wait(3000)
 await shot(dashboard, '01-dashboard', 1440, 1500)
@@ -157,7 +161,7 @@ await wait(1200)
 await evaluate(reset, 'localStorage.clear()')
 
 const viewer = await openPage(browser, `${BASE}${FIRST.route}`, 1280, 720)
-const control = await openPage(browser, `${BASE}/control`, 430, 860)
+const control = await openPage(browser, `${BASE}/control?admin=${ADMIN}`, 430, 860)
 await wait(3000)
 
 await clickSelector(control, 'button[aria-label="Open menu"]')
