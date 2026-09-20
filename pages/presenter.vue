@@ -7,7 +7,7 @@
  * next, the speaker notes, pacing against the planned times, and where the
  * audience actually is.
  */
-import { computed, onMounted, onUnmounted, ref } from 'vue'
+import { computed, nextTick, onMounted, onUnmounted, ref, watch } from 'vue'
 import { usePresentation } from '~/composables/usePresentation'
 import { useSlideData } from '~/composables/useSlideData'
 import { useWebSocket } from '~/composables/useWebSocket'
@@ -45,8 +45,34 @@ const { locale, locales, setLocale } = useI18n()
 /** The presenter view drives the room, so its own position is the room's. */
 const current = computed(() => globalSlide.value || flatSlides.value[0])
 const upcoming = computed(() => flatSlides.value[Math.max(0, globalIndex.value) + 1])
-/** What comes after that, in order: the running order, not the whole deck. */
+/** What comes after that, in order. Only for the count in the panel's header. */
 const later = computed(() => flatSlides.value.slice(Math.max(0, globalIndex.value) + 2))
+
+/**
+ * The whole deck, in the running order, with where the room is marked.
+ *
+ * The panel used to list only what was still to come, which is the wrong half
+ * when somebody asks about a slide two back. It holds all of it now and parks
+ * itself on the live slide: scroll it wherever you like between moves, and the
+ * next move puts it back where it was.
+ */
+const deckList = computed(() => flatSlides.value.map((slide, index) => ({
+  ...slide,
+  isPast: index < globalIndex.value,
+  isLive: index === globalIndex.value,
+})))
+
+const listEl = ref<HTMLElement | null>(null)
+
+/** Park the list on the live slide, so what comes next fills the panel below it. */
+const alignList = () => {
+  const list = listEl.value
+  const row = list?.querySelector<HTMLElement>('[data-live="true"]')
+  if (!list || !row) return
+  list.scrollTop += row.getBoundingClientRect().top - list.getBoundingClientRect().top
+}
+
+watch(globalIndex, () => nextTick(alignList))
 
 // --- Timer and pacing ---------------------------------------------------
 const elapsed = ref(0)
@@ -218,6 +244,8 @@ const handleKeydown = (e: KeyboardEvent) => {
 onMounted(() => {
   window.addEventListener('keydown', handleKeydown)
   if (ws && ws.sendHello) ws.sendHello()
+  // The room may already be somewhere when this view opens.
+  nextTick(alignList)
 })
 
 onUnmounted(() => {
@@ -408,16 +436,17 @@ onUnmounted(() => {
 
           <PresenterProblemPanel v-if="current?.problem" :problem-id="current.problem" class="flex-none max-h-[26vh] overflow-y-auto" />
 
-          <!-- The running order from here on, newest first in time, not the whole deck -->
+          <!-- The whole running order, parked on the live slide -->
           <div class="flex-1 min-h-0 bg-gray-900 border border-gray-800 rounded-xl overflow-hidden flex flex-col">
             <div class="flex-none px-3 py-2 border-b border-gray-800 text-[10px] uppercase tracking-widest text-gray-500">
               Then · {{ later.length }} slide(s) to go
             </div>
-            <ul class="flex-1 overflow-y-auto p-1.5 space-y-1">
-              <li v-for="slide in later" :key="slide.id">
+            <ul ref="listEl" class="flex-1 overflow-y-auto p-1.5 space-y-1">
+              <li v-for="slide in deckList" :key="slide.id" :data-live="slide.isLive">
                 <button
                   @click="jumpTo(slide.id)"
                   class="w-full flex items-center gap-2 p-1 rounded-lg text-left transition-colors hover:bg-gray-800"
+                  :class="slide.isLive ? 'bg-gray-800 ring-1 ring-blue-500' : slide.isPast ? 'opacity-45' : ''"
                 >
                   <!-- A cheap stand-in for the slide: its shape, not a second app. -->
                   <span
