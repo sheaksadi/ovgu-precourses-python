@@ -30,6 +30,7 @@ before the next one starts.
 
 ## D — The follow-along views work on a phone
 
-- [ ] Every slide readable at 390 x 844, no sideways scroll, nothing clipped.
+- [x] Every slide readable at 390 x 844, no sideways scroll, nothing clipped.
+      171 of 176; the five left are the sorting run scenes another session owns.
 </content>
 </invoke>
