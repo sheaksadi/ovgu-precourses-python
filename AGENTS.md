@@ -280,6 +280,52 @@ Pacing comes from `duration` (planned minutes) on a slide entry: the presenter v
 the deck, compares the elapsed time with the plan, and turns the clock amber then red as
 it slips.
 
+## A phone held upright
+
+Half the room follows the slides on their own phone, so a slide that only works on a
+projector only works for half the room. Every slide has to read at 390 x 844.
+
+The house pattern lives in `components/lesson/Shell.vue`, at the end of its styles:
+
+```css
+@media (orientation: portrait) and (max-width: 760px) { … }
+```
+
+Inside that block the projector layout is undone and the slide becomes one scrolling
+column:
+
+- the parts that were `position: absolute` go `position: static`, with `inset: auto`
+  and `width: auto`, in the order they should be read;
+- the root becomes `display: flex; flex-direction: column`, with padding that clears
+  the chrome (`3.5rem` at the top for the sync pill, `5rem` at the bottom for the
+  replay button) and `overflow-y: auto`, so the slide scrolls inside the fixed viewport;
+- a scene that draws itself absolutely keeps a box to draw in: `position: relative`
+  with a height in `vh`, because the scene inside is drawn in `vh`;
+- type that was sized in `vh` is sized in `clamp(rem, vw, rem)` instead — `vh` on a
+  tall narrow screen gives huge headlines and tiny labels at the same time;
+- nothing goes below 11px, and a long code line scrolls sideways in its own panel
+  (`overflow-x: auto`) rather than being cut off.
+
+Never scale the whole slide down to fit. It shifts every scene that centres itself
+with `translate(-50%)`, and it makes the type unreadable at exactly the size where
+reading matters. A projector-shaped scene may crop on a phone instead.
+
+Only touch what is inside the media query: the projector is what the room sees, and it
+is not allowed to change while the phone is being fixed.
+
+Two tools:
+
+```
+npm run check:phone                        # every slide: overflow, cut-off, tiny type
+npm run check:phone -- pre-0041 pre-0042   # only these
+npm run shot:phone -- <out-dir> pre-0041   # look at it
+```
+
+Both need the app running and a headless Chromium on port 9222; their headers say how.
+`check:phone` reports what it can measure — sideways overflow, content cut off with no
+way to scroll, and text under 11px. Two things overlapping is not one of them, so read
+the screenshots too.
+
 ## Handout
 
 `pages/print.vue` renders every slide in order with its notes, one per page, for "Print

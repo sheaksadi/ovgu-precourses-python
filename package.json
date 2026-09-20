@@ -12,7 +12,9 @@
     "slides:check": "node scripts/check-slides.mjs",
     "check:sync": "node scripts/check-sync.mjs",
     "check:deck": "node scripts/drive-deck.mjs",
-    "check:problems": "node scripts/check-problems.mjs"
+    "check:problems": "node scripts/check-problems.mjs",
+    "check:phone": "node scripts/check-phone.mjs",
+    "shot:phone": "node scripts/shot-phone.mjs"
   },
   "devDependencies": {
     "@iconify-json/lucide": "^1.2.131",
