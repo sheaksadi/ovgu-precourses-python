@@ -196,7 +196,6 @@ const de = {
     pick: 'Diese nehmen!',
     downloading: 'Wird heruntergeladen …',
     downloaded: 'Fertig – jetzt Datei öffnen',
-    start: 'Los geht’s',
     replay: 'Nochmal zeigen',
     hint: 'oder Enter drücken',
     demoLabel: 'Vorführung: nach PyCharm suchen, jetbrains.com öffnen, zur Community Edition scrollen und sie herunterladen',

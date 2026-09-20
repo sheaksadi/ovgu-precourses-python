@@ -14,7 +14,9 @@ import { useWebSocket } from '~/composables/useWebSocket'
  * last frame (`land`). Where the pointer rests is handed to the stage that
  * continues the demo through `useState`, so advancing a slide never makes it jump.
  *
- * Plays on mount, again on Enter or `play()`, and again when the language changes.
+ * Plays on mount, the way every other animated slide does: opening the slide
+ * is what starts it, and nothing waits behind a button. Again on Enter or
+ * `play()`, and again when the language changes.
  *
  * A replay asked for by a person plays everywhere: `replay()` tells the room
  * over the WebSocket and every screen starts from the top together, because the
@@ -44,15 +46,6 @@ export interface DemoPlayerOptions extends DemoStage {
   land: () => void
   /** Schedules this stage's steps with `later` and returns when the last one fires, in ms. */
   script: () => number
-  /**
-   * Play as soon as the slide opens. True for a demo split over several slides,
-   * where advancing the slide is what starts the next stage.
-   *
-   * A long demo sets this to false instead and waits behind its own start
-   * button, so the room watches it from the top together rather than catching
-   * the middle of it.
-   */
-  autoplay?: boolean
 }
 
 export const useDemoPlayer = (options: DemoPlayerOptions) => {
@@ -67,8 +60,6 @@ export const useDemoPlayer = (options: DemoPlayerOptions) => {
   /** Place the pointer and the scene without gliding, for the opening frame. */
   const instant = ref(false)
   const finished = ref(false)
-  /** False while a manual demo waits behind its start button. */
-  const started = ref(options.autoplay !== false)
   const carried = useState<(DemoStage & { x: number, y: number }) | null>('demo-pointer', () => null)
 
   let timers: ReturnType<typeof setTimeout>[] = []
@@ -123,7 +114,6 @@ export const useDemoPlayer = (options: DemoPlayerOptions) => {
   const play = async (): Promise<number> => {
     stop()
     finished.value = false
-    started.value = true
     options.reset()
     await openPointer()
 
@@ -146,15 +136,6 @@ export const useDemoPlayer = (options: DemoPlayerOptions) => {
     ws.sendDemoReplay(runs)
   }
 
-  /** The opening frame, held until somebody presses start. */
-  const rest = async () => {
-    stop()
-    finished.value = false
-    started.value = false
-    options.reset()
-    await openPointer()
-  }
-
   const onKey = (event: KeyboardEvent) => {
     if (event.key !== 'Enter') return
     if (['INPUT', 'TEXTAREA'].includes((event.target as HTMLElement).tagName)) return
@@ -168,23 +149,14 @@ export const useDemoPlayer = (options: DemoPlayerOptions) => {
   options.reset()
 
   onMounted(() => {
-    // A room-wide replay remounts the scene (the layouts key it on the demo
-    // nonce), so a demo that waits for its start button would come back to the
-    // still frame instead of playing. The room is held busy for the length of
-    // that replay, and that is the difference between "somebody pressed play"
-    // and "somebody opened this slide".
-    if (options.autoplay === false && !demos.busy.value) rest()
-    else play().then((ms) => { lastRun.value = ms })
+    play().then((ms) => { lastRun.value = ms })
     window.addEventListener('keydown', onKey)
     window.addEventListener('deck:demo-replay', onRoomReplay)
   })
 
   // The demo is written in the room's language, so it plays again when that
-  // changes — unless it has not been started yet, which stays a still frame.
-  watch(locale, () => {
-    if (!started.value) rest()
-    else play().then((ms) => { lastRun.value = ms })
-  })
+  // changes.
+  watch(locale, () => { play().then((ms) => { lastRun.value = ms }) })
 
   onBeforeUnmount(() => {
     stop()
@@ -192,5 +164,5 @@ export const useDemoPlayer = (options: DemoPlayerOptions) => {
     window.removeEventListener('deck:demo-replay', onRoomReplay)
   })
 
-  return { pointer, instant, finished, started, later, pointAt, pointAtFraction, play: replay, busy: demos.busy }
+  return { pointer, instant, finished, later, pointAt, pointAtFraction, play: replay, busy: demos.busy }
 }

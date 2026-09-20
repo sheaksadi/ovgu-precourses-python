@@ -7,11 +7,12 @@
  * with its controls under it. Used by the walk-throughs in `components/pycharm/`,
  * which drive it with `useDemoPlayer`.
  *
- * A demo that does not play on its own passes `started: false` and a `start`
- * label. Its button is the same button in the same row, only labelled to start
- * rather than to replay; whoever presses it starts the animation on every
- * screen in the room at once. Nothing is ever laid over the frame: a control
- * that covers the thing it controls is the one place a viewer cannot look.
+ * The demo plays when the slide opens, like every other animated slide, so
+ * there is nothing to press to begin. Once it has played through, the devices
+ * following along get the button that plays it again for the whole room; the
+ * projector never gets a button at all, and Enter on its keyboard does the
+ * same job. Nothing is ever laid over the frame: a control that covers the
+ * thing it controls is the one place a viewer cannot look.
  */
 import { computed } from 'vue'
 import { useDeckRole } from '~/composables/useDeckRole'
@@ -26,10 +27,6 @@ const props = defineProps<{
   tip?: string
   replay: string
   hint: string
-  /** False while the demo waits to be started. Absent means it is already running. */
-  started?: boolean
-  /** Label of the start button, for a demo that waits. */
-  start?: string
 }>()
 
 const emit = defineEmits<{ replay: [] }>()
@@ -45,12 +42,10 @@ const held = computed(() => demos.busy.value && role.value !== 'presenter')
 // The replay lives under the frame here, so the deck's own bar stands down.
 demos.claimReplay()
 
-const waiting = computed(() => props.started === false)
-
 /** Six steps and a tip do not fit the column at the size three of them do. */
 const dense = computed(() => props.steps.length > 4)
 
-const isDone = (step: number) => !waiting.value && (step < props.stage || (step === props.stage && props.finished))
+const isDone = (step: number) => step < props.stage || (step === props.stage && props.finished)
 </script>
 
 <template>
@@ -64,7 +59,7 @@ const isDone = (step: number) => !waiting.value && (step < props.stage || (step 
           v-for="(step, index) in steps"
           :key="index"
           class="walk-step"
-          :class="{ 'is-now': index + 1 === stage && !finished && !waiting, 'is-done': isDone(index + 1) }"
+          :class="{ 'is-now': index + 1 === stage && !finished, 'is-done': isDone(index + 1) }"
         >
           <span class="walk-num">
             <span class="text-trim">{{ isDone(index + 1) ? '✓' : index + 1 }}</span>
@@ -86,21 +81,13 @@ const isDone = (step: number) => !waiting.value && (step < props.stage || (step 
     <section class="walk-demo">
       <slot />
 
-      <!-- One row under the frame: start it, or play it again. -->
-      <div v-if="!isProjector || waiting" class="walk-controls">
-        <button
-          v-if="!isProjector"
-          type="button"
-          class="walk-replay"
-          :class="{ 'is-start': waiting }"
-          :disabled="held"
-          @click="emit('replay')"
-        >
-          <Icon :name="waiting ? 'lucide:play' : 'lucide:rotate-ccw'" />
-          <span class="text-trim">{{ waiting ? (start || replay) : replay }}</span>
+      <!-- Played through: the row that plays it again, for the devices only. -->
+      <div v-if="!isProjector && finished" class="walk-controls">
+        <button type="button" class="walk-replay" :disabled="held" @click="emit('replay')">
+          <Icon name="lucide:rotate-ccw" />
+          <span class="text-trim">{{ replay }}</span>
         </button>
-        <span v-else class="walk-start-badge">{{ start || replay }}</span>
-        <span v-if="!isProjector" class="walk-hint">{{ hint }}</span>
+        <span class="walk-hint">{{ hint }}</span>
       </div>
     </section>
   </div>
@@ -253,19 +240,6 @@ const isDone = (step: number) => !waiting.value && (step < props.stage || (step 
   gap: 2.2vh;
 }
 
-/* The room's screen says what is about to happen; it carries no buttons. */
-.walk-start-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 1.2vh;
-  padding: calc(1vh + 0.25em) 2.4vh;
-  border-radius: 1.2vh;
-  background: var(--text);
-  font-size: clamp(0.8rem, 1.8vh, 1.2rem);
-  font-weight: 800;
-  color: var(--bg);
-}
-
 .walk-controls {
   display: flex;
   align-items: center;
@@ -287,11 +261,6 @@ const isDone = (step: number) => !waiting.value && (step < props.stage || (step 
   font-weight: 800;
   color: var(--text);
   cursor: pointer;
-}
-/* Nothing has played yet, so this is the one thing to press. */
-.walk-replay.is-start {
-  background: var(--text);
-  color: var(--bg);
 }
 
 .walk-hint {
@@ -372,11 +341,6 @@ const isDone = (step: number) => !waiting.value && (step < props.stage || (step 
     font-size: 0.8rem;
   }
 
-  .walk-start-badge {
-    gap: 0.6rem;
-    padding: 0.7rem 1.2rem;
-    font-size: 0.95rem;
-  }
 }
 
 @keyframes appear {

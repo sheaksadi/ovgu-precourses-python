@@ -8,16 +8,32 @@
  * the steps read clearly without copying any real site; only the real compiler's
  * address is shown (`utils/tryit.ts`).
  *
- * Replay with the button or Enter. Switching the language replays it in that
+ * It plays through, and then the devices following along get the button that
+ * plays it again — for the whole room, like every other animated scene: the
+ * request goes over the WebSocket and comes back as a broadcast. The projector
+ * carries no buttons — Enter on its keyboard does the same job — and neither
+ * does a preview or a controller. Switching the language replays it in that
  * language. Reduced motion shows the finished state straight away.
  *
  * Text and the one-line program live in `tryit.*` in `locales/`.
  */
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch, type Ref } from 'vue'
+import { useDeckRole } from '~/composables/useDeckRole'
+import { useDemos } from '~/composables/useDemos'
 import { useI18n } from '~/composables/useI18n'
+import { useWebSocket } from '~/composables/useWebSocket'
 import { COMPILER } from '~/utils/tryit'
 
 const { t, locale } = useI18n()
+const { isViewer, isPeek, isProjector } = useDeckRole()
+
+// The scene carries its own button, under the frame, so the deck's bar stands down.
+const demos = useDemos()
+const ws = useWebSocket()
+demos.claimReplay()
+
+/** The screens that carry controls at all: the ones somebody is holding. */
+const canReplay = computed(() => isViewer.value && !isPeek.value && !isProjector.value)
 
 type Scene = 'search' | 'results' | 'loading' | 'site'
 type Target = 'search' | 'result' | 'run'
@@ -108,16 +124,30 @@ const play = () => {
   })
 }
 
+/** About nine seconds of demo, plus a moment to read the output it ends on. */
+const RUNS_FOR = 10500
+
+/** Asked for by a person: the whole room watches it again, from the top. */
+const replay = () => {
+  if (demos.busy.value) return
+  demos.hold(RUNS_FOR)
+  ws.sendDemoReplay(RUNS_FOR)
+}
+
 const onKey = (event: KeyboardEvent) => {
   if (event.key !== 'Enter') return
   if (['INPUT', 'TEXTAREA'].includes((event.target as HTMLElement).tagName)) return
   event.preventDefault()
-  play()
+  replay()
 }
+
+/** The room asked: play, but do not ask the room back. */
+const onRoomReplay = () => play()
 
 onMounted(() => {
   play()
   window.addEventListener('keydown', onKey)
+  window.addEventListener('deck:demo-replay', onRoomReplay)
 })
 
 watch(locale, () => play())
@@ -125,6 +155,7 @@ watch(locale, () => play())
 onBeforeUnmount(() => {
   stop()
   window.removeEventListener('keydown', onKey)
+  window.removeEventListener('deck:demo-replay', onRoomReplay)
 })
 </script>
 
@@ -236,8 +267,8 @@ onBeforeUnmount(() => {
       </svg>
     </div>
 
-    <div class="demo-controls">
-      <button type="button" class="replay" @click="play">
+    <div v-if="canReplay && finished" class="demo-controls">
+      <button type="button" class="replay" :disabled="demos.busy.value" @click="replay">
         <Icon name="lucide:rotate-ccw" />
         <span class="text-trim">{{ t('tryit.replay') }}</span>
       </button>

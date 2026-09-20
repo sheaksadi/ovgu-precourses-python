@@ -195,7 +195,6 @@ const en: Messages = {
     pick: 'Take this one!',
     downloading: 'Downloading …',
     downloaded: 'Done – now open the file',
-    start: 'Let’s go',
     replay: 'Show again',
     hint: 'or press Enter',
     demoLabel: 'Demo: search for PyCharm, open jetbrains.com, scroll to the Community Edition and download it',

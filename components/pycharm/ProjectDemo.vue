@@ -110,14 +110,12 @@ const land = () => {
   pressed.value = null
 }
 
-const { pointer, instant, finished, started, later, pointAt, pointAtFraction, play } = useDemoPlayer({
+const { pointer, instant, finished, later, pointAt, pointAtFraction, play } = useDemoPlayer({
   id: 'pycharm-project',
   stage: 1,
   frame,
   reset,
   land,
-  // Long enough that catching the middle of it helps nobody: the room starts it.
-  autoplay: false,
   script: () => {
     let at = 400
 
@@ -207,9 +205,7 @@ const { pointer, instant, finished, started, later, pointAt, pointAtFraction, pl
     :steps="steps"
     :stage="step"
     :finished="finished"
-    :started="started"
     :tip="tip"
-    :start="t('pycharm.start')"
     :replay="t('pycharm.replay')"
     :hint="t('pycharm.hint')"
     @replay="play"
