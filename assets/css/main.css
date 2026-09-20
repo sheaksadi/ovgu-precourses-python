@@ -113,6 +113,7 @@ body.has-deck-dock {
     overflow-x: hidden;
     overflow-y: auto;
   }
+  .guide-page [class*="text-[8px]"],
   .guide-page [class*="text-[9px]"],
   .guide-page [class*="text-[10px]"],
   .guide-page [class*="text-[11px]"] {

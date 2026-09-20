@@ -744,4 +744,12 @@ onBeforeUnmount(() => {
 @keyframes turn {
   to { transform: rotate(360deg); }
 }
+
+/* ─── A phone held upright ───────────────────────────────────────────── */
+/* The line that tells a phone it may spin is the one line a phone must read. */
+@media (orientation: portrait) and (max-width: 760px) {
+  .spin-waiting {
+    font-size: 0.8rem;
+  }
+}
 </style>
