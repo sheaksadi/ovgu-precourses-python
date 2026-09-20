@@ -78,6 +78,24 @@ body {
   font-family: var(--font-text);
 }
 
+/* ─── The stage ──────────────────────────────────────────────────────────
+ *
+ * A slide fills the screen, minus whatever the deck has docked under it. Only
+ * the follow-along devices dock anything — the replay bar in
+ * `components/deck/ReplayDock.vue`, which sets the class on <body> while it is
+ * there. The projector and the presenter's previews keep the whole screen, so
+ * the variable stays at zero for them and nothing moves.
+ */
+:root {
+  --deck-dock: 0px;
+}
+body.has-deck-dock {
+  --deck-dock: 3.5rem;
+}
+.deck-stage {
+  height: calc(100vh - var(--deck-dock));
+}
+
 /* ─── Keyframes shared by components ─────────────────────────────────── */
 @keyframes fade-in {
   from { opacity: 0; }
