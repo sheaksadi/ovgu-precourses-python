@@ -459,6 +459,85 @@ const segments = (line: string) => line.split('`').map((part, index) => ({ part,
   opacity: 0;
 }
 
+/* ─── A phone held upright ───────────────────────────────────────────── */
+/* See "A phone held upright" in AGENTS.md. The code and what it is doing to the
+   variables stack, in that order, and the code box scrolls sideways rather than
+   cutting a line off: this slide is read line by line. */
+@media (orientation: portrait) and (max-width: 760px) {
+  .walk {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    padding: 3.5rem 1rem 5rem;
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+
+  .walk-head,
+  .walk-code,
+  .walk-side,
+  .walk-note {
+    position: static;
+    inset: auto;
+    width: auto;
+  }
+
+  .walk-progress {
+    flex-wrap: wrap;
+    gap: 0.5rem 1rem;
+    margin-bottom: 0.9rem;
+  }
+  .walk-eyebrow,
+  .walk-count,
+  .walk-label {
+    font-size: 0.72rem;
+  }
+
+  .walk-headline {
+    font-size: clamp(1.5rem, 7vw, 2.2rem);
+  }
+
+  /* Relative, not static: the lines are placed against this box, and the
+     camera that follows the running line moves them inside it. */
+  /* Taller than it looks: the camera zooms in up to 1.75x, so a short box
+     would show three lines of a solution that is read as a whole. */
+  .walk-code {
+    position: relative;
+    height: 46vh;
+    overflow-x: auto;
+    overflow-y: hidden;
+    border-radius: 1rem;
+  }
+  .walk-line {
+    height: 2.6vh;
+    font-size: 0.8rem;
+  }
+
+  .walk-side {
+    gap: 1rem;
+  }
+  .walk-card {
+    gap: 0.8rem;
+    padding: 1rem;
+    border-radius: 1rem;
+  }
+  .walk-var-name,
+  .walk-check {
+    font-size: 0.95rem;
+  }
+  .walk-var-value {
+    font-size: 1rem;
+  }
+  .walk-check-slot {
+    min-height: 3.2rem;
+  }
+
+  .walk-note {
+    gap: 0.75rem;
+    font-size: 0.95rem;
+  }
+}
+
 @keyframes appear {
   from { opacity: 0; }
   to { opacity: 1; }
