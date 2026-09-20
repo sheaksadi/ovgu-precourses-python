@@ -1754,8 +1754,6 @@ else:
         { name: 'Sebastian Lague', what: 'Coding Adventures: simulations, graphics, pathfinding. Shows what programming feels like when it is fun.', tag: 'Projects' },
         { name: 'Computerphile', what: 'Short explanations of computer science topics, often by the people who did the research.', tag: 'Theory' },
         { name: 'CS50', what: 'The whole Harvard intro course, recorded. If you want one thread to follow: this one.', tag: 'Course' },
-        { name: 'Corey Schafer', what: 'Calm, thorough Python tutorials. Good when a topic from this course still wobbles.', tag: 'Python' },
-        { name: 'ArjanCodes', what: 'How to write code you still understand in a month. Interesting later, not yet.', tag: 'Later' },
       ],
     },
     next: {

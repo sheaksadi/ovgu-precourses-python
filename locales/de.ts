@@ -1758,8 +1758,6 @@ else:
         { name: 'Sebastian Lague', what: 'Coding Adventures: Simulationen, Grafik, Wegfindung. Zeigt, wie sich Programmieren anfühlt, wenn es Spaß macht.', tag: 'Projekte' },
         { name: 'Computerphile', what: 'Kurze Erklärungen zu Informatik-Themen, oft von den Leuten, die daran geforscht haben.', tag: 'Theorie' },
         { name: 'CS50', what: 'Der komplette Harvard-Einstiegskurs, aufgezeichnet. Wenn du einen roten Faden willst: der hier.', tag: 'Kurs' },
-        { name: 'Corey Schafer', what: 'Ruhige, gründliche Python-Tutorials. Gut, wenn ein Thema aus dem Vorkurs noch wackelt.', tag: 'Python' },
-        { name: 'ArjanCodes', what: 'Wie man Code schreibt, den man in einem Monat noch versteht. Danach interessant, nicht davor.', tag: 'Später' },
       ],
     },
     next: {

@@ -1157,7 +1157,7 @@ export const slides: SlideEntry[] = [
     title: 'Weiterschauen',
     subtitle: 'Kanäle, die es besser erklären als jede Folie',
     duration: 5,
-    teleprompter: 'Empfehlungen, keine Hausaufgaben. 3Blue1Brown macht Mathe sichtbar – die Serie über neuronale Netze ist der beste Einstieg ins Thema, den es gratis gibt. Sebastian Lague baut Sachen und zeigt dabei, wie Programmieren sich anfühlt, wenn es Spaß macht. Computerphile für die Theorie, CS50 für einen kompletten Kurs, Corey Schafer und ArjanCodes für Python selbst. Sagen, welcher davon man selbst schaut.',
+    teleprompter: 'Empfehlungen, keine Hausaufgaben. 3Blue1Brown macht Mathe sichtbar – die Serie über neuronale Netze ist der beste Einstieg ins Thema, den es gratis gibt. Sebastian Lague baut Sachen und zeigt dabei, wie Programmieren sich anfühlt, wenn es Spaß macht. Computerphile für die Theorie, CS50 für einen kompletten Kurs. Sagen, welcher davon man selbst schaut.',
   },
   {
     id: 'PRE-0180',
