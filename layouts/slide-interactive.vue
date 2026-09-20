@@ -28,7 +28,7 @@ const atEnd = computed(() => currentIndex.value >= flatSlides.value.length - 1)
 </script>
 
 <template>
-  <div :class="slideBg" class="relative w-screen deck-stage overflow-hidden text-white flex flex-col">
+  <div :class="slideBg" class="relative w-screen h-screen overflow-hidden text-white flex flex-col">
     <main class="flex-grow relative w-full h-full pt-8 pb-20">
       <slot />
     </main>

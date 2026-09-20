@@ -28,7 +28,7 @@ const slideBg = computed(() => currentSlide.value?.backgroundColor || '')
 <template>
   <div
     :class="slideBg"
-    class="relative w-screen deck-stage overflow-hidden text-ink font-sans flex flex-col"
+    class="relative w-screen h-screen overflow-hidden text-ink font-sans flex flex-col"
     :style="{ backgroundColor: slideBg ? undefined : 'var(--bg)' }"
   >
     <!-- Bold pastel accent bar -->

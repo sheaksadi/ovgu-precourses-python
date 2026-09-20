@@ -1,33 +1,22 @@
 <script setup lang="ts">
 /**
- * The follow-along device's own strip, under the slide. Mounted once, in
- * `app.vue`, and it holds "play it again" in the middle.
+ * "Play it again", on a follow-along device. Mounted once, in `app.vue`.
  *
  * Every animated slide can be replayed by anybody in the room, not only by the
  * person at the laptop: the request goes over the WebSocket and comes back as a
  * broadcast, so the projector and every phone start from the top together —
  * replaying only the phone in your hand would be no use to anyone.
  *
- * It is a bar at every size, never a button in a corner. A slide fills its
- * corners — a counter, a QR code, the tallest bar of a run — so a control
- * parked in one covers the thing it controls. The bar costs the slide its own
- * height instead (`--deck-dock`, see `assets/css/main.css`, applied by the
- * `.deck-stage` height every slide layout uses), and that is the same deal the
- * spin button and the walk-through replay take: a row under the scene.
- *
- * The device's other controls dock into the same strip from their own
- * components: the language switch at its left edge
- * (`components/deck/LanguagePill.vue`), the "join in" hint in the middle
- * (`components/deck/InteractiveHint.vue`) and how far this screen is from the
- * room at its right (`components/slides/SyncPill.vue`).
- *
- * While a replay runs the button holds, and the server ignores a second request
- * inside its own lock, the same way the icebreaker spin does.
+ * It hovers in the bottom right corner and takes no room from the slide, which
+ * keeps the whole screen. While a replay runs the button holds, and the server
+ * ignores a second request inside its own lock, the same way the icebreaker
+ * spin does.
  *
  * Never on the projector, a peek frame, a controller — or on a slide somebody
- * is working in, where a replay would remount their answer away.
+ * is working in, where a replay would remount their answer away. A scene that
+ * carries a replay of its own (`demos.claimReplay`) takes this one's place.
  */
-import { computed, onBeforeUnmount, onMounted, watch } from 'vue'
+import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { useI18n } from '~/composables/useI18n'
 import { useDeckRole } from '~/composables/useDeckRole'
@@ -49,34 +38,11 @@ const onDevice = computed(() =>
   isViewer.value && !isPeek.value && !isProjector.value && !!slide.value,
 )
 
-const replayable = computed(() =>
+const show = computed(() =>
   onDevice.value && !slide.value!.problem && !slide.value!.interactive
   // A walk-through carries its own replay, under the frame it belongs to.
   && !demos.ownsReplay.value,
 )
-
-/**
- * The strip is there for the whole talk, not only where there is something to
- * replay: it also holds the language switch, the join-in hint and how far this
- * screen is from the room. A row that comes and goes under a thumb is worse
- * than a row that is always in the same place.
- */
-const show = computed(() => onDevice.value)
-
-/**
- * The slide gives up the height the strip takes, so nothing of the scene ends
- * up behind it. The class carries it rather than a style on one element,
- * because every layout reads the same variable — and only while there is a
- * strip, so the projector keeps the whole screen.
- */
-const dock = (on: boolean) => {
-  if (import.meta.server) return
-  document.body.classList.toggle('has-deck-dock', on)
-}
-watch(show, dock)
-
-onMounted(() => dock(show.value))
-onBeforeUnmount(() => dock(false))
 
 /** Zero: every screen holds for its own scene, and at least the floor in `useDemos`. */
 const replay = () => {
@@ -88,7 +54,6 @@ const replay = () => {
 <template>
   <div v-if="show" class="dock">
     <button
-      v-if="replayable"
       type="button"
       class="replay"
       :class="{ 'is-busy': demos.busy.value }"
@@ -105,18 +70,10 @@ const replay = () => {
 <style scoped>
 .dock {
   position: fixed;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  right: 1rem;
+  /* Clear of the page number in the corner under it. */
+  bottom: 2.75rem;
   z-index: 70;
-  /* Also `--deck-dock` in `assets/css/main.css`: the slide gives up this much. */
-  height: 3.5rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0 1rem;
-  background: var(--bg);
-  border-top: 2px solid var(--border);
 }
 
 .replay {
