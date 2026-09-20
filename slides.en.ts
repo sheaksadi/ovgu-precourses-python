@@ -93,22 +93,9 @@ export const slidesEn: Record<string, SlideText> = {
     teleprompter: 'Everyone works on their own now. Scan the QR code or search pycharm download, scroll to the Community Edition, download and install. Walk around and help with operating system warnings. The goal: PyCharm opens. Whoever is done helps the person next to them.',
   },
   'PRE-0053': {
-    title: 'A new project',
-    subtitle: 'New Project, Project venv, Python version',
-    teleprompter: 'Open PyCharm. On the first start the welcome window appears; choose New Project there. If a project is already open: File → New Project. Enter plays the demo again.',
-  },
-  'PRE-0054': {
-    title: 'A new project - settings',
-    teleprompter: 'Type a name, vorkurs for example. Interpreter type stays Project venv: every project gets its own Python environment. Python version must not be empty. If the list is empty, Python is not installed yet: scan the QR code on the left, install Python, tick "Add python.exe to PATH" on Windows, and restart PyCharm.',
-  },
-  'PRE-0055': {
-    title: 'A new project - Create',
-    teleprompter: 'Press Create. PyCharm makes the folder and the virtual environment .venv, which takes a moment. Afterwards the bottom right shows the Python version with the project name. Walk around briefly: does everyone see that?',
-  },
-  'PRE-0056': {
-    title: 'Running code',
-    subtitle: 'Make a file, write code, Run',
-    teleprompter: 'Now the first file of your own. Right click the project folder, New, Python File, type a name, Enter. PyCharm adds the .py ending itself. Type print("Hallo Welt!") into the file. No need to save, PyCharm saves on its own. Watch the quotes and the brackets. Press the green arrow at the top, or right click in the code and choose Run. The run window opens at the bottom with Hallo Welt! and exit code 0. Task: change the text and run it again. Enter plays the demo again.',
+    title: 'Make a project, run it',
+    subtitle: 'New Project, venv, the first file, Run',
+    teleprompter: 'The whole way in one demo: press "Let\'s go" and it plays through. New Project, type a name, Interpreter type stays Project venv, and Python version must not be empty - if the list is empty, Python is missing: scan the QR code on the left, tick "Add python.exe to PATH" on Windows, restart PyCharm. Create makes the folder and the .venv. Then right click the project folder, New, Python File, type a name, Enter; PyCharm adds the .py ending. Type print("Hello, world!"), watch the quotes and brackets, no need to save. The green arrow at the top runs it, and Hello, world! with exit code 0 appears below. Walk around: does it run for everyone? Task: change the text and run it again. Enter or the button plays it all again.',
   },
   'PRE-0205': {
     title: 'Questions?',

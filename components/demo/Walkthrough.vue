@@ -6,6 +6,10 @@
  * optional `aside` at the bottom; the demo frame (default slot) on the right
  * with a replay button under it. Used by the walk-throughs in `components/pycharm/`,
  * which drive it with `useDemoPlayer`.
+ *
+ * A demo that does not play on its own passes `started: false` and a `start`
+ * label. The frame then waits behind one big button, and whoever presses it
+ * starts the animation on every screen in the room at once.
  */
 import { computed } from 'vue'
 import { useDeckRole } from '~/composables/useDeckRole'
@@ -20,6 +24,10 @@ const props = defineProps<{
   tip?: string
   replay: string
   hint: string
+  /** False while the demo waits to be started. Absent means it is already running. */
+  started?: boolean
+  /** Label of the start button, for a demo that waits. */
+  start?: string
 }>()
 
 const emit = defineEmits<{ replay: [] }>()
@@ -32,11 +40,16 @@ const { isProjector, role } = useDeckRole()
 const demos = useDemos()
 const held = computed(() => demos.busy.value && role.value !== 'presenter')
 
-const isDone = (step: number) => step < props.stage || (step === props.stage && props.finished)
+const waiting = computed(() => props.started === false)
+
+/** Six steps and a tip do not fit the column at the size three of them do. */
+const dense = computed(() => props.steps.length > 4)
+
+const isDone = (step: number) => !waiting.value && (step < props.stage || (step === props.stage && props.finished))
 </script>
 
 <template>
-  <div class="walk relative w-full h-full overflow-hidden" :class="`stage-${stage}`">
+  <div class="walk relative w-full h-full overflow-hidden" :class="[`stage-${stage}`, { 'is-dense': dense }]">
     <section class="walk-copy">
       <p class="walk-eyebrow">{{ eyebrow }}</p>
       <h2 class="walk-title">{{ title }}</h2>
@@ -46,7 +59,7 @@ const isDone = (step: number) => step < props.stage || (step === props.stage && 
           v-for="(step, index) in steps"
           :key="index"
           class="walk-step"
-          :class="{ 'is-now': index + 1 === stage && !finished, 'is-done': isDone(index + 1) }"
+          :class="{ 'is-now': index + 1 === stage && !finished && !waiting, 'is-done': isDone(index + 1) }"
         >
           <span class="walk-num">
             <span class="text-trim">{{ isDone(index + 1) ? '✓' : index + 1 }}</span>
@@ -68,7 +81,16 @@ const isDone = (step: number) => step < props.stage || (step === props.stage && 
     <section class="walk-demo">
       <slot />
 
-      <div v-if="!isProjector" class="walk-controls">
+      <!-- Nothing has played yet: one button, where the demo will be. -->
+      <div v-if="waiting" class="walk-start">
+        <button v-if="!isProjector" type="button" class="walk-start-button" :disabled="held" @click="emit('replay')">
+          <Icon name="lucide:play" />
+          <span class="text-trim">{{ start || replay }}</span>
+        </button>
+        <span v-else class="walk-start-badge">{{ start || replay }}</span>
+      </div>
+
+      <div v-if="!isProjector && !waiting" class="walk-controls">
         <button type="button" class="walk-replay" :disabled="held" @click="emit('replay')">
           <Icon name="lucide:rotate-ccw" />
           <span class="text-trim">{{ replay }}</span>
@@ -192,15 +214,75 @@ const isDone = (step: number) => step < props.stage || (step === props.stage && 
   padding-top: 2.4vh;
 }
 
+/* A longer walk-through trades size for the room to show every step at once. */
+.walk.is-dense .walk-steps {
+  margin-top: 2.8vh;
+  gap: 0.4vh;
+}
+.walk.is-dense .walk-step {
+  padding: 0.7vh 1vh;
+  font-size: clamp(0.72rem, 1.85vh, 1.2rem);
+}
+.walk.is-dense .walk-num {
+  width: 3.6vh;
+  height: 3.6vh;
+  font-size: clamp(0.65rem, 1.6vh, 1rem);
+}
+.walk.is-dense .walk-tip {
+  margin-top: 2.4vh;
+  font-size: clamp(0.72rem, 1.7vh, 1.1rem);
+}
+.walk.is-dense .walk-aside {
+  padding-top: 1.6vh;
+}
+
 /* ─── Demo ───────────────────────────────────────────────────────────── */
 .walk-demo {
   position: absolute;
+  z-index: 0;
   top: 9vh;
   right: 5vw;
   width: 52vw;
   display: flex;
   flex-direction: column;
   gap: 2.2vh;
+}
+
+/* The veil sits over the still frame, so the frame is the promise of the demo. */
+.walk-start {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  border-radius: 1.6vh;
+  background: color-mix(in srgb, var(--bg) 62%, transparent);
+  backdrop-filter: blur(2px);
+  animation: appear 0.3s ease both;
+}
+
+.walk-start-button,
+.walk-start-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 1.2vh;
+  padding: calc(1.6vh + 0.3em) 3.2vh;
+  border-radius: 999px;
+  background: var(--text);
+  font-size: clamp(0.95rem, 2.6vh, 1.8rem);
+  font-weight: 900;
+  color: var(--bg);
+  box-shadow: 0 1.2vh 3vh rgba(0, 0, 0, 0.18);
+}
+.walk-start-button {
+  cursor: pointer;
+  transition: transform 0.15s ease;
+}
+.walk-start-button:hover:not(:disabled) {
+  transform: scale(1.03);
+}
+.walk-start-button:disabled {
+  opacity: 0.45;
+  cursor: default;
 }
 
 .walk-controls {

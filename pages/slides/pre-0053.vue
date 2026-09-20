@@ -1,7 +1,7 @@
 <script setup lang="ts">
-/** PRE-0053 — new PyCharm project, stage 1 of 3. The scene lives in components/pycharm/ProjectDemo.vue. */
+/** PRE-0053 — from an empty PyCharm to a running program, in one take. The scene lives in components/pycharm/ProjectDemo.vue. */
 </script>
 
 <template>
-  <PycharmProjectDemo :stage="1" />
+  <PycharmProjectDemo />
 </template>

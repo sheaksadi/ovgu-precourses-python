@@ -1,15 +1,22 @@
 <script setup lang="ts">
 /**
- * New PyCharm project walk-through. Auto-imported as `<PycharmProjectDemo :stage="1" />`.
+ * From an empty PyCharm to a running program, in one take.
+ * Auto-imported as `<PycharmProjectDemo />`, used by PRE-0053.
  *
- * One PyCharm window over three slides (PRE-0053 and its two sub-slides):
+ * One PyCharm window, six steps, no slide change in between:
  *
  *   1. welcome screen: New Project
  *   2. name the project, keep Project venv, pick the Python version
  *   3. Create: the project opens with its .venv and interpreter
+ *   4. right-click the project → New → Python File, name it
+ *   5. type the one-line program
+ *   6. press Run: the output appears in the Run panel
  *
- * The QR code beside it is for anyone whose Python list stays empty. The run
- * walk-through (`RunDemo.vue`) opens on this demo's last frame.
+ * It used to be four slides, and the seam between them was the part people
+ * asked about — so it is one animation now, and it waits behind its own start
+ * button instead of playing while the room is still arriving.
+ *
+ * The QR code beside it is for anyone whose Python list stays empty.
  *
  * Text lives in `pycharm.project.*` in `locales/`; PyCharm's own labels stay in
  * English, as students see them.
@@ -21,7 +28,6 @@ import { PYTHON } from '~/utils/pycharm'
 
 type Scene = 'welcome' | 'dialog' | 'creating' | 'ide'
 
-const props = defineProps<{ stage: 1 | 2 | 3 }>()
 const { t, tm } = useI18n()
 
 const PROJECT_TYPES = ['Pure Python', 'Django', 'FastAPI', 'Flask', 'Jupyter']
@@ -30,18 +36,32 @@ const WELCOME_MENU = ['Projects', 'Remote Development', 'Customize', 'Plugins', 
 const DEFAULT_NAME = 'pythonProject'
 const PYTHON_VERSION = 'Python 3.13'
 
+/** The step the demo is showing, 1 to 6. */
+const step = ref(1)
 const steps = computed(() => tm<string[]>('pycharm.project.steps'))
-const tip = computed(() => tm<string[]>('pycharm.project.tips')[props.stage - 1])
+const tip = computed(() => tm<string[]>('pycharm.project.tips')[step.value - 1])
 const projectName = computed(() => t('pycharm.project.name'))
+const fileName = computed(() => `${t('pycharm.project.file')}.py`)
 
 const frame = ref<HTMLElement | null>(null)
 const scene = ref<Scene>('welcome')
+
+// The New Project dialog.
 const name = ref(DEFAULT_NAME)
 const nameFocused = ref(false)
 const nameSelected = ref(false)
 const versionMenu = ref(false)
 const venvMarked = ref(false)
 const versionMarked = ref(false)
+
+// The editor.
+const files = ref<string[]>([])
+const open = ref<string | null>(null)
+const code = ref('')
+const menu = ref<'none' | 'context' | 'new'>('none')
+const newFile = ref<string | null>(null)
+const run = ref<'none' | 'started' | 'done'>('none')
+
 const marks = ref<string[]>([])
 const pressed = ref<string | null>(null)
 
@@ -50,73 +70,130 @@ const windowTitle = computed(() => {
   return scene.value === 'ide' ? name.value : 'New Project'
 })
 
+/** The first frame: PyCharm as it opens, before anybody has clicked. */
 const reset = () => {
-  scene.value = props.stage === 1 ? 'welcome' : 'dialog'
-  name.value = props.stage === 3 ? projectName.value : DEFAULT_NAME
+  step.value = 1
+  scene.value = 'welcome'
+  name.value = DEFAULT_NAME
   nameFocused.value = false
   nameSelected.value = false
   versionMenu.value = false
-  venvMarked.value = props.stage === 3
-  versionMarked.value = props.stage === 3
+  venvMarked.value = false
+  versionMarked.value = false
+  files.value = []
+  open.value = null
+  code.value = ''
+  menu.value = 'none'
+  newFile.value = null
+  run.value = 'none'
   marks.value = []
   pressed.value = null
 }
 
+/** The last frame: the program written and run. Reduced motion lands here. */
 const land = () => {
-  scene.value = props.stage === 3 ? 'ide' : 'dialog'
-  name.value = props.stage === 1 ? DEFAULT_NAME : projectName.value
+  step.value = steps.value.length
+  scene.value = 'ide'
+  name.value = projectName.value
   nameFocused.value = false
   nameSelected.value = false
   versionMenu.value = false
-  venvMarked.value = props.stage === 2
-  versionMarked.value = props.stage === 2
-  marks.value = props.stage === 3 ? ['venv', 'interpreter'] : []
+  venvMarked.value = true
+  versionMarked.value = true
+  files.value = [fileName.value]
+  open.value = fileName.value
+  code.value = t('pycharm.project.code')
+  menu.value = 'none'
+  newFile.value = null
+  run.value = 'done'
+  marks.value = []
   pressed.value = null
 }
 
-const { pointer, instant, finished, later, pointAt, play } = useDemoPlayer({
+const { pointer, instant, finished, started, later, pointAt, pointAtFraction, play } = useDemoPlayer({
   id: 'pycharm-project',
-  stage: props.stage,
+  stage: 1,
   frame,
   reset,
   land,
+  // Long enough that catching the middle of it helps nobody: the room starts it.
+  autoplay: false,
   script: () => {
-    let at = 500
+    let at = 400
 
-    if (props.stage === 1) {
-      later(at, () => pointAt('[data-point="new-project"]'))
-      later(at += 800, () => { pressed.value = 'new-project' })
-      later(at += 180, () => { pressed.value = null; scene.value = 'dialog' })
+    // 1. New Project.
+    later(at, () => pointAt('[data-point="new-project"]'))
+    later(at += 800, () => { pressed.value = 'new-project' })
+    later(at += 180, () => { pressed.value = null; scene.value = 'dialog' })
+
+    // 2. Name it, keep the venv, pick the Python.
+    const title = projectName.value
+    later(at += 500, () => { step.value = 2 })
+    later(at += 200, () => pointAt('[data-point="name"]'))
+    later(at += 700, () => { pressed.value = 'name'; nameFocused.value = true; nameSelected.value = true })
+    later(at += 180, () => { pressed.value = null })
+    later(at += 450, () => { nameSelected.value = false; name.value = '' })
+    for (let i = 1; i <= title.length; i++) {
+      later(at += 85, () => { name.value = title.slice(0, i) })
+    }
+    later(at += 450, () => { nameFocused.value = false; pointAt('[data-point="venv"]') })
+    later(at += 700, () => { pressed.value = 'venv' })
+    later(at += 180, () => { pressed.value = null; venvMarked.value = true })
+    later(at += 500, () => pointAt('[data-point="version"]'))
+    later(at += 700, () => { pressed.value = 'version' })
+    later(at += 180, () => { pressed.value = null; versionMenu.value = true })
+    later(at += 400, () => pointAt('[data-point="version-option"]'))
+    later(at += 700, () => { pressed.value = 'version-option' })
+    later(at += 180, () => { pressed.value = null; versionMenu.value = false; versionMarked.value = true })
+
+    // 3. Create: the folder and the .venv.
+    later(at += 600, () => { step.value = 3 })
+    later(at += 200, () => pointAt('[data-point="create"]'))
+    later(at += 700, () => { pressed.value = 'create' })
+    later(at += 180, () => { pressed.value = null; scene.value = 'creating' })
+    later(at += 1500, () => { scene.value = 'ide' })
+    later(at += 500, () => { marks.value = ['venv'] })
+    later(at += 600, () => { marks.value = ['venv', 'interpreter'] })
+
+    // 4. A file to write in.
+    const file = t('pycharm.project.file')
+    later(at += 700, () => { step.value = 4; marks.value = [] })
+    later(at += 200, () => pointAt('[data-point="project"]'))
+    later(at += 700, () => { pressed.value = 'project'; menu.value = 'context' })
+    later(at += 180, () => { pressed.value = null })
+    later(at += 400, () => pointAt('[data-point="new"]'))
+    later(at += 600, () => { menu.value = 'new' })
+    later(at += 300, () => pointAt('[data-point="python-file"]'))
+    later(at += 700, () => { pressed.value = 'python-file' })
+    later(at += 180, () => { pressed.value = null; menu.value = 'none'; newFile.value = '' })
+    at += 400
+    for (let i = 1; i <= file.length; i++) {
+      later(at += 95, () => { newFile.value = file.slice(0, i) })
+    }
+    later(at += 400, () => { pressed.value = 'enter' })
+    later(at += 220, () => {
+      pressed.value = null
+      newFile.value = null
+      files.value = [fileName.value]
+      open.value = fileName.value
+    })
+    later(at += 300, () => pointAtFraction(0.8, 0.45))
+
+    // 5. Write the program. Brackets and quotes get a beat of their own.
+    later(at += 600, () => { step.value = 5 })
+    at += 400
+    const text = t('pycharm.project.code')
+    for (let i = 1; i <= text.length; i++) {
+      later(at, () => { code.value = text.slice(0, i) })
+      at += text[i - 1] === '(' || text[i - 1] === '"' ? 200 : 75
     }
 
-    if (props.stage === 2) {
-      const text = projectName.value
-      later(at, () => pointAt('[data-point="name"]'))
-      later(at += 800, () => { pressed.value = 'name'; nameFocused.value = true; nameSelected.value = true })
-      later(at += 180, () => { pressed.value = null })
-      later(at += 500, () => { nameSelected.value = false; name.value = '' })
-      for (let i = 1; i <= text.length; i++) {
-        later(at += 95, () => { name.value = text.slice(0, i) })
-      }
-      later(at += 500, () => { nameFocused.value = false; pointAt('[data-point="venv"]') })
-      later(at += 800, () => { pressed.value = 'venv' })
-      later(at += 180, () => { pressed.value = null; venvMarked.value = true })
-      later(at += 600, () => pointAt('[data-point="version"]'))
-      later(at += 800, () => { pressed.value = 'version' })
-      later(at += 180, () => { pressed.value = null; versionMenu.value = true })
-      later(at += 450, () => pointAt('[data-point="version-option"]'))
-      later(at += 800, () => { pressed.value = 'version-option' })
-      later(at += 180, () => { pressed.value = null; versionMenu.value = false; versionMarked.value = true })
-    }
-
-    if (props.stage === 3) {
-      later(at, () => pointAt('[data-point="create"]'))
-      later(at += 800, () => { pressed.value = 'create' })
-      later(at += 180, () => { pressed.value = null; scene.value = 'creating' })
-      later(at += 1700, () => { scene.value = 'ide' })
-      later(at += 500, () => { marks.value = ['venv'] })
-      later(at += 700, () => { marks.value = ['venv', 'interpreter'] })
-    }
+    // 6. Run it.
+    later(at += 800, () => { step.value = 6 })
+    later(at += 250, () => pointAt('[data-point="run"]'))
+    later(at += 700, () => { pressed.value = 'run' })
+    later(at += 180, () => { pressed.value = null; run.value = 'started' })
+    later(at += 700, () => { run.value = 'done' })
 
     return at
   },
@@ -128,9 +205,11 @@ const { pointer, instant, finished, later, pointAt, play } = useDemoPlayer({
     :eyebrow="t('pycharm.eyebrow')"
     :title="t('pycharm.project.title')"
     :steps="steps"
-    :stage="stage"
+    :stage="step"
     :finished="finished"
+    :started="started"
     :tip="tip"
+    :start="t('pycharm.start')"
     :replay="t('pycharm.replay')"
     :hint="t('pycharm.hint')"
     @replay="play"
@@ -233,18 +312,32 @@ const { pointer, instant, finished, later, pointAt, play } = useDemoPlayer({
             </div>
           </div>
 
-          <!-- 3. The project -->
+          <!-- 3. The project, and everything written in it -->
           <div v-else key="ide" class="view">
-            <PycharmIde :project="name" :interpreter="`${PYTHON_VERSION} (${name})`" venv :marks="marks" />
+            <PycharmIde
+              :project="name"
+              :interpreter="`${PYTHON_VERSION} (${name})`"
+              venv
+              :files="files"
+              :open="open"
+              :code="code"
+              :caret="open !== null && run === 'none'"
+              :menu="menu"
+              :new-file="newFile"
+              :run="run"
+              :output="t('pycharm.project.output')"
+              :marks="marks"
+              :pressed="pressed"
+            />
           </div>
         </Transition>
       </PycharmWindow>
 
-      <DemoPointer v-bind="pointer" :clicking="pressed !== null" :instant="instant" />
+      <DemoPointer v-bind="pointer" :clicking="pressed !== null && pressed !== 'enter'" :instant="instant" />
     </div>
 
     <template #aside>
-      <div class="python-card" :class="{ 'is-hint': stage === 2 }">
+      <div class="python-card" :class="{ 'is-hint': step === 2 }">
         <div class="python-qr">
           <ArtQrCode :href="PYTHON.href" :badge="false" />
         </div>
@@ -598,7 +691,7 @@ const { pointer, instant, finished, later, pointAt, play } = useDemoPlayer({
   height: 100%;
   background: var(--ide-accent);
   transform-origin: left center;
-  animation: load 1.6s ease-out both;
+  animation: load 1.4s ease-out both;
 }
 
 /* ─── No Python yet ──────────────────────────────────────────────────── */
