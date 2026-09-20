@@ -253,8 +253,21 @@ const segments = (text: string) => text.split('`').map((part, index) => ({ part,
   to { opacity: 1; translate: 0 0; }
 }
 
-/* A phone reads every list as one column. */
+/* ─── A phone held upright ───────────────────────────────────────────── */
+/* One column, and the slide scrolls: three recommendations stacked are taller
+   than a phone, and `overflow: hidden` simply cut the last one off. */
 @media (max-width: 760px) {
+  /* The box keeps the height of the screen and scrolls inside it: the layout
+     above it is `overflow: hidden`, so a box that simply grew would be cut. */
+  .outro {
+    height: 100%;
+    padding: 3.5rem 1rem 5rem;
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+  .card-tag {
+    font-size: 0.7rem;
+  }
   .outro-cards {
     grid-template-columns: minmax(0, 1fr) !important;
   }

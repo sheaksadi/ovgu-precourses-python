@@ -174,6 +174,58 @@ onMounted(() => {
   animation: rise 0.55s cubic-bezier(0.22, 1, 0.36, 1) 0.5s both;
 }
 
+/* ─── A phone held upright ───────────────────────────────────────────── */
+/* See "A phone held upright" in AGENTS.md. The washes are sized in `vw`, which
+   on a phone is a circle wider than the screen; they belong behind the words,
+   not beside them. */
+@media (orientation: portrait) and (max-width: 760px) {
+  .wash-warm {
+    right: -30vw;
+    top: -10vh;
+    width: 90vw;
+    height: 90vw;
+  }
+  .wash-cool {
+    right: -20vw;
+    bottom: -14vh;
+    width: 80vw;
+    height: 80vw;
+  }
+  .dot-field {
+    background-size: 6vw 6vw;
+  }
+
+  .thanks-body {
+    left: 1rem;
+    right: 1rem;
+  }
+  .thanks-title {
+    font-size: clamp(2rem, 11vw, 3rem);
+  }
+  .thanks-line {
+    margin-top: 1rem;
+    font-size: 1rem;
+  }
+  .thanks-note {
+    margin-top: 0.8rem;
+    font-size: 0.85rem;
+  }
+  .thanks-url {
+    margin-top: 1.4rem;
+    font-size: 0.85rem;
+    overflow-wrap: anywhere;
+  }
+  .thanks-sign {
+    font-size: 0.95rem;
+  }
+  .thanks-puzzles {
+    margin-top: 1rem;
+  }
+  .puzzles-url {
+    overflow-wrap: anywhere;
+  }
+}
+
 @keyframes rise {
   from { opacity: 0; translate: 0 1.4vh; }
   to { opacity: 1; translate: 0 0; }

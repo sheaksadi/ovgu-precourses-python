@@ -7,6 +7,7 @@
  * measures, inside the slide itself:
  *
  *   out     pixels an element sticks out past the left or right edge
+ *           (decorations marked `aria-hidden` are allowed to bleed)
  *   under   pixels the content runs past the bottom
  *   tiny    pieces of text drawn below 11px, which is where reading stops
  *
@@ -118,7 +119,10 @@ const MEASURE = `(() => {
   const out = { out: 0, under: 0, tiny: 0, worst: '', lowest: '' }
   for (const el of slide.querySelectorAll('*')) {
     // The chrome the layouts draw on top is not the slide's business.
-    if (el.closest('.sync-pill, .replay, .lang-pill, [data-debug-bar]')) continue
+    if (el.closest('.sync-pill, .replay, .dock, .lang-pill, [data-debug-bar]')) continue
+    // Nor is a decoration that is meant to bleed off the edge: a wash behind
+    // the words, a dot field. They are hidden from a reader by definition.
+    if (el.closest('[aria-hidden="true"]')) continue
     const box = el.getBoundingClientRect()
     if (box.width < 1 || box.height < 1) continue
     const past = Math.max(0, Math.round(box.right - vw), Math.round(-box.left))
