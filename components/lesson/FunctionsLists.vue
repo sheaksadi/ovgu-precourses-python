@@ -276,4 +276,13 @@ code {
   from { opacity: 1; transform: none; }
   to { opacity: 0; transform: translateY(-1.4vh) scale(0.5); }
 }
+
+/* ─── A phone held upright ───────────────────────────────────────────── */
+/* "Outside" and "inside the call" are the two words the whole scene turns on. */
+@media (orientation: portrait) and (max-width: 760px) {
+  .area-label,
+  .link-tag {
+    font-size: 0.7rem;
+  }
+}
 </style>

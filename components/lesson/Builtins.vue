@@ -705,4 +705,13 @@ code {
   from { margin-inline: 0; border-radius: 0; }
   to { margin-inline: 0.8vh; border-radius: 1.2vh; border-left: 3px solid var(--text); border-right: 3px solid var(--text); }
 }
+
+/* ─── A phone held upright ───────────────────────────────────────────── */
+/* The label over the pipeline says what the whole scene is about, and `1.15vh`
+   of a phone is 9.7px. */
+@media (orientation: portrait) and (max-width: 760px) {
+  .chain-label {
+    font-size: 0.7rem;
+  }
+}
 </style>

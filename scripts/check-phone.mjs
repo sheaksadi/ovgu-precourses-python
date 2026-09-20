@@ -131,7 +131,8 @@ const MEASURE = `(() => {
       out.under = below
       out.lowest = (typeof el.className === 'string' ? el.className : el.tagName).slice(0, 44)
     }
-    if (!el.children.length && el.textContent.trim() && parseFloat(getComputedStyle(el).fontSize) < 11) out.tiny++
+    // 10.95, not 11: a clamp that lands exactly on the floor rounds to 10.999.
+    if (!el.children.length && el.textContent.trim() && parseFloat(getComputedStyle(el).fontSize) < 10.95) out.tiny++
   }
   return JSON.stringify(out)
 })()`

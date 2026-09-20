@@ -800,4 +800,23 @@ code {
   80% { top: 21.6vh; left: 3%; }
   100% { opacity: 1; top: 30vh; left: 3%; }
 }
+
+/* ─── A phone held upright ───────────────────────────────────────────── */
+/* The order badges are sized in `vh`; on a phone that floor is under reading
+   size, and the numbers are the whole point of the scene. */
+@media (orientation: portrait) and (max-width: 760px) {
+  .line b {
+    width: 1.1rem;
+    height: 1.1rem;
+    font-size: 0.7rem;
+  }
+
+  /* The call lines are one unbroken string each, so they set the width of the
+     scene; smaller type is what keeps them inside a phone. */
+  .line {
+    gap: 0.35rem;
+    padding: 0.35rem 0.4rem;
+    font-size: 0.65rem;
+  }
+}
 </style>

@@ -660,4 +660,21 @@ code {
   67% { height: calc(var(--l1) * 100%); }
   77%, 100% { height: calc(var(--l2) * 100%); }
 }
+
+/* ─── A phone held upright ───────────────────────────────────────────── */
+/* The tags naming what changed, and what Python does with each line, are the
+   captions of this scene; `vh` put them at 8-9px on a phone. */
+@media (orientation: portrait) and (max-width: 760px) {
+  .line-label,
+  .note-tag {
+    font-size: 0.7rem;
+  }
+
+  /* The tag sits beside the line it comments on, so it pays for the type it
+     just gained out of its own padding. */
+  .note-tag {
+    padding: calc(0.15vh + 0.2em) 0.3rem;
+    letter-spacing: 0;
+  }
+}
 </style>

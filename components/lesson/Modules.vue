@@ -517,4 +517,17 @@ code {
   from { opacity: 0; transform: translate(-8vh, -12vh) scale(0.6); }
   to { opacity: 1; transform: none; }
 }
+
+/* ─── A phone held upright ───────────────────────────────────────────── */
+/* The file, its name and the line breaks in it are the thing being read here,
+   and all three were under 11px on a phone. */
+@media (orientation: portrait) and (max-width: 760px) {
+  .paper-name,
+  .paper-break,
+  .whole-tag,
+  .walk-tag,
+  .walk-strip {
+    font-size: 0.7rem;
+  }
+}
 </style>
