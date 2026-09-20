@@ -31,6 +31,13 @@ export function useDemos() {
   const now = useState<number>('deck-demo-now', () => 0)
   /** Counts replays, so a keyed scene remounts and its animations start again. */
   const nonce = useState<number>('deck-demo-nonce', () => 0)
+  /**
+   * Scenes that carry a replay button of their own — the walk-throughs put one
+   * under their frame, where the demo is. Two buttons asking the room for the
+   * same thing is one too many, so the deck's own bar stands down while such a
+   * scene is on screen.
+   */
+  const owners = useState<number>('deck-demo-owners', () => 0)
 
   let timer: ReturnType<typeof setInterval> | null = null
 
@@ -57,6 +64,13 @@ export function useDemos() {
   return {
     busy: computed(() => now.value < until.value),
     nonce: computed(() => nonce.value),
+    /** True while a scene on screen offers a replay of its own. */
+    ownsReplay: computed(() => owners.value > 0),
+    /** Said by such a scene, for as long as it is mounted. */
+    claimReplay: () => {
+      owners.value++
+      onBeforeUnmount(() => { owners.value = Math.max(0, owners.value - 1) })
+    },
     /** How long the demo that is running still has, for anything that wants to wait. */
     remaining: computed(() => Math.max(0, until.value - now.value)),
     hold,
