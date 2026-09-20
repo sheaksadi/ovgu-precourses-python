@@ -640,4 +640,27 @@ const lit = (word: string) => link.isActive(`word:${word}`)
   15% { opacity: 1; }
   100% { opacity: 0; top: 39vh; left: 86%; }
 }
+
+/* ─── A phone held upright ───────────────────────────────────────────── */
+@media (orientation: portrait) and (max-width: 760px) {
+  /* `.shell` in front, not a bare :deep(), so this beats Shell's own rule of
+     the same specificity instead of losing the tie on build order. */
+  .shell :deep(.output-label) {
+    font-size: clamp(0.75rem, 3vw, 0.85rem);
+  }
+  :deep(.code-tabbar .ml-auto span) {
+    font-size: 0.72rem;
+  }
+
+  /* Momo's line was sized for a wide scene: at 12.5vh from the left it now
+     runs past the right edge for anything longer than a couple of words. It
+     wraps instead, and sits closer to Momo so the balloon still points at her. */
+  .bubble {
+    left: 9vh;
+    max-width: 64vw;
+    padding: 0.85vh 1.3vh;
+    font-size: clamp(0.75rem, 3.6vw, 1rem);
+    white-space: normal;
+  }
+}
 </style>

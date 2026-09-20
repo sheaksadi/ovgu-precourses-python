@@ -509,4 +509,30 @@ const outputDelays = computed(() => current.value.output.map((_, i) => 1.4 + i *
   from { opacity: 0; scale: 0.85; }
   to { opacity: 1; scale: 1; }
 }
+
+/* A phone held upright: LessonShell already stacks the slide and gives this
+   scene a fixed-height box (see its own portrait query). What is left is the
+   small labels sized in vh, which land under 11px on a tall narrow screen.
+   The two `:deep()` rules reach into the shared CodePanel filename tab and
+   LessonShell's own output label — `.shell` in front, not a bare :deep(),
+   so the rule beats Shell's own same-specificity one instead of losing the
+   tie on build order. */
+@media (orientation: portrait) and (max-width: 760px) {
+  .panel-label,
+  .op-says,
+  .combo-head {
+    font-size: clamp(0.72rem, 3vw, 0.85rem);
+  }
+  .editor-label,
+  .editor-arrow,
+  .editor-note {
+    font-size: clamp(0.7rem, 2.8vw, 0.78rem);
+  }
+  :deep(.code-tabbar .ml-auto span) {
+    font-size: 0.72rem;
+  }
+  .shell :deep(.output-label) {
+    font-size: clamp(0.75rem, 3vw, 0.85rem);
+  }
+}
 </style>

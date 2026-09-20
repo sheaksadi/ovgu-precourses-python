@@ -730,4 +730,16 @@ const phase = (active: number) => (props.stage === active ? 'is-running' : 'is-s
   80.43%, 88.04% { left: 71%; }
   95.65%, 100% { left: 85%; }
 }
+
+/* ─── A phone held upright ───────────────────────────────────────────── */
+@media (orientation: portrait) and (max-width: 760px) {
+  /* `.shell` in front, not a bare :deep(), so this beats Shell's own rule of
+     the same specificity instead of losing the tie on build order. */
+  .shell :deep(.output-label) {
+    font-size: clamp(0.75rem, 3vw, 0.85rem);
+  }
+  :deep(.code-tabbar .ml-auto span) {
+    font-size: 0.72rem;
+  }
+}
 </style>

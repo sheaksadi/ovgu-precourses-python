@@ -139,7 +139,7 @@ const outputDelays = computed(() => {
       </div>
 
       <!-- 2–7: the cat as a card, and what the stage does to it -->
-      <div v-else class="cards" :class="{ 'is-many': stage === 7 }">
+      <div v-else class="cards" :class="{ 'is-many': stage === 7 || stage === 3 }">
         <!-- 3–4: the blueprint the cards come from -->
         <div v-if="stage === 3 || stage === 4" class="plan">
           <span class="plan-tag">{{ t('objects.blueprint') }}</span>
@@ -405,5 +405,49 @@ const outputDelays = computed(() => {
 @keyframes flip-in {
   from { opacity: 0; translate: 0 0.8vh; }
   to { opacity: 1; translate: 0 0; }
+}
+
+/* ─── A phone held upright ───────────────────────────────────────────── */
+/* The shell already turns the slide into one scrolling column and gives the
+   scene a fixed-height box to draw in (`.shell-scene`, 46vh). What breaks
+   inside it here is the row of cat cards: stages 3 and 7 put three or four of
+   them side by side, sized for the 44vw scene the shell has on a projector,
+   and they run off the right edge of a 390px screen. Two columns keeps every
+   card at reading width and the whole group inside the box's height. */
+@media (orientation: portrait) and (max-width: 760px) {
+  .cards.is-many {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    align-items: center;
+    justify-items: stretch;
+    gap: 1.2vh;
+    width: 100%;
+  }
+  .cards.is-many .plan,
+  .cards.is-many .card {
+    width: auto;
+    min-width: 0;
+  }
+
+  /* vh sizing gives huge headlines and unreadable labels on the same tall,
+     narrow screen; these are the labels that landed under 11px there. */
+  .warn {
+    font-size: clamp(0.7rem, 3vw, 0.85rem);
+  }
+  .plan-tag {
+    font-size: clamp(0.7rem, 3vw, 0.8rem);
+  }
+  .plan-row {
+    font-size: clamp(0.75rem, 3.2vw, 0.85rem);
+  }
+  .card-call {
+    font-size: clamp(0.72rem, 3vw, 0.8rem);
+  }
+  .known-name {
+    font-size: clamp(0.72rem, 3vw, 0.85rem);
+  }
+  .known-note {
+    font-size: clamp(0.75rem, 3.2vw, 0.9rem);
+  }
 }
 </style>

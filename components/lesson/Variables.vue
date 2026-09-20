@@ -774,4 +774,76 @@ const segments = (text: string) => text.split('`').map((part, index) => ({ part,
   70% { opacity: 1; transform: translateY(-1.4vh) scale(1); }
   100% { opacity: 0; transform: translateY(-2.4vh) scale(1); }
 }
+
+/* ─── A phone held upright ────────────────────────────────────────────── */
+/* This lesson does not use LessonShell, so it needs the whole pattern: the
+   header, scene, code and takeaway go static in one scrolling column (the
+   same order they already sit in the markup), and the scene keeps its own
+   box to draw the eight stages in, exactly like LessonShell's own
+   `.shell-scene`. */
+@media (orientation: portrait) and (max-width: 760px) {
+  .vars {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    padding: 3.5rem 1rem 5rem;
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+
+  .vars-head,
+  .vars-code,
+  .vars-note {
+    position: static;
+    inset: auto;
+    width: auto;
+  }
+
+  .vars-progress {
+    flex-wrap: wrap;
+    gap: 0.5rem 1rem;
+  }
+
+  .vars-headline {
+    font-size: clamp(1.5rem, 7vw, 2.2rem);
+  }
+
+  /* Relative, not static: the four scenes inside are drawn absolutely
+     against this card, and would otherwise anchor to the whole slide. */
+  .vars-scene {
+    position: relative;
+    inset: auto;
+    width: auto;
+    height: 46vh;
+  }
+
+  /* Four boxes at their landscape width (13vh) run well past a phone's
+     width; a share of the viewport width keeps all four on the card. */
+  .type-row .vbox-art {
+    width: 20vw;
+  }
+
+  .type-label {
+    font-size: clamp(0.72rem, 3vw, 0.85rem);
+  }
+
+  /* A long line scrolls sideways in its panel instead of being cut off.
+     The panel's own `whitespace-pre-wrap` mostly keeps lines in bounds by
+     wrapping them, but a single long token (a run-together f-string tail)
+     can still be wider than the panel, so it needs `nowrap` to actually
+     scroll instead of spilling over by a few pixels. */
+  .vars-code :deep(.code-panel) {
+    overflow-x: auto;
+  }
+  .vars-code :deep(.code-content) {
+    white-space: nowrap;
+  }
+  :deep(.code-tabbar .ml-auto span) {
+    font-size: 0.72rem;
+  }
+
+  .output-label {
+    font-size: clamp(0.75rem, 3vw, 0.85rem);
+  }
+}
 </style>

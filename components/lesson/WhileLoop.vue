@@ -984,4 +984,23 @@ const show = (...list: number[]) => list.includes(props.stage)
   66.67%, 83.33% { left: 60%; }
   100% { left: 81%; }
 }
+
+/* ─── A phone held upright ───────────────────────────────────────────── */
+@media (orientation: portrait) and (max-width: 760px) {
+  /* `.shell` in front, not a bare :deep(), so this beats Shell's own rule of
+     the same specificity instead of losing the tie on build order. */
+  .shell :deep(.output-label) {
+    font-size: clamp(0.75rem, 3vw, 0.85rem);
+  }
+  :deep(.code-tabbar .ml-auto span) {
+    font-size: 0.72rem;
+  }
+
+  /* The "12" tag on the meter and the ✓/✗ mark on each check were both sized
+     at 1.3vh, which drops under 11px on a tall narrow screen. */
+  .meter-line,
+  .check b {
+    font-size: clamp(0.7rem, 2.8vw, 0.8rem);
+  }
+}
 </style>

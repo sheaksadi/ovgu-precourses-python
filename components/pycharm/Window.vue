@@ -91,4 +91,14 @@ defineProps<{ title: string }>()
   min-height: 0;
   overflow: hidden;
 }
+
+/* ─── A phone held upright ───────────────────────────────────────────── */
+/* The window is drawn in `vh`, and `1.45vh` of a phone is under reading size.
+   It is a picture of PyCharm, so it may crop — but the words in it are the
+   words students look for on their own screen, and those have to be legible. */
+@media (orientation: portrait) and (max-width: 760px) {
+  .window {
+    font-size: 0.72rem;
+  }
+}
 </style>

@@ -222,4 +222,33 @@ const outputDelays = computed(() => current.value.output.map((_, i) => 1.5 + i *
   50% { scale: 1.04; }
   to { scale: 1; }
 }
+
+/* A phone held upright: LessonShell already stacks the slide into one column
+   and gives this scene a fixed-height box (see its own portrait query), so
+   only the labels sized in vh — which land under 11px on a tall narrow
+   screen — need a floor here. The two `:deep()` rules reach into the shared
+   CodePanel filename tab and LessonShell's own output label, both of which
+   have the same problem but live outside this file. */
+@media (orientation: portrait) and (max-width: 760px) {
+  .kinds-label,
+  .kind-hint {
+    font-size: clamp(0.72rem, 3vw, 0.8rem);
+  }
+  .machine-note {
+    font-size: clamp(0.72rem, 2.8vw, 0.75rem);
+  }
+  /* German compounds ("Anführungszeichen") have no spaces to wrap on, and the
+     narrow column clips them without this. */
+  .kind-hint {
+    overflow-wrap: anywhere;
+  }
+  :deep(.code-tabbar .ml-auto span) {
+    font-size: 0.72rem;
+  }
+  /* `.shell` in front, not a bare :deep(), so this beats Shell's own rule of
+     the same specificity instead of losing the tie on build order. */
+  .shell :deep(.output-label) {
+    font-size: clamp(0.75rem, 3vw, 0.85rem);
+  }
+}
 </style>

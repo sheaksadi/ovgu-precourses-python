@@ -420,4 +420,21 @@ const bannerChanges = computed(() => props.stage > 1 && previous.value.banner !=
   80.95%, 90.48% { left: calc(var(--x0) + 3 * var(--pitch)); }
   100% { left: calc(var(--x0) + 4 * var(--pitch)); }
 }
+
+/* ─── A phone held upright ───────────────────────────────────────────── */
+@media (orientation: portrait) and (max-width: 760px) {
+  /* `.shell` in front, not a bare :deep(), so this beats Shell's own rule of
+     the same specificity instead of losing the tie on build order. */
+  .shell :deep(.output-label) {
+    font-size: clamp(0.75rem, 3vw, 0.85rem);
+  }
+  :deep(.code-tabbar .ml-auto span) {
+    font-size: 0.72rem;
+  }
+
+  /* At 1.3vh this dropped under 11px on a tall narrow screen. */
+  .ghost-note {
+    font-size: clamp(0.7rem, 2.8vw, 0.8rem);
+  }
+}
 </style>

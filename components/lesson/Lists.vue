@@ -534,4 +534,27 @@ const basketLit = computed(() => link.isActive(`word:${listName.value}`))
   from { opacity: 0; transform: translateY(-9vh); }
   to { opacity: 1; transform: none; }
 }
+
+/* ─── A phone held upright ───────────────────────────────────────────── */
+@media (orientation: portrait) and (max-width: 760px) {
+  /* `.shell` in front, not a bare :deep(), so this beats Shell's own rule of
+     the same specificity instead of losing the tie on build order. */
+  .shell :deep(.output-label) {
+    font-size: clamp(0.75rem, 3vw, 0.85rem);
+  }
+  :deep(.code-tabbar .ml-auto span) {
+    font-size: 0.72rem;
+  }
+
+  /* Momo's line was sized for a wide scene: at 14vh from the left it now runs
+     past the right edge for anything longer than a couple of words. It wraps
+     instead, and sits closer to Momo so the balloon still points at her. */
+  .bubble {
+    left: 10vh;
+    max-width: 62vw;
+    padding: 0.9vh 1.4vh;
+    font-size: clamp(0.75rem, 3.6vw, 0.95rem);
+    white-space: normal;
+  }
+}
 </style>

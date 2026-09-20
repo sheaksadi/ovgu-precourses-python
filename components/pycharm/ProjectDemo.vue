@@ -740,6 +740,61 @@ const { pointer, instant, finished, started, later, pointAt, pointAtFraction, pl
   overflow-wrap: anywhere;
 }
 
+/* ─── A phone held upright ───────────────────────────────────────────── */
+/* See "A phone held upright" in AGENTS.md. The window is a picture of PyCharm,
+   so it keeps its shape and simply gets smaller; what has to give is the text
+   inside it and the row of three welcome actions, which is wider than a phone. */
+@media (orientation: portrait) and (max-width: 760px) {
+  .welcome {
+    grid-template-columns: 34% 1fr;
+  }
+  .welcome-main {
+    gap: 0.8vh;
+    padding: 0 1.2vh;
+  }
+  .welcome-mark {
+    font-size: 0.7rem;
+  }
+  .welcome-text {
+    display: none;
+  }
+  .welcome-actions {
+    gap: 1.4vh;
+    margin-top: 1.4vh;
+  }
+  .action-icon {
+    width: 4.4vh;
+    height: 4.4vh;
+    font-size: 1.8vh;
+  }
+
+  .dialog-form {
+    gap: 1vh 0.9vh;
+    padding: 1.4vh 1.2vh;
+  }
+  .field-checks {
+    display: none;
+  }
+  .select {
+    min-width: 0;
+  }
+
+  /* The QR card is the one thing here a phone actually reads. */
+  .python-card {
+    gap: 1rem;
+    padding: 1rem;
+  }
+  .python-qr {
+    width: 6.5rem;
+  }
+  .python-text strong {
+    font-size: 1rem;
+  }
+  .python-text span {
+    font-size: 0.8rem;
+  }
+}
+
 @keyframes appear {
   from { opacity: 0; }
   to { opacity: 1; }

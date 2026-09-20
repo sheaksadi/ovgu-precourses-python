@@ -384,4 +384,13 @@ const at = (index: number) => START + index * STEP
     animation: none;
   }
 }
+
+/* A phone held upright: the eyebrow's vh-sized clamp lands under 11px on a tall
+   narrow screen, so it gets its own floor here instead. Everything else about
+   this slide already reads fine stacked (see the max-width query above). */
+@media (orientation: portrait) and (max-width: 760px) {
+  .me-eyebrow {
+    font-size: clamp(0.75rem, 3.2vw, 0.85rem);
+  }
+}
 </style>

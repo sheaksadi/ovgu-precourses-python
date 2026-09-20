@@ -710,4 +710,85 @@ const litWord = (part: 'momo' | 'key' | 'house' | 'door') => lit(`word:${words.v
   from { transform: none; }
   to { transform: translateY(-2vh) scale(0.72); }
 }
+
+/* ─── A phone held upright ────────────────────────────────────────────── */
+/* This lesson does not use LessonShell, so it needs the whole pattern: the
+   absolutely-placed pieces go static in reading order, the root becomes one
+   scrolling column, and the lane's two-column grid — label beside a
+   landscape-width track — collapses to one column. Without that, the
+   track's vh-sized art keeps its landscape offsets against a now much
+   narrower box and ends up sitting on top of the label instead of beside it. */
+@media (orientation: portrait) and (max-width: 760px) {
+  .door-lesson {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    padding: 3.5rem 1rem 5rem;
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+
+  .lesson-head,
+  .lanes,
+  .prompt,
+  .code-dock,
+  .to-python,
+  .python-dock {
+    position: static;
+    inset: auto;
+    width: auto;
+  }
+
+  /* Four steps need to wrap instead of running off the right edge. */
+  .steps {
+    flex-wrap: wrap;
+    gap: 0.6rem 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .lesson-title {
+    font-size: clamp(1.6rem, 7vw, 2.4rem);
+  }
+
+  /* Label above the track, not beside it — see the block comment above. */
+  .lane {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.4vh;
+  }
+
+  .prompt {
+    max-width: none;
+  }
+
+  /* Its `left: 50%` centring only worked while it was positioned absolutely;
+     static, the leftover `translate(-50%)` just shoves it half its own width
+     off the left edge, so it needs its own centring instead. */
+  .to-python {
+    left: auto;
+    translate: none;
+    justify-content: center;
+  }
+
+  /* A long line scrolls sideways in its panel instead of being cut off. */
+  .code-dock :deep(.code-panel),
+  .python-dock :deep(.code-panel) {
+    overflow-x: auto;
+  }
+  :deep(.code-tabbar .ml-auto span) {
+    font-size: 0.72rem;
+  }
+
+  /* The stage-3/4 "make room below" transforms only make sense against the
+     landscape layout they were built for: in a static, already-stacked
+     column they would shrink and shift the lanes over the header instead. */
+  .stage-3 .lanes {
+    animation: appear 0.4s ease both;
+  }
+  .stage-4 .lanes {
+    display: none;
+  }
+  .stage-4 .code-dock {
+    animation: appear 0.4s ease both;
+  }
+}
 </style>

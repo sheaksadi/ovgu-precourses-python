@@ -591,4 +591,27 @@ const cells = computed(() => {
   from { opacity: 0; transform: translateY(-2vh); }
   to { opacity: 1; transform: none; }
 }
+
+/* ─── A phone held upright ───────────────────────────────────────────── */
+@media (orientation: portrait) and (max-width: 760px) {
+  /* `.shell` in front, not a bare :deep(), so this beats Shell's own rule of
+     the same specificity instead of losing the tie on build order. */
+  .shell :deep(.output-label) {
+    font-size: clamp(0.75rem, 3vw, 0.85rem);
+  }
+  :deep(.code-tabbar .ml-auto span) {
+    font-size: 0.72rem;
+  }
+
+  /* The stamp starts at scale(1.8) and holds that size, invisible, through its
+     whole delay. On the narrow column that invisible box reaches past the
+     edge, so the phone gets a smaller starting scale for the same pop. */
+  .stage-4 .stamp {
+    animation-name: stamp-phone;
+  }
+  @keyframes stamp-phone {
+    from { opacity: 0; transform: scale(1.3); }
+    to { opacity: 1; transform: scale(1); }
+  }
+}
 </style>

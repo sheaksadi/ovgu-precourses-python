@@ -40,6 +40,9 @@ const { isProjector, role } = useDeckRole()
 const demos = useDemos()
 const held = computed(() => demos.busy.value && role.value !== 'presenter')
 
+// The replay lives under the frame here, so the deck's own bar stands down.
+demos.claimReplay()
+
 const waiting = computed(() => props.started === false)
 
 /** Six steps and a tip do not fit the column at the size three of them do. */
@@ -312,6 +315,86 @@ const isDone = (step: number) => !waiting.value && (step < props.stage || (step 
   font-size: clamp(0.7rem, 1.5vh, 1rem);
   font-weight: 600;
   color: var(--text-muted);
+}
+
+/* ─── A phone held upright ───────────────────────────────────────────── */
+/* See "A phone held upright" in AGENTS.md. The projector's two columns become
+   one scrolling column: what the demo is about, then the demo, then the tip. */
+@media (orientation: portrait) and (max-width: 760px) {
+  .walk {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    padding: 3.5rem 1rem 5rem;
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+
+  .walk-copy,
+  .walk-demo {
+    position: static;
+    inset: auto;
+    width: auto;
+  }
+
+  .walk-title {
+    font-size: clamp(1.5rem, 7vw, 2.2rem);
+  }
+
+  .walk-steps {
+    margin-top: 1.6rem;
+    gap: 0.35rem;
+  }
+  .walk-step {
+    gap: 0.75rem;
+    padding: 0.5rem 0.6rem;
+    border-radius: 0.8rem;
+    font-size: 0.95rem;
+  }
+  .walk-num {
+    width: 1.9rem;
+    height: 1.9rem;
+    font-size: 0.8rem;
+  }
+
+  .walk-tip {
+    gap: 0.75rem;
+    margin-top: 1.4rem;
+    font-size: 0.95rem;
+  }
+  .walk-rail {
+    width: 0.25rem;
+  }
+
+  .walk-aside {
+    margin-top: 1.2rem;
+    padding-top: 0;
+  }
+
+  /* The window inside is drawn in vh against this box, so it keeps a vh height
+     and crops rather than being redrawn for a narrow screen. */
+  .walk-demo :deep(.frame) {
+    height: 42vh;
+  }
+
+  .walk-controls {
+    gap: 0.75rem;
+  }
+  .walk-replay {
+    padding: 0.6rem 1.1rem;
+    border-radius: 0.8rem;
+    font-size: 0.9rem;
+  }
+  .walk-hint {
+    font-size: 0.8rem;
+  }
+
+  .walk-start-button,
+  .walk-start-badge {
+    gap: 0.6rem;
+    padding: 0.9rem 1.6rem;
+    font-size: 1.05rem;
+  }
 }
 
 @keyframes appear {
