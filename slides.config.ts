@@ -523,7 +523,7 @@ export const slides: SlideEntry[] = [
     subtitle: 'Zählen, und der längste Lauf am Stück',
     problem: 'loops-steps',
     duration: 20,
-    teleprompter: 'Rätsel-Runde zu Schleifen, zwei Aufgaben. Hier: Bellos Schrittzähler, 40 Tage. Teil 1 zählt die Tage über 10000 – Schleife, if, Zähler. Teil 2 will den längsten Lauf am Stück: der Zähler muss bei einem schwachen Tag wieder auf 0. Danach kommt Momos Fang, dann die Rangliste und die Lösung.',
+    teleprompter: 'Rätsel-Runde zu Schleifen, zwei Aufgaben. Hier: Bellos Schrittzähler, 40 Tage. Teil 1 zählt die Tage über 10000 – Schleife, if, Zähler. Teil 2 will den längsten Lauf am Stück: der Zähler muss bei einem schwachen Tag wieder auf 0. Danach kommt Momos Fang, dann die Lösung.',
   },
   {
     id: 'PRE-0137',
@@ -532,13 +532,6 @@ export const slides: SlideEntry[] = [
     duration: 15,
     problem: 'loops-fish',
     teleprompter: 'Erstes Rätsel im Advent-of-Code-Stil. Jedes Gerät bekommt eine eigene Fischliste: kopieren, in PyCharm lösen, nur die Zahl abschicken. Teil 1 zählt Fische ab 20 cm, Teil 2 öffnet sich nach Teil 1: Momo frisst der Reihe nach, bis 300 cm nicht mehr passen – break. Oben rechts erscheint, wer gelöst hat. Wer weiterblättert, findet das Rätsel unten rechts wieder.',
-  },
-  {
-    id: 'PRE-0138',
-    title: 'Rätsel: Rangliste Schleifen',
-    subtitle: 'Wer hat die meisten Sterne?',
-    duration: 2,
-    teleprompter: 'Die Rangliste der Schleifen-Runde: ein Stern pro gelöstem Teil, bei Gleichstand zählt, wer schneller war. Auf den Handys steht der eigene Platz. Kurz feiern, dann die Lösungen zeigen.',
   },
   {
     id: 'PRE-0139',
@@ -701,7 +694,7 @@ export const slides: SlideEntry[] = [
     subtitle: 'Erste Code-Aufgabe: eine Funktion schreiben',
     problem: 'functions-greet',
     duration: 20,
-    teleprompter: 'Erste Code-Aufgabe: keine Zahl abschicken, sondern eine Funktion schreiben. Auf dem eigenen Gerät steht ein Editor, Python läuft direkt im Browser. Ausführen prüft die sichtbaren Tests, Abschicken zusätzlich einen versteckten. Achtung auf return statt print – genau daran scheitern die ersten Versuche. Danach die Rechteck-Funktion, dann die Rangliste.',
+    teleprompter: 'Erste Code-Aufgabe: keine Zahl abschicken, sondern eine Funktion schreiben. Auf dem eigenen Gerät steht ein Editor, Python läuft direkt im Browser. Ausführen prüft die sichtbaren Tests, Abschicken zusätzlich einen versteckten. Achtung auf return statt print – genau daran scheitern die ersten Versuche. Danach die Rechteck-Funktion.',
   },
   {
     id: 'PRE-0143',
@@ -710,13 +703,6 @@ export const slides: SlideEntry[] = [
     duration: 12,
     problem: 'functions-area',
     teleprompter: 'Erste Code-Aufgabe: Hier gibt es keine Zahl zum Abschicken, sondern eine Funktion. Auf dem eigenen Gerät steht ein Editor; Ausführen prüft die sichtbaren Tests, Abschicken zusätzlich zwei versteckte. Python läuft im Browser, ohne Internet. Wer lieber in PyCharm schreibt: Code hinüberkopieren und dann hier einfügen.',
-  },
-  {
-    id: 'PRE-0145',
-    title: 'Rätsel: Rangliste Funktionen',
-    subtitle: 'Zwei Funktionen, zwei Sterne',
-    duration: 2,
-    teleprompter: 'Rangliste der Funktionen-Runde: ein Stern pro bestandener Aufgabe. Auf den Handys steht der eigene Platz. Wer noch mitten drin ist, findet beide Aufgaben unten rechts weiter offen.',
   },
   {
     id: 'PRE-0113',
@@ -1032,13 +1018,6 @@ export const slides: SlideEntry[] = [
     duration: 20,
     problem: 'finale-shelter',
     teleprompter: 'Zweites Finale: eine Simulation. Die Regeln stehen auf der Folie, der Code muss sie nur befolgen – jede Runde alle hungriger, dann die hungrigste Katze füttern, nie unter null. Teil 1 ist der Gesamthunger am Ende, Teil 2 die Katze, die am häufigsten dran war. Wer eine Klasse nimmt, hat es leichter; nötig ist sie nicht. Genau das ist die Pointe der Objekte-Folien.',
-  },
-  {
-    id: 'PRE-0177',
-    title: 'Finale: Rangliste',
-    subtitle: 'Vier Sterne zu holen',
-    duration: 3,
-    teleprompter: 'Endstand der letzten Runde. Beide Rätsel bleiben offen, niemand muss aufhören. Kurz würdigen, wer weit gekommen ist – und sagen, dass Teil 2 von beiden ehrlich schwer war.',
   },
   {
     id: 'PRE-0156',

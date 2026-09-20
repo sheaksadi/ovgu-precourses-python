@@ -249,17 +249,12 @@ export const slidesEn: Record<string, SlideText> = {
   'PRE-0089': {
     title: 'Now you: loops',
     subtitle: 'Counting, and the longest run in a row',
-    teleprompter: 'Puzzle round on loops, two tasks. This one: Bello step counter, 40 days. Part 1 counts the days over 10000 - loop, if, counter. Part 2 wants the longest run in a row: the counter has to go back to 0 on a weak day. After this comes Momo catch, then the leaderboard and the solution.',
+    teleprompter: 'Puzzle round on loops, two tasks. This one: Bello step counter, 40 days. Part 1 counts the days over 10000 - loop, if, counter. Part 2 wants the longest run in a row: the counter has to go back to 0 on a weak day. After this comes Momo catch, then the solution.',
   },
   'PRE-0137': {
     title: 'Puzzle: Momo\'s catch',
     subtitle: 'Counting with a loop and an if, then a total with break',
     teleprompter: 'First puzzle in the Advent of Code style. Every device gets its own list of fish: copy it, solve it in PyCharm, submit only the number. Part 1 counts fish from 20 cm, part 2 opens once part 1 is solved: Momo eats in order until 300 cm no longer fits - break. Who has solved it appears in the top right. Anyone who moves on finds the puzzle again in the bottom right.',
-  },
-  'PRE-0138': {
-    title: 'Puzzle: loops leaderboard',
-    subtitle: 'Who has the most stars?',
-    teleprompter: 'The leaderboard of the loops round: one star per solved part, and on a tie whoever was faster. Everyone sees their own place on their phone. Celebrate briefly, then show the solutions.',
   },
   'PRE-0139': {
     title: 'Solution: Momo\'s catch',
@@ -359,17 +354,12 @@ export const slidesEn: Record<string, SlideText> = {
   'PRE-0112': {
     title: 'Now you: functions',
     subtitle: 'First code task: write a function',
-    teleprompter: 'First code task: nothing to submit as a number, a function to write instead. There is an editor on your own device and Python runs right in the browser. Run checks the visible tests, Submit adds a hidden one. Watch out for return instead of print - that is exactly what the first attempts trip over. After this the rectangle function, then the leaderboard.',
+    teleprompter: 'First code task: nothing to submit as a number, a function to write instead. There is an editor on your own device and Python runs right in the browser. Run checks the visible tests, Submit adds a hidden one. Watch out for return instead of print - that is exactly what the first attempts trip over. After this the rectangle function.',
   },
   'PRE-0143': {
     title: 'Code task: rectangle',
     subtitle: 'Write a function, test it, submit it',
     teleprompter: 'First code task: there is no number to submit here, there is a function. The device has an editor; Run checks the visible tests, Submit adds two hidden ones. Python runs in the browser, no internet needed. If you would rather write in PyCharm: copy the code across and paste it here.',
-  },
-  'PRE-0145': {
-    title: 'Puzzle: functions leaderboard',
-    subtitle: 'Two functions, two stars',
-    teleprompter: 'Leaderboard of the functions round: one star per passing task. Everyone sees their own place on their phone. Anyone still in the middle of it finds both tasks open in the bottom right.',
   },
   'PRE-0113': {
     title: 'Built-in functions',
@@ -562,11 +552,6 @@ export const slidesEn: Record<string, SlideText> = {
     title: 'Finale: the shelter',
     subtitle: 'Rules, round after round',
     teleprompter: 'Second finale: a simulation. The rules are on the slide and the code only has to follow them - every round everyone gets hungrier, then the hungriest cat is fed, never below zero. Part 1 is the total hunger at the end, part 2 the cat that was fed most often. Anyone who uses a class has an easier time; it is not required. That is exactly the point of the objects slides.',
-  },
-  'PRE-0177': {
-    title: 'Finale: leaderboard',
-    subtitle: 'Four stars to collect',
-    teleprompter: 'Final standings of the last round. Both puzzles stay open, nobody has to stop. Give credit briefly to whoever got far - and say that part 2 of both was honestly hard.',
   },
   'PRE-0156': {
     title: 'Sorting',
