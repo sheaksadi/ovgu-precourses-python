@@ -410,22 +410,23 @@ onUnmounted(() => {
 
         <!-- What is coming: the next slide pinned, the running order under it -->
         <aside class="lg:col-span-5 flex flex-col gap-2 min-h-0">
-          <!-- Pinned: the next slide never scrolls away. -->
-          <div class="flex-none h-[30%] min-h-0 bg-gray-900 border border-gray-800 rounded-xl p-3 flex gap-3">
-            <div class="w-[30%] flex-none">
+          <!-- Pinned: the next slide never scrolls away. Forty percent of the
+               column, the preview as tall as the panel; the order gets the rest. -->
+          <div class="flex-none h-[40%] min-h-0 bg-gray-900 border border-gray-800 rounded-xl p-3 flex gap-3">
+            <div class="flex-none h-full aspect-video max-w-[70%]">
               <SlidePreview
                 :slide-id="upcoming?.id"
                 :route="upcoming?.route"
                 label="Next slide"
                 placeholder="End of deck"
               />
-              <div v-if="upcoming" class="mt-1 text-[11px] text-gray-500 font-mono truncate">
-                {{ upcoming.pageLabel }}<span v-if="upcoming.duration"> · {{ upcoming.duration }}m</span>
-              </div>
             </div>
 
             <div class="flex-1 min-w-0 flex flex-col min-h-0">
               <div class="flex-none text-[10px] uppercase tracking-widest text-blue-400">Up next</div>
+              <div v-if="upcoming" class="flex-none text-[11px] text-gray-500 font-mono truncate">
+                {{ upcoming.pageLabel }}<span v-if="upcoming.duration"> · {{ upcoming.duration }}m</span>
+              </div>
               <div class="flex-none text-sm font-bold text-white truncate">{{ upcoming?.title || 'End of deck' }}</div>
               <p v-if="upcoming?.teleprompter" class="flex-1 min-h-0 mt-1 overflow-y-auto text-xs leading-relaxed text-gray-400">
                 {{ upcoming.teleprompter }}
