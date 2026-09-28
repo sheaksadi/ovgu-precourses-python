@@ -388,6 +388,217 @@ const de = {
     ],
   },
 
+  everyday: {
+    eyebrow: 'Entscheidungen im Alltag',
+    title1: 'Jeden Tag entscheiden wir',
+    title2: 'Immer dasselbe Muster',
+    question: 'Frage',
+    yes: 'Ja',
+    no: 'Nein',
+    if: 'wenn',
+    then: 'dann',
+    else: 'sonst',
+    elif: 'sonst wenn',
+    scenarios: [
+      { icon: 'rain', question: 'Regnet es?', condition: 'es regnet', yes: 'Schirm mitnehmen', no: 'Sonnenbrille aufsetzen' },
+      { icon: 'light', question: 'Ist die Ampel rot?', condition: 'die Ampel rot ist', yes: 'stehen bleiben', no: 'über die Straße gehen' },
+      { icon: 'battery', question: 'Akku unter 20\u00A0%?', condition: 'der Akku unter 20\u00A0% ist', yes: 'Handy aufladen', no: 'weiter scrollen' },
+      { icon: 'clock', question: 'Ist Wochenende?', condition: 'Wochenende ist', yes: 'ausschlafen', no: 'Wecker um 7' },
+      { icon: 'pizza', question: 'Noch Pizza da?', condition: 'noch Pizza da ist', yes: 'Pizza essen', no: 'Nudeln kochen' },
+      { icon: 'lock', question: 'Passwort richtig?', condition: 'das Passwort richtig ist', yes: 'du bist drin', no: 'nochmal versuchen' },
+    ],
+    prompt: 'Eine Frage mit Ja oder Nein, und zwei Wege.',
+    ask: 'Was entscheidest du heute noch so?',
+    patternIf: 'eine Frage, Ja oder Nein',
+    patternThen: 'der Weg bei Ja',
+    patternElse: 'der Weg bei Nein',
+    next: 'Jede Entscheidung, egal wie klein: eine Frage und zwei Wege. Genau so denkt auch ein Programm.',
+  },
+
+  everydayCode: {
+    eyebrow: 'Vom Alltag zu Python',
+    output: 'Ausgabe',
+    /**
+     * One card per form of if. `card` indexes `everyday.scenarios`. `rows` is
+     * the card once it is up close: a row whose `key` is `if`, `then` or `else`
+     * grows out of the card's own row, any other key is a new row. `lines` are
+     * the pseudo-code lines a row stands for; `focus` the Python lines that run.
+     */
+    variations: [
+      {
+        card: 0,
+        titles: { zoom: 'Eine Entscheidung, ganz nah', card: 'Erst aufschreiben', python: 'Dann in Python', flip: 'Der andere Weg' },
+        notes: {
+          zoom: 'Die Karten vom Anfang. Wir nehmen eine davon und schauen genau hin.',
+          card: 'Pseudo-Code: ganz normale Sprache, nur ordentlich. Nach der Frage ein Doppelpunkt, was dann passiert, rückt ein.',
+          python: 'Fast Wort für Wort: aus wenn wird if, aus sonst wird else, aus der Frage eine Variable, aus dem Tun ein print.',
+          flip: 'Nur eine Sache ändert sich: True wird zu False. Python nimmt den anderen Weg.',
+        },
+        rows: [
+          { key: 'if', kind: 'if', text: 'es regnet', lines: [1] },
+          { key: 'then', kind: 'then', text: 'Schirm mitnehmen', lines: [2] },
+          { key: 'else', kind: 'else', text: 'Sonnenbrille aufsetzen', lines: [3, 4] },
+        ],
+        pseudo: `wenn es regnet:
+    Schirm mitnehmen
+sonst:
+    Sonnenbrille aufsetzen`,
+        python: `regnet = True
+if regnet:
+    print("Schirm mitnehmen")
+else:
+    print("Sonnenbrille aufsetzen")`,
+        output: 'Schirm mitnehmen',
+        focus: [3],
+        flip: {
+          python: `regnet = False
+if regnet:
+    print("Schirm mitnehmen")
+else:
+    print("Sonnenbrille aufsetzen")`,
+          output: 'Sonnenbrille aufsetzen',
+          focus: [1, 5],
+        },
+      },
+      {
+        card: 2,
+        titles: { card: 'Die Frage ist ein Vergleich', python: 'akku < 20' },
+        notes: {
+          card: 'Diesmal ist die Frage eine Zahl, die wir vergleichen: Ist der Akku unter 20?',
+          python: 'akku < 20 antwortet mit True oder False, genau wie regnet. Was kommt bei akku = 80 heraus?',
+        },
+        rows: [
+          { key: 'if', kind: 'if', text: 'der Akku unter 20 % ist', lines: [1] },
+          { key: 'then', kind: 'then', text: 'Handy aufladen', lines: [2] },
+          { key: 'else', kind: 'else', text: 'weiter scrollen', lines: [3, 4] },
+        ],
+        pseudo: `wenn Akku unter 20:
+    Handy aufladen
+sonst:
+    weiter scrollen`,
+        python: `akku = 15
+if akku < 20:
+    print("Handy aufladen")
+else:
+    print("weiter scrollen")`,
+        output: 'Handy aufladen',
+        focus: [3],
+      },
+      {
+        card: 1,
+        titles: { card: 'Mehr als zwei Wege', python: 'elif' },
+        notes: {
+          card: 'Eine Ampel kann auch gelb sein. Zwischen dann und sonst kommt ein dritter Weg: sonst wenn.',
+          python: 'sonst wenn heißt elif. Python prüft von oben nach unten und nimmt den ersten Weg, der passt. Und bei "grün"?',
+        },
+        rows: [
+          { key: 'if', kind: 'if', text: 'die Ampel rot ist', lines: [1] },
+          { key: 'then', kind: 'then', text: 'stehen bleiben', lines: [2] },
+          { key: 'elif', kind: 'elif', text: 'die Ampel gelb ist', lines: [3] },
+          { key: 'then-yellow', kind: 'then', text: 'kurz warten', lines: [4] },
+          { key: 'else', kind: 'else', text: 'über die Straße gehen', lines: [5, 6] },
+        ],
+        pseudo: `wenn Ampel rot:
+    stehen bleiben
+sonst wenn Ampel gelb:
+    kurz warten
+sonst:
+    über die Straße gehen`,
+        python: `ampel = "gelb"
+if ampel == "rot":
+    print("stehen bleiben")
+elif ampel == "gelb":
+    print("kurz warten")
+else:
+    print("über die Straße gehen")`,
+        output: 'kurz warten',
+        focus: [5],
+      },
+      {
+        card: 3,
+        titles: { card: 'Eins von beiden reicht', python: 'or' },
+        notes: {
+          card: 'Wochenende heißt eigentlich: Samstag oder Sonntag. Die Frage wird zu zwei Fragen.',
+          python: 'or ist großzügig: Eine der beiden Fragen muss True sein. Was kommt bei tag = "Montag" heraus?',
+        },
+        rows: [
+          { key: 'if', kind: 'if', text: 'Samstag oder Sonntag ist', lines: [1] },
+          { key: 'then', kind: 'then', text: 'ausschlafen', lines: [2] },
+          { key: 'else', kind: 'else', text: 'Wecker um 7', lines: [3, 4] },
+        ],
+        pseudo: `wenn Samstag oder Sonntag:
+    ausschlafen
+sonst:
+    Wecker um 7`,
+        python: `tag = "Sonntag"
+if tag == "Samstag" or tag == "Sonntag":
+    print("ausschlafen")
+else:
+    print("Wecker um 7")`,
+        output: 'ausschlafen',
+        focus: [3],
+      },
+      {
+        card: 5,
+        titles: { card: 'Beides muss stimmen', python: 'and' },
+        notes: {
+          card: 'Beim Einloggen reicht das Passwort allein nicht: Name und Passwort müssen stimmen.',
+          python: 'and ist streng: Nur wenn beide Fragen True sind, geht es rein. Was passiert, wenn nur der Name stimmt?',
+        },
+        rows: [
+          { key: 'if', kind: 'if', text: 'Name und Passwort richtig sind', lines: [1] },
+          { key: 'then', kind: 'then', text: 'du bist drin', lines: [2] },
+          { key: 'else', kind: 'else', text: 'nochmal versuchen', lines: [3, 4] },
+        ],
+        pseudo: `wenn Name und Passwort richtig:
+    du bist drin
+sonst:
+    nochmal versuchen`,
+        python: `name = "momo"
+passwort = "1234"
+if name == "momo" and passwort == "1234":
+    print("du bist drin")
+else:
+    print("nochmal versuchen")`,
+        output: 'du bist drin',
+        focus: [4],
+      },
+      {
+        card: 4,
+        titles: { card: 'Eine Frage in der Frage', python: 'if im if' },
+        notes: {
+          card: 'Wenn noch Pizza da ist, kommt die nächste Frage: Habe ich Hunger? Sie rückt unter die erste.',
+          python: 'Die zweite Frage wird nur gestellt, wenn die erste Ja ist. Die Einrückung zeigt, was wozu gehört. Und bei stuecke = 0?',
+        },
+        rows: [
+          { key: 'if', kind: 'if', text: 'noch Pizza da ist', lines: [1] },
+          { key: 'if-hungry', kind: 'if', text: 'ich Hunger habe', depth: 1, lines: [2] },
+          { key: 'then', kind: 'then', text: 'Pizza essen', depth: 1, lines: [3] },
+          { key: 'else-hungry', kind: 'else', text: 'für später aufheben', depth: 1, lines: [4, 5] },
+          { key: 'else', kind: 'else', text: 'Nudeln kochen', lines: [6, 7] },
+        ],
+        pseudo: `wenn noch Pizza da:
+    wenn ich Hunger habe:
+        Pizza essen
+    sonst:
+        für später aufheben
+sonst:
+    Nudeln kochen`,
+        python: `stuecke = 3
+hunger = False
+if stuecke > 0:
+    if hunger:
+        print("Pizza essen")
+    else:
+        print("für später aufheben")
+else:
+    print("Nudeln kochen")`,
+        output: 'für später aufheben',
+        focus: [7],
+      },
+    ],
+  },
+
   door: {
     steps: ['Problem', 'Lösen', 'Aufschreiben', 'Python'],
     title: 'Kommt Momo ins Haus?',
@@ -1786,12 +1997,6 @@ else:
     empty: 'Noch nichts geöffnet. Die Rätsel erscheinen hier, sobald eins dran war.',
     back: 'Zurück zum Vortrag',
     open: 'Rätsel öffnen',
-  },
-  questionTime: {
-    eyebrow: 'Kurze Pause',
-    headline: 'Fragen?',
-    prompts: ['Was war zu schnell?', 'Wo hat der Code nicht getan, was du wolltest?', 'Was hast du ausprobiert?'],
-    note: 'Bis hierher: print, Variablen, Vergleiche, if. Ab jetzt kommt alles darauf obendrauf – deshalb jetzt fragen, nicht später.',
   },
   problems: {
     eyebrow: 'Rätsel',

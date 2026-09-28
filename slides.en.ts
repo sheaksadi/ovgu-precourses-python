@@ -29,6 +29,96 @@ export const slidesEn: Record<string, SlideText> = {
     subtitle: 'Say your name, introduce yourself, spin a question',
     teleprompter: 'Round the room: say your name, introduce yourself briefly - hobbies, something odd or special, or something nice about yourself. Then that person spins the question on their own phone; the projector shows who spun and which question came up. Without a phone: spin from the presenter view or the remote. No question repeats until everyone has had a turn. Open the projector through the projector button on the start page, otherwise it shows a spin button of its own. Going first yourself helps.',
   },
+  'PRE-0208': {
+    title: 'If … then … else',
+    subtitle: 'Everyday decisions',
+    teleprompter: 'Before any code: we make yes-or-no decisions all day. Each click brings one situation to the middle. Read the question first and ask the room what they would do, then yes and no appear. Starting with rain: is it raining? Yes: take an umbrella. No: put on sunglasses.',
+  },
+  'PRE-0215': {
+    title: 'If … then … else - traffic light',
+    teleprompter: 'The rain card goes to its place, the traffic light arrives: is the light red? Yes: wait. No: cross the street.',
+  },
+  'PRE-0216': {
+    title: 'If … then … else - battery',
+    teleprompter: 'Battery under 20 %? Yes: charge the phone. No: keep scrolling. Ask: who is under 20 % right now?',
+  },
+  'PRE-0217': {
+    title: 'If … then … else - weekend',
+    teleprompter: 'Is it the weekend? Yes: sleep in. No: alarm at 7.',
+  },
+  'PRE-0218': {
+    title: 'If … then … else - pizza',
+    teleprompter: 'Any pizza left? Yes: eat pizza. No: cook pasta.',
+  },
+  'PRE-0219': {
+    title: 'If … then … else - password',
+    teleprompter: 'Password correct? Yes: you are in. No: try again. A computer really does this every day, millions of times.',
+  },
+  'PRE-0220': {
+    title: 'If … then … else - all cards',
+    teleprompter: 'The last card goes to its place. Ask the room: what else do you decide today? Collect two or three examples - each has the same shape: one question, two ways.',
+  },
+  'PRE-0209': {
+    title: 'If … then … else - the pattern',
+    teleprompter: 'Same cards, new words. The question turns into an if sentence, yes becomes then, no becomes else. Every decision has the same three parts: a question that is only yes or no, the way for yes, the way for no. No programming words yet - the cards come back after the conditionals, and then we write them in Python.',
+  },
+  'PRE-0210': {
+    title: 'From everyday life to Python',
+    subtitle: 'Every card a new form of if',
+    teleprompter: 'The cards from the start come back, now that if, comparisons, elif, and and or are known. Each card shows a different form. First the simplest: rain. The others step aside, the rain card comes up close.',
+  },
+  'PRE-0211': {
+    title: 'From everyday life to Python - rain: pseudo-code',
+    teleprompter: 'Write it down first, no Python yet. Pseudo-code is plain language, just tidy: a colon after the question, and what happens then is indented. Hover a row of the card and the matching line lights up.',
+  },
+  'PRE-0212': {
+    title: 'From everyday life to Python - rain: Python',
+    teleprompter: 'The card has done its job: the pseudo-code moves left, Python arrives beside it. Almost word for word: the question becomes the variable raining, the action becomes print. raining is True, so line 3 runs.',
+  },
+  'PRE-0213': {
+    title: 'From everyday life to Python - rain: False',
+    teleprompter: 'Ask first: what happens when True becomes False? Then show it. One change, and Python takes the else way. Exactly one of the two ways always runs.',
+  },
+  'PRE-0214': {
+    title: 'From everyday life to Python - battery',
+    teleprompter: 'Next card: the battery. This time the question is not a ready-made yes/no variable but a comparison - under 20.',
+  },
+  'PRE-0221': {
+    title: 'From everyday life to Python - battery: Python',
+    teleprompter: 'battery < 20 is a question Python answers with True or False, just like in the comparisons. With 15 it is True. Ask: what happens with battery = 80? And with exactly 20?',
+  },
+  'PRE-0222': {
+    title: 'From everyday life to Python - traffic light',
+    teleprompter: 'A traffic light has more than two states. A third way grows on the card: else if yellow, then wait a moment.',
+  },
+  'PRE-0223': {
+    title: 'From everyday life to Python - traffic light: Python',
+    teleprompter: 'else if is written elif in Python. Python asks top to bottom and takes the first way that fits; the rest is skipped. With yellow, line 5 runs. Ask: what about "green"? And "blue"?',
+  },
+  'PRE-0224': {
+    title: 'From everyday life to Python - weekend',
+    teleprompter: 'The weekend really means Saturday or Sunday. The question on the card gets more precise.',
+  },
+  'PRE-0225': {
+    title: 'From everyday life to Python - weekend: Python',
+    teleprompter: 'Two questions joined with or: either one will do. day is Sunday, the first question is False, the second True - so sleep in. Ask: what comes out for Monday?',
+  },
+  'PRE-0226': {
+    title: 'From everyday life to Python - password',
+    teleprompter: 'To log in, the password alone is not enough: name and password both have to match.',
+  },
+  'PRE-0227': {
+    title: 'From everyday life to Python - password: Python',
+    teleprompter: 'and is strict: only when both questions are True do you get in. Ask: what happens when only the name matches? That is exactly what every login page does.',
+  },
+  'PRE-0228': {
+    title: 'From everyday life to Python - pizza',
+    teleprompter: 'The last card gets a question inside the question: if there is pizza left, it depends on whether you are hungry. The rows move in.',
+  },
+  'PRE-0229': {
+    title: 'From everyday life to Python - pizza: Python',
+    teleprompter: 'An if inside an if. The second question is only asked when the first is yes. The indentation shows what belongs where. slices is 3 but not hungry - so line 7. Then let them try on their own: take a card, change the values, build a variant of their own.',
+  },
   'PRE-0034': {
     title: 'Does Momo get inside?',
     subtitle: 'Problem',
@@ -96,11 +186,6 @@ export const slidesEn: Record<string, SlideText> = {
     title: 'Make a project, run it',
     subtitle: 'New Project, venv, the first file, Run',
     teleprompter: 'The whole way in one demo: press "Let\'s go" and it plays through. New Project, type a name, Interpreter type stays Project venv, and Python version must not be empty - if the list is empty, Python is missing: scan the QR code on the left, tick "Add python.exe to PATH" on Windows, restart PyCharm. Create makes the folder and the .venv. Then right click the project folder, New, Python File, type a name, Enter; PyCharm adds the .py ending. Type print("Hello, world!"), watch the quotes and brackets, no need to save. The green arrow at the top runs it, and Hello, world! with exit code 0 appears below. Walk around: does it run for everyone? Task: change the text and run it again. Enter or the button plays it all again.',
-  },
-  'PRE-0205': {
-    title: 'Questions?',
-    subtitle: 'A short break before the lists',
-    teleprompter: 'The halfway break. So far: print, variables, comparisons, if - everything from here builds on that. "Any questions?" gets nothing, so the slide asks three concrete ones instead. Wait it out, ten seconds is fine. Anyone who would rather not speak up can ask the person next to them.',
   },
   'PRE-0059': {
     title: 'Lists',

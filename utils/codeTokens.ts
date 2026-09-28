@@ -54,6 +54,9 @@ const PY_KEYWORDS = new Set([
   'while', 'with', 'yield',
 ])
 
+/** German pseudo-code words that play the part of a keyword, inked like one. */
+const PSEUDO_KEYWORDS = new Set(['wenn', 'sonst', 'und', 'oder'])
+
 /** Keywords that introduce a name: the name after them is a definition. */
 const PY_DEFINERS = new Set(['def', 'class'])
 
@@ -80,6 +83,8 @@ const WORD_CONCEPTS: Record<string, string> = {
   // branching
   if: 'branch', is: 'branch', when: 'branch', check: 'branch', then: 'branch',
   else: 'otherwise', otherwise: 'otherwise',
+  wenn: 'branch', sonst: 'otherwise',
+  and: 'both', und: 'both', or: 'either', oder: 'either',
   // input / output
   print: 'output', say: 'output', show: 'output', display: 'output', output: 'output',
   input: 'input', ask: 'input',
@@ -172,7 +177,7 @@ export function tokenizeCode(source: string): CodeLine[] {
           if (afterDefiner) finalKind = 'definition'
           else if (PY_CONSTANTS.has(text)) finalKind = 'constant'
           else if (PY_SELF.has(text)) finalKind = 'self'
-          else if (PY_KEYWORDS.has(text) || upperCased) finalKind = 'keyword'
+          else if (PY_KEYWORDS.has(text) || PSEUDO_KEYWORDS.has(text) || upperCased) finalKind = 'keyword'
           else if (PY_BUILTINS.has(text) && rest.startsWith('(')) finalKind = 'builtin'
           else if (rest.startsWith('(')) finalKind = 'call'
           afterDefiner = finalKind === 'keyword' && PY_DEFINERS.has(text)

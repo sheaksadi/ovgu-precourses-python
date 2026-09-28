@@ -386,6 +386,211 @@ const en: Messages = {
     ],
   },
 
+  everyday: {
+    eyebrow: 'Everyday decisions',
+    title1: 'We decide all day long',
+    title2: 'Always the same pattern',
+    question: 'Question',
+    yes: 'Yes',
+    no: 'No',
+    if: 'if',
+    then: 'then',
+    else: 'else',
+    elif: 'else if',
+    scenarios: [
+      { icon: 'rain', question: 'Is it raining?', condition: 'it is raining', yes: 'take an umbrella', no: 'put on sunglasses' },
+      { icon: 'light', question: 'Is the light red?', condition: 'the light is red', yes: 'wait', no: 'cross the street' },
+      { icon: 'battery', question: 'Battery under 20\u00A0%?', condition: 'the battery is under 20\u00A0%', yes: 'charge the phone', no: 'keep scrolling' },
+      { icon: 'clock', question: 'Is it the weekend?', condition: 'it is the weekend', yes: 'sleep in', no: 'alarm at 7' },
+      { icon: 'pizza', question: 'Any pizza left?', condition: 'there is pizza left', yes: 'eat pizza', no: 'cook pasta' },
+      { icon: 'lock', question: 'Password correct?', condition: 'the password is correct', yes: "you're in", no: 'try again' },
+    ],
+    prompt: 'One yes-or-no question, and two ways.',
+    ask: 'What else do you decide today?',
+    patternIf: 'a question, yes or no',
+    patternThen: 'the way for yes',
+    patternElse: 'the way for no',
+    next: 'Every decision, however small: one question and two ways. A program thinks exactly like this.',
+  },
+
+  everydayCode: {
+    eyebrow: 'From everyday life to Python',
+    output: 'Output',
+    variations: [
+      {
+        card: 0,
+        titles: { zoom: 'One decision, up close', card: 'Write it down first', python: 'Then in Python', flip: 'The other way' },
+        notes: {
+          zoom: 'The cards from before. We take one of them and look closely.',
+          card: 'Pseudo-code: plain language, just tidy. A colon after the question, and what happens then is indented.',
+          python: 'Almost word for word: the question becomes a variable, the action becomes a print.',
+          flip: 'Only one thing changes: True becomes False. Python takes the other way.',
+        },
+        rows: [
+          { key: 'if', kind: 'if', text: 'it is raining', lines: [1] },
+          { key: 'then', kind: 'then', text: 'take an umbrella', lines: [2] },
+          { key: 'else', kind: 'else', text: 'put on sunglasses', lines: [3, 4] },
+        ],
+        pseudo: `if it is raining:
+    take an umbrella
+else:
+    put on sunglasses`,
+        python: `raining = True
+if raining:
+    print("take an umbrella")
+else:
+    print("put on sunglasses")`,
+        output: 'take an umbrella',
+        focus: [3],
+        flip: {
+          python: `raining = False
+if raining:
+    print("take an umbrella")
+else:
+    print("put on sunglasses")`,
+          output: 'put on sunglasses',
+          focus: [1, 5],
+        },
+      },
+      {
+        card: 2,
+        titles: { card: 'The question is a comparison', python: 'battery < 20' },
+        notes: {
+          card: 'This time the question is a number we compare: is the battery under 20?',
+          python: 'battery < 20 answers True or False, just like raining. What comes out with battery = 80?',
+        },
+        rows: [
+          { key: 'if', kind: 'if', text: 'the battery is under 20 %', lines: [1] },
+          { key: 'then', kind: 'then', text: 'charge the phone', lines: [2] },
+          { key: 'else', kind: 'else', text: 'keep scrolling', lines: [3, 4] },
+        ],
+        pseudo: `if battery under 20:
+    charge the phone
+else:
+    keep scrolling`,
+        python: `battery = 15
+if battery < 20:
+    print("charge the phone")
+else:
+    print("keep scrolling")`,
+        output: 'charge the phone',
+        focus: [3],
+      },
+      {
+        card: 1,
+        titles: { card: 'More than two ways', python: 'elif' },
+        notes: {
+          card: 'A traffic light can be yellow too. Between then and else comes a third way: else if.',
+          python: 'else if is written elif. Python checks top to bottom and takes the first way that fits. And with "green"?',
+        },
+        rows: [
+          { key: 'if', kind: 'if', text: 'the light is red', lines: [1] },
+          { key: 'then', kind: 'then', text: 'wait', lines: [2] },
+          { key: 'elif', kind: 'elif', text: 'the light is yellow', lines: [3] },
+          { key: 'then-yellow', kind: 'then', text: 'wait a moment', lines: [4] },
+          { key: 'else', kind: 'else', text: 'cross the street', lines: [5, 6] },
+        ],
+        pseudo: `if light red:
+    wait
+else if light yellow:
+    wait a moment
+else:
+    cross the street`,
+        python: `light = "yellow"
+if light == "red":
+    print("wait")
+elif light == "yellow":
+    print("wait a moment")
+else:
+    print("cross the street")`,
+        output: 'wait a moment',
+        focus: [5],
+      },
+      {
+        card: 3,
+        titles: { card: 'Either one will do', python: 'or' },
+        notes: {
+          card: 'The weekend really means: Saturday or Sunday. The question becomes two questions.',
+          python: 'or is generous: one of the two questions has to be True. What comes out with day = "Monday"?',
+        },
+        rows: [
+          { key: 'if', kind: 'if', text: 'it is Saturday or Sunday', lines: [1] },
+          { key: 'then', kind: 'then', text: 'sleep in', lines: [2] },
+          { key: 'else', kind: 'else', text: 'alarm at 7', lines: [3, 4] },
+        ],
+        pseudo: `if Saturday or Sunday:
+    sleep in
+else:
+    alarm at 7`,
+        python: `day = "Sunday"
+if day == "Saturday" or day == "Sunday":
+    print("sleep in")
+else:
+    print("alarm at 7")`,
+        output: 'sleep in',
+        focus: [3],
+      },
+      {
+        card: 5,
+        titles: { card: 'Both have to match', python: 'and' },
+        notes: {
+          card: 'To log in, the password alone is not enough: name and password both have to match.',
+          python: 'and is strict: only when both questions are True do you get in. What happens when only the name matches?',
+        },
+        rows: [
+          { key: 'if', kind: 'if', text: 'name and password are correct', lines: [1] },
+          { key: 'then', kind: 'then', text: "you're in", lines: [2] },
+          { key: 'else', kind: 'else', text: 'try again', lines: [3, 4] },
+        ],
+        pseudo: `if name and password correct:
+    you are in
+else:
+    try again`,
+        python: `name = "momo"
+password = "1234"
+if name == "momo" and password == "1234":
+    print("you are in")
+else:
+    print("try again")`,
+        output: 'you are in',
+        focus: [4],
+      },
+      {
+        card: 4,
+        titles: { card: 'A question inside the question', python: 'if inside if' },
+        notes: {
+          card: 'If there is pizza left, the next question follows: am I hungry? It moves in under the first.',
+          python: 'The second question is only asked when the first is yes. The indentation shows what belongs where. And with slices = 0?',
+        },
+        rows: [
+          { key: 'if', kind: 'if', text: 'there is pizza left', lines: [1] },
+          { key: 'if-hungry', kind: 'if', text: 'I am hungry', depth: 1, lines: [2] },
+          { key: 'then', kind: 'then', text: 'eat pizza', depth: 1, lines: [3] },
+          { key: 'else-hungry', kind: 'else', text: 'save it for later', depth: 1, lines: [4, 5] },
+          { key: 'else', kind: 'else', text: 'cook pasta', lines: [6, 7] },
+        ],
+        pseudo: `if pizza left:
+    if I am hungry:
+        eat pizza
+    else:
+        save it for later
+else:
+    cook pasta`,
+        python: `slices = 3
+hungry = False
+if slices > 0:
+    if hungry:
+        print("eat pizza")
+    else:
+        print("save it for later")
+else:
+    print("cook pasta")`,
+        output: 'save it for later',
+        focus: [7],
+      },
+    ],
+  },
+
   door: {
     steps: ['Problem', 'Solve', 'Write it down', 'Python'],
     title: 'Does Momo get into the house?',
@@ -1782,12 +1987,6 @@ else:
     empty: 'Nothing opened yet. Puzzles show up here once one has come round.',
     back: 'Back to the talk',
     open: 'Open puzzles',
-  },
-  questionTime: {
-    eyebrow: 'A short break',
-    headline: 'Questions?',
-    prompts: ['What went too fast?', 'Where did the code not do what you wanted?', 'What did you try out?'],
-    note: 'So far: print, variables, comparisons, if. Everything from here builds on that – so ask now, not later.',
   },
   problems: {
     eyebrow: 'Puzzle',
