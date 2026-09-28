@@ -1,7 +1,8 @@
 <script setup lang="ts">
 /**
  * PRE-0033 — course title. The audience scans the code in the bottom-right
- * quarter to follow the slides on their own device, in German or English.
+ * quarter to follow the slides on their own device, in German or English. The
+ * code always points at the public deck, precoursepy.sadi.dev, never the LAN.
  */
 import { ref } from 'vue'
 import { useI18n } from '~/composables/useI18n'
@@ -48,7 +49,7 @@ const shortUrl = (value: string) => value.replace(/^https?:\/\//, '')
       </div>
 
       <div class="qr-card">
-        <ArtQrCode path="/join" badge="cat" badge-color="coral" badge-accent="rose" @url="joinUrl = $event" />
+        <ArtQrCode href="https://precoursepy.sadi.dev/join" badge="cat" badge-color="coral" badge-accent="rose" @url="joinUrl = $event" />
 
         <div class="qr-caption">
           <span class="qr-cta">{{ t('title.scan') }}</span>
