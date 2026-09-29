@@ -11,7 +11,8 @@ import { deckDb } from '../../../utils/db'
  * Check one answer.
  *
  * Results: `correct` (with rank), `high` / `low` / `wrong` (field locked for a
- * moment), `cooldown` (still locked), `locked` (Part 2 before Part 1),
+ * moment), `cooldown` (still locked), `locked` (Part 2 before Part 1, unless
+ * the presenter opened Part 2 for everyone),
  * `already` (solved before), `empty`. A correct answer is broadcast to the room
  * as `solve`, with the problem's new standings.
  *
@@ -30,7 +31,7 @@ export default defineEventHandler(async (event) => {
 
   const solved = problemRoom.solvedParts(problem.id, audienceId)
   if (solved[part]) return { result: 'already' }
-  if (part === 2 && !solved[1]) return { result: 'locked' }
+  if (part === 2 && !solved[1] && !problemRoom.isRevealed(problem.id)) return { result: 'locked' }
 
   const cooldownMs = problemRoom.cooldownLeft(problem.id, audienceId)
   if (cooldownMs > 0) return { result: 'cooldown', cooldownMs }

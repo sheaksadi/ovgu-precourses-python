@@ -104,7 +104,8 @@ const setDraft = (part: Part, value: string) => { drafts.value = { ...drafts.val
 
 const cooldown = computed(() => Math.max(0, Math.ceil(((mine.value?.cooldownUntil ?? 0) - now.value) / 1000)))
 const solvedAt = (part: Part) => mine.value?.solved?.[part]
-const isOpen = (part: Part) => part === 1 || !!solvedAt(1)
+/** Part 2 opens with Part 1 solved, or for everyone once the presenter says so. */
+const isOpen = (part: Part) => part === 1 || !!solvedAt(1) || store.isRevealed(active.value)
 
 const send = async (part: Part) => {
   if (sending.value || cooldown.value > 0 || !draft(part).trim()) return

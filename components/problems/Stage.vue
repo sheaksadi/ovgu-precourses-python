@@ -66,7 +66,12 @@ const segments = (line: string) => line.split('`').map((part, index) => ({ part,
 <template>
   <div class="stage">
     <section class="stage-story">
-      <p class="stage-eyebrow">{{ eyebrow }}</p>
+      <p class="stage-eyebrow">
+        {{ eyebrow }}
+        <span v-if="part === 2" class="stage-open" :class="{ 'is-open': problems.isRevealed(problem) }">
+          {{ problems.isRevealed(problem) ? t('problems.openForAll') : t('problems.openAfterOne') }}
+        </span>
+      </p>
       <h2 class="stage-title">{{ text.title }}</h2>
       <p v-for="(line, index) in shown.story" :key="`${part}-${index}`" class="stage-line">
         <template v-for="(bit, i) in segments(line)" :key="i">
@@ -152,6 +157,19 @@ const segments = (line: string) => line.split('`').map((part, index) => ({ part,
   letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--text-muted);
+}
+.stage-open {
+  margin-left: 1vh;
+  padding: 0.3vh 1vh;
+  border-radius: 999px;
+  border: 2px solid var(--border);
+  letter-spacing: 0.08em;
+  transition: background 0.3s ease, border-color 0.3s ease;
+}
+.stage-open.is-open {
+  border-color: var(--lavender);
+  background: color-mix(in srgb, var(--lavender) 30%, var(--bg));
+  color: var(--text);
 }
 .stage-title {
   margin: 1.4vh 0 2.4vh;

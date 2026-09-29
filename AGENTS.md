@@ -276,6 +276,12 @@ Each preview is one iframe that boots once and is then driven by `postMessage`
 position, never follows the room, cannot move it, and stays out of the audience counts,
 so advancing a slide no longer reloads a second copy of the app.
 
+A puzzle with two parts has a slide per part; Part 2 is a sub-slide with the
+`reveal` action. A device opens Part 2 once it has solved Part 1 — or, when the
+presenter view or the remote presses **Open part 2 for all** on that slide, for
+everyone at once (`problemRoom.toggleReveal`, in memory; the same button closes
+it again, and a room reset closes it too).
+
 Pacing comes from `duration` (planned minutes) on a slide entry: the presenter view sums
 the deck, compares the elapsed time with the plan, and turns the clock amber then red as
 it slips.

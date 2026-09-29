@@ -13,6 +13,10 @@ import { deckDb } from './db'
  * the server starts, so restarting mid-course does not empty the leaderboard.
  * The cooldown after a wrong answer is the one thing that is not kept — it is
  * five seconds long, and a restart takes longer than that.
+ *
+ * Part 2 normally opens on a device once it has solved Part 1. The presenter
+ * can open it for everyone instead, from the Part 2 slide; that choice lives
+ * only here, in memory, and a room reset closes it again.
  */
 export interface Standing {
   audienceId: string
@@ -42,6 +46,8 @@ interface Entry {
 const solves = new Map<string, Map<string, Entry>>()
 const openedAt = new Map<string, number>()
 const cooldowns = new Map<string, number>()
+/** Problems whose Part 2 the presenter has opened for every device. */
+const revealed = new Set<string>()
 
 const key = (problemId: string, audienceId: string) => `${problemId}:${audienceId}`
 
@@ -97,6 +103,15 @@ export const problemRoom = {
     return record
   },
 
+  isRevealed: (problemId: string) => revealed.has(problemId),
+
+  /** Open Part 2 for everyone, or close it again. Returns the new state. */
+  toggleReveal: (problemId: string) => {
+    if (revealed.has(problemId)) revealed.delete(problemId)
+    else revealed.add(problemId)
+    return revealed.has(problemId)
+  },
+
   /** Most parts first, then whoever got there first. */
   standings: (problemId: string): Standing[] =>
     [...(solves.get(problemId) ?? new Map<string, Entry>()).entries()]
@@ -107,10 +122,10 @@ export const problemRoom = {
       .sort((a, b) => b.points - a.points || a.lastAt - b.lastAt),
 
   state: () => {
-    const ids = new Set([...openedAt.keys(), ...solves.keys()])
+    const ids = new Set([...openedAt.keys(), ...solves.keys(), ...revealed])
     return {
       type: 'problem_state' as const,
-      problems: Object.fromEntries([...ids].map(id => [id, { openedAt: openedAt.get(id) ?? null, standings: problemRoom.standings(id) }])),
+      problems: Object.fromEntries([...ids].map(id => [id, { openedAt: openedAt.get(id) ?? null, standings: problemRoom.standings(id), revealed: revealed.has(id) }])),
     }
   },
 
@@ -119,6 +134,7 @@ export const problemRoom = {
     solves.clear()
     openedAt.clear()
     cooldowns.clear()
+    revealed.clear()
     if (alsoStored) deckDb.clear()
   },
 }

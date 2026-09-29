@@ -2088,6 +2088,8 @@ else:
     clock: 'Time',
     leaders: 'Fastest',
     nobodyYet: 'Nobody yet – who is first?',
+    openForAll: 'open for everyone',
+    openAfterOne: 'opens after Part 1',
     board: {
       eyebrow: 'Puzzles · Leaderboard',
       title: 'Who has the most stars?',
@@ -2126,6 +2128,8 @@ else:
       solved: '{name} solved Part {part}',
       first: '{name} was the fastest!',
       body: '{title} · Part {part} · place {rank}',
+      revealed: '{title}: Part 2 is open',
+      revealedBody: 'Opened for everyone – even without Part 1.',
     },
     'builtins-scores': {
       title: 'Score Table',

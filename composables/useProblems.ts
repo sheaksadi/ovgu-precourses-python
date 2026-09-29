@@ -33,6 +33,8 @@ export interface Standing {
 export interface RoomProblem {
   openedAt: number | null
   standings: Standing[]
+  /** The presenter opened Part 2 for every device, solved Part 1 or not. */
+  revealed?: boolean
 }
 
 export interface MyProblem {
@@ -131,14 +133,28 @@ export function useProblems() {
     return result
   }
 
+  const seenState = useState('problems-seen-state', () => false)
+
+  /** Take the room's state. Returns the problems whose Part 2 has just been opened for everyone. */
   const applyState = (state: { problems?: Record<string, RoomProblem> }) => {
-    room.value = state.problems ?? {}
+    const next = state.problems ?? {}
+    // The first state after connecting is the room as it already was, not news.
+    const opened = seenState.value
+      ? Object.keys(next).filter(id => next[id]!.revealed && !room.value[id]?.revealed)
+      : []
+    room.value = next
+    seenState.value = true
+    return opened
   }
 
   const applySolve = (event: SolveEvent) => {
     room.value = {
       ...room.value,
-      [event.problemId]: { openedAt: room.value[event.problemId]?.openedAt ?? event.at - event.elapsedMs, standings: event.standings },
+      [event.problemId]: {
+        ...room.value[event.problemId],
+        openedAt: room.value[event.problemId]?.openedAt ?? event.at - event.elapsedMs,
+        standings: event.standings,
+      },
     }
     // Solved in another tab of this device: this one shows it too.
     const current = mine.value[event.problemId]
@@ -146,6 +162,9 @@ export function useProblems() {
       mine.value = { ...mine.value, [event.problemId]: { ...current, solved: { ...current.solved, [event.part]: event.at } } }
     }
   }
+
+  /** Whether the presenter opened this problem's Part 2 for everyone. */
+  const isRevealed = (id: string) => !!room.value[id]?.revealed
 
   /** How many devices solved this part. */
   const solvedCount = (id: string, part: Part) => (room.value[id]?.standings ?? []).filter(entry => entry.parts[part]).length
@@ -161,6 +180,7 @@ export function useProblems() {
 
   return {
     room: computed(() => room.value),
+    isRevealed,
     mine: computed(() => mine.value),
     opened: computed(() => opened.value),
     load,

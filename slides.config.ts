@@ -480,6 +480,7 @@ export const slides: SlideEntry[] = [
     parent: 'PRE-0070',
     problem: 'lists-basket',
     transition: 'none',
+    presenterAction: { label: 'Open part 2 for all', command: 'reveal' },
     teleprompter: 'Teil 2 auf eigener Folie: die letzten drei Preise zusammen. Das Beispiel rechnet es mit der kleinen Liste vor, von hinten: 310, 40, 250. preise[-1] ist das letzte Ding, so muss niemand zählen. Auf den Geräten öffnet sich Teil 2 erst, wenn Teil 1 gelöst ist.',
   },
   {
@@ -685,6 +686,7 @@ export const slides: SlideEntry[] = [
     parent: 'PRE-0089',
     problem: 'loops-steps',
     transition: 'none',
+    presenterAction: { label: 'Open part 2 for all', command: 'reveal' },
     teleprompter: 'Teil 2: der längste Lauf am Stück. Im Beispiel Tag für Tag mitlesen: Die Serie wächst bei einem guten Tag und fällt bei einem schwachen auf 0, die beste merkt sich den Rekord. Zwei Variablen, eine Schleife. Auf den Geräten öffnet sich Teil 2 erst nach Teil 1.',
   },
   {
@@ -701,6 +703,7 @@ export const slides: SlideEntry[] = [
     parent: 'PRE-0137',
     problem: 'loops-fish',
     transition: 'none',
+    presenterAction: { label: 'Open part 2 for all', command: 'reveal' },
     teleprompter: 'Teil 2: Momo frisst der Reihe nach, bis der nächste Fisch nicht mehr passt – dann break. Das Beispiel mit einem Bauch für nur 50 cm: 12, dann 37, mit 20 wären es 57, Schluss. Wichtig: erst prüfen, dann addieren. Auf den Geräten öffnet sich Teil 2 erst nach Teil 1.',
   },
   {
@@ -857,6 +860,7 @@ export const slides: SlideEntry[] = [
     parent: 'PRE-0144',
     problem: 'physics-race',
     transition: 'none',
+    presenterAction: { label: 'Open part 2 for all', command: 'reveal' },
     teleprompter: 'Teil 2: dieselben schnellen Läufe, aber diesmal ihre Strecken addieren. Wer in Teil 1 tempo(strecke, zeit) geschrieben hat, braucht nur eine Zeile mehr. Im Beispiel sind es Lauf 1 und Lauf 4: 100 + 200.',
   },
   {
@@ -964,6 +968,7 @@ export const slides: SlideEntry[] = [
     parent: 'PRE-0118',
     problem: 'builtins-scores',
     transition: 'none',
+    presenterAction: { label: 'Open part 2 for all', command: 'reveal' },
     teleprompter: 'Teil 2: die drei besten Punktzahlen zusammen. Im Beispiel erst von hoch nach niedrig ordnen, dann die ersten drei nehmen. sorted mit reverse=True legt die höchste nach vorne.',
   },
   {
@@ -1022,6 +1027,7 @@ export const slides: SlideEntry[] = [
     parent: 'PRE-0123',
     problem: 'dicts-shelter',
     transition: 'none',
+    presenterAction: { label: 'Open part 2 for all', command: 'reveal' },
     teleprompter: 'Teil 2: das älteste Tier – der Wert entscheidet, abgeschickt wird der Schlüssel. Im Beispiel einmal durchgehen und sich das bisher älteste merken. Es gibt immer genau ein ältestes Tier.',
   },
   {
@@ -1129,6 +1135,7 @@ export const slides: SlideEntry[] = [
     parent: 'PRE-0147',
     problem: 'data-temps',
     transition: 'none',
+    presenterAction: { label: 'Open part 2 for all', command: 'reveal' },
     teleprompter: 'Teil 2: der größte Sprung von einem Tag zum nächsten, egal ob rauf oder runter. Im Beispiel jedes Nachbarpaar anschauen: 3, 6, 11 – der größte ist 11. abs macht aus -6 eine 6.',
   },
   {
@@ -1245,6 +1252,7 @@ export const slides: SlideEntry[] = [
     parent: 'PRE-0175',
     problem: 'finale-logbook',
     transition: 'none',
+    presenterAction: { label: 'Open part 2 for all', command: 'reveal' },
     teleprompter: 'Teil 2: für die Katze aus Teil 1 die längste Serie aufeinanderfolgender Tage. Im Beispiel fängt Momo an Tag 1, 2 und 4 – Tag 3 fehlt, also ist die Serie 2. Tipp: Tage sammeln, doppelte raus, sortieren, dann zählen, solange der nächste Tag genau eins größer ist.',
   },
   {
@@ -1261,6 +1269,7 @@ export const slides: SlideEntry[] = [
     parent: 'PRE-0176',
     problem: 'finale-shelter',
     transition: 'none',
+    presenterAction: { label: 'Open part 2 for all', command: 'reveal' },
     teleprompter: 'Teil 2: Welche Katze wurde am häufigsten gefüttert? Nummer abschicken, die erste Katze ist 0. Im Beispiel war Katze 1 in beiden Runden die hungrigste. Eine zweite Liste, die pro Katze mitzählt, reicht.',
   },
   {

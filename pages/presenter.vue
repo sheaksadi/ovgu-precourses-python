@@ -15,6 +15,7 @@ import { useDemos } from '~/composables/useDemos'
 import { useKeyBindings } from '~/composables/useKeyBindings'
 import SlidePreview from '~/components/presenter/SlidePreview.vue'
 import { useSpins } from '~/composables/useSpins'
+import { useProblems } from '~/composables/useProblems'
 import { useI18n } from '~/composables/useI18n'
 import { ADMIN_PASSWORD } from '~/utils/admin'
 
@@ -153,6 +154,14 @@ const runSlideAction = () => {
 }
 
 const spins = useSpins()
+const problems = useProblems()
+
+/** The slide's action button. On a Part 2 slide it opens Part 2 for everyone, or closes it again. */
+const actionLabel = computed(() => {
+  const slide = current.value
+  if (slide?.presenterAction?.command === 'reveal' && slide.problem && problems.isRevealed(slide.problem)) return 'Close part 2 again'
+  return slide?.presenterAction?.label ?? ''
+})
 
 /**
  * Play the slide's animation again, everywhere. The presenter view keeps its
@@ -378,7 +387,7 @@ onUnmounted(() => {
               @click="runSlideAction"
               class="flex-1 touch-manipulation rounded-xl bg-amber-500 hover:bg-amber-400 active:bg-amber-300 border border-amber-400 text-gray-950 font-bold flex items-center justify-center gap-2"
             >
-              <Icon name="lucide:refresh-cw" /> {{ current.presenterAction.label }}
+              <Icon name="lucide:refresh-cw" /> {{ actionLabel }}
             </button>
 
             <!-- Play the scene again, on every screen in the room. -->

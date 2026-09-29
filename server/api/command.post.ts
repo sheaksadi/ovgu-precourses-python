@@ -4,6 +4,7 @@ import { acceptControllerEvent } from '../utils/controllerGate'
 import { wsManager } from '../utils/wsManager'
 import { spinRoom } from '../utils/spinRoom'
 import { catRoom } from '../utils/catRoom'
+import { problemRoom } from '../utils/problemRoom'
 
 let sequence = 0
 
@@ -34,6 +35,15 @@ export default defineEventHandler(async (event) => {
     const cat = await catRoom.next(null)
     if (cat) wsManager.broadcast(cat)
     return cat ?? { type: 'cat_busy' }
+  }
+
+  // Part 2 for everyone: the answer endpoint stops asking for Part 1 first, and
+  // every device learns it from the room's problem state.
+  if (isSlideAction && body.action === 'reveal' && slide?.problem) {
+    problemRoom.toggleReveal(slide.problem)
+    const state = problemRoom.state()
+    wsManager.broadcast(state)
+    return state
   }
 
   const command = { type: 'command', name: body.name, slideId: body.slideId, action: body.action, sequence: ++sequence }

@@ -2098,6 +2098,8 @@ else:
     clock: 'Zeit',
     leaders: 'Am schnellsten',
     nobodyYet: 'Noch niemand – wer ist zuerst?',
+    openForAll: 'für alle offen',
+    openAfterOne: 'öffnet sich nach Teil 1',
     board: {
       eyebrow: 'Rätsel · Rangliste',
       title: 'Wer hat die meisten Sterne?',
@@ -2136,6 +2138,8 @@ else:
       solved: '{name} hat Teil {part} gelöst',
       first: '{name} war am schnellsten!',
       body: '{title} · Teil {part} · Platz {rank}',
+      revealed: '{title}: Teil 2 ist offen',
+      revealedBody: 'Für alle freigegeben – auch ohne Teil 1.',
     },
     'builtins-scores': {
       title: 'Turniertabelle',

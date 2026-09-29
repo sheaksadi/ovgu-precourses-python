@@ -6,12 +6,14 @@ import { usePresentationStore } from '~/stores/presentationStore'
 import { useWebSocket } from '~/composables/useWebSocket'
 import QRCodeDisplay from '~/components/control/QRCodeDisplay.vue'
 import { useSpins } from '~/composables/useSpins'
+import { useProblems } from '~/composables/useProblems'
 
 const { goToSlide, goToIndex, flatSlides } = usePresentation()
 const { firstSlideId, getSlideById } = useSlideData()
 const { sendCommand, sendPointer } = useWebSocket()
 const store = usePresentationStore()
 const spins = useSpins()
+const problems = useProblems()
 const menuOpen = ref(false)
 const showQrModal = ref(false)
 
@@ -24,7 +26,14 @@ const nextSlide = () => {
   if (i < flatSlides.value.length - 1) goToIndex(i + 1)
   else if (i < 0) goToIndex(0)
 }
-/** The slide's room action (the icebreaker spin), for a student without a phone. */
+/** The action button's words. On a Part 2 slide the same button closes Part 2 again once it is open. */
+const actionLabel = computed(() => {
+  const slide = currentSlideData.value
+  if (slide?.presenterAction?.command === 'reveal' && slide.problem && problems.isRevealed(slide.problem)) return 'Close part 2 again'
+  return slide?.presenterAction?.label ?? ''
+})
+
+/** The slide's room action (the icebreaker spin, Part 2 for everyone), for a student without a phone. */
 const runSlideAction = () => {
   const slide = currentSlideData.value
   if (slide?.presenterAction) sendCommand('slide_action', { slideId: slide.id, action: slide.presenterAction.command })
@@ -188,7 +197,7 @@ definePageMeta({
                 @click="runSlideAction"
                 class="w-full py-4 rounded-2xl bg-amber-500 active:bg-amber-400 border border-amber-400 text-gray-950 font-bold flex items-center justify-center gap-2"
               >
-                <Icon name="lucide:refresh-cw" class="text-xl" /> {{ currentSlideData.presenterAction.label }}
+                <Icon name="lucide:refresh-cw" class="text-xl" /> {{ actionLabel }}
               </button>
               <p v-if="currentSlideData.presenterAction.command === 'spin'" class="mt-2 text-xs text-gray-400 text-center truncate">
                 {{ spins.latestLine.value }}

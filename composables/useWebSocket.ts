@@ -188,7 +188,14 @@ export const useWebSocket = () => {
           spins.applyState(data)
         }
         else if (data.type === 'problem_state') {
-          problems.applyState(data)
+          for (const id of problems.applyState(data)) {
+            toasts.push({
+              tone: 'lavender',
+              icon: 'lucide:puzzle',
+              title: t('problems.toast.revealed', { title: t(`problems.${id}.title`) }),
+              body: t('problems.toast.revealedBody'),
+            })
+          }
         }
         else if (data.type === 'solve') {
           problems.applySolve(data)

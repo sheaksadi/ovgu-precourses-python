@@ -222,6 +222,29 @@ await shot(audience, '07-puzzle-workspace', 430, 900)
 
 // --- The room moves on; the device keeps its puzzle ---------------------
 await clickText(control, 'button', 'Next')
+
+// --- Part 2 for everyone ------------------------------------------------
+// On the Part 2 slide the remote can open Part 2 on every device, before they
+// have solved Part 1; the same button closes it again.
+const partTwoLocked = () => evaluate(audience, '!!document.querySelector(".ws-locked")')
+await waitForPath(audience, '/slides/pre-0234')
+// A room that was left open on an earlier run: close Part 2 first.
+if ((await clickText(control, 'button', 'Close part 2 again')) === 'clicked') await wait(1200)
+await waitForText(audience, '.ws-locked')
+check('Part 2 starts locked on a device', (await partTwoLocked()) === true,
+  `device at ${await path(audience)}, buttons ${JSON.stringify(await evaluate(control, '[...document.querySelectorAll("button")].map(b => b.innerText.trim()).filter(Boolean).join(" | ")'))}`)
+await clickText(control, 'button', 'Open part 2 for all')
+await wait(1200)
+check('the remote opens Part 2 for everyone', (await partTwoLocked()) === false
+  && !!(await text(audience, '.ws-part-title')))
+check('the device hears that Part 2 is open', !!(await waitForText(audience, '.toast-stack')),
+  JSON.stringify(await text(audience, '.toast-stack')))
+await shot(audience, '07b-part-two-open', 430, 900)
+check('the remote offers to close it again', (await clickText(control, 'button', 'Close part 2 again')) === 'clicked',
+  JSON.stringify(await evaluate(control, '[...document.querySelectorAll("button")].map(b => b.innerText.trim()).filter(Boolean).join(" | ")')))
+await wait(1200)
+check('closing locks Part 2 again', (await partTwoLocked()) === true)
+
 await wait(400)
 await clickText(control, 'button', 'Next')
 check('the device follows past the puzzle', (await waitForPath(audience, AFTER.route)) === AFTER.route,
