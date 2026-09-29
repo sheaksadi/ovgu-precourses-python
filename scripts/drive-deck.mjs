@@ -142,7 +142,8 @@ const FIRST = { route: '/slides/pre-0033' }
 const SECOND = { route: '/slides/pre-0185', title: 'Kurz zu mir' }
 const DRIFTED = { route: '/slides/pre-0038' }
 const PUZZLE = { route: '/slides/pre-0137', title: 'Rätsel: Momos Fang' }
-const BOARD = { route: '/slides/pre-0138' }
+/** Two moves on from the puzzle: its Part 2 slide, then the solution walk. */
+const AFTER = { route: '/slides/pre-0139' }
 
 // --- Surfaces -----------------------------------------------------------
 // The three views that drive the talk ask for the admin word; `?admin=` is
@@ -221,7 +222,9 @@ await shot(audience, '07-puzzle-workspace', 430, 900)
 
 // --- The room moves on; the device keeps its puzzle ---------------------
 await clickText(control, 'button', 'Next')
-check('the device follows to the leaderboard', (await waitForPath(audience, BOARD.route)) === BOARD.route,
+await wait(400)
+await clickText(control, 'button', 'Next')
+check('the device follows past the puzzle', (await waitForPath(audience, AFTER.route)) === AFTER.route,
   `device at ${await path(audience)}`)
 
 // The puzzle lives at /puzzles now, and the corner it used to sit in offers a replay.

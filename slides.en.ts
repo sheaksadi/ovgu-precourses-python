@@ -436,16 +436,6 @@ export const slidesEn: Record<string, SlideText> = {
     subtitle: 'A list that changes',
     teleprompter: 'So far numbers went in and out. Here a list goes in: animal is not a copy, it is the same list as momo. That is why Momo is less hungry outside the call too. And position 1 is the hunger only because we said so - which is exactly what dictionaries fix later.',
   },
-  'PRE-0112': {
-    title: 'Now you: functions',
-    subtitle: 'First code task: write a function',
-    teleprompter: 'First code task: nothing to submit as a number, a function to write instead. There is an editor on your own device and Python runs right in the browser. Run checks the visible tests, Submit adds a hidden one. Watch out for return instead of print - that is exactly what the first attempts trip over. After this the rectangle function.',
-  },
-  'PRE-0143': {
-    title: 'Code task: rectangle',
-    subtitle: 'Write a function, test it, submit it',
-    teleprompter: 'First code task: there is no number to submit here, there is a function. The device has an editor; Run checks the visible tests, Submit adds two hidden ones. Python runs in the browser, no internet needed. If you would rather write in PyCharm: copy the code across and paste it here.',
-  },
   'PRE-0113': {
     title: 'Built-in functions',
     subtitle: 'max, min, sum, len and more',
@@ -718,6 +708,68 @@ export const slidesEn: Record<string, SlideText> = {
   'PRE-0181': {
     title: 'Thank you',
     teleprompter: 'Thanks for taking part. Questions still go by email, and the slides stay reachable at the same address. Finish the puzzles at home if you want to.',
+  },
+  'PRE-0230': {
+    title: 'main()',
+    subtitle: 'One way into the program',
+    teleprompter: 'Bigger programs get a fixed way in: the function main. Python reads the file from top to bottom - def only remembers a function, nothing runs yet. Only the if line at the very bottom starts main, and main calls the other functions. So the top says what there is, and the bottom says where it starts. Ask first: does anything run in line 1 already?',
+  },
+  'PRE-0231': {
+    title: 'main() - __name__',
+    teleprompter: 'How does Python know whether to start main? __name__ is a variable Python sets by itself. Start the file directly - the green arrow in PyCharm - and it holds "__main__", so main runs. When another file brings it in with import, it holds the file name, and main does not run: you only get the functions. Nobody has to write this in the course, but you will see it in almost every Python project.',
+  },
+  'PRE-0232': {
+    title: 'Now you: lists - part 2',
+    teleprompter: 'Part 2 on its own slide: the last three prices added up. The example works it through with the small list, from the back: 310, 40, 250. prices[-1] is the last item, so nobody has to count. On the devices, part 2 opens once part 1 is solved.',
+  },
+  'PRE-0233': {
+    title: 'Now you: loops - part 2',
+    teleprompter: 'Part 2: the longest run in a row. Read the example along day by day: the streak grows on a good day and falls to 0 on a weak one, and best remembers the record. Two variables, one loop. On the devices, part 2 opens after part 1.',
+  },
+  'PRE-0234': {
+    title: 'Puzzle: Momo\'s catch - part 2',
+    teleprompter: 'Part 2: Momo eats in order until the next fish no longer fits - then break. The example uses a belly of only 50 cm: 12, then 37, with 20 it would be 57, stop. Important: check first, then add. On the devices, part 2 opens after part 1.',
+  },
+  'PRE-0235': {
+    title: 'Puzzle: Bello\'s sprints - part 2',
+    teleprompter: 'Part 2: the same fast runs, but this time add up their distances. Anyone who wrote tempo(distance, time) in part 1 needs just one more line. In the example it is run 1 and run 4: 100 + 200.',
+  },
+  'PRE-0236': {
+    title: 'Now you: built-ins - part 2',
+    teleprompter: 'Part 2: the best three scores together. In the example, order from high to low first, then take the first three. sorted with reverse=True puts the highest first.',
+  },
+  'PRE-0237': {
+    title: 'Now you: dictionaries - part 2',
+    teleprompter: 'Part 2: the oldest animal - the value decides, the key is what gets submitted. In the example, walk through once and remember the oldest so far. There is always exactly one oldest animal.',
+  },
+  'PRE-0238': {
+    title: 'Puzzle: weather data - part 2',
+    teleprompter: 'Part 2: the biggest jump from one day to the next, up or down. In the example, look at every neighbouring pair: 3, 6, 11 - the biggest is 11. abs turns -6 into 6.',
+  },
+  'PRE-0239': {
+    title: 'Finale: Momo\'s log book - part 2',
+    teleprompter: 'Part 2: for the cat from part 1, the longest run of consecutive days. In the example Momo catches on day 1, 2 and 4 - day 3 is missing, so the run is 2. Hint: collect the days, drop duplicates, sort, then count while the next day is exactly one higher.',
+  },
+  'PRE-0240': {
+    title: 'Finale: the shelter - part 2',
+    teleprompter: 'Part 2: which cat was fed most often? Submit the number; the first cat is 0. In the example cat 1 was the hungriest in both rounds. A second list that counts per cat is enough.',
+  },
+  'PRE-0241': {
+    title: 'Putting it together',
+    subtitle: 'Function, loop and if in one program',
+    teleprompter: 'Now everything comes together on a real case: grading exams. First the rule as a function - from 50 points on it is passed, if and else decide, return hands the answer back. Call it twice, get two different answers. Ask first: what comes out at exactly 50?',
+  },
+  'PRE-0242': {
+    title: 'Putting it together - loop',
+    teleprompter: 'Now three exams in one list. The loop takes one after another and asks the same function every time. The red frame shows where the loop is right now. The function does not need to know about the list - it only ever gets one number.',
+  },
+  'PRE-0243': {
+    title: 'Putting it together - counting',
+    teleprompter: 'The real question: how many passed? A counter starts at 0, and an if in the loop raises it only on passed. That is the pattern for almost everything: a function for the rule, a loop for the many cases, an if for the decision. The puzzles look exactly like this.',
+  },
+  'PRE-0244': {
+    title: 'Putting it together - password',
+    teleprompter: 'Second case, same tools: checking a password, like every login page. Too short - the first if returns False at once. Long enough but no digit - the loop reads everything and finds nothing. With a digit - return ends the loop at the first hit, the rest is never read. Ask: what about kitty123 without the 123?',
   },
   // <slides-en:end>
 }

@@ -20,8 +20,8 @@ import { CODE_TASKS } from '~/utils/codeTasks'
 interface ProblemText {
   title: string
   story: string[]
-  example: { input: string, answer: string, note?: string }
-  part2?: { story: string[], example: { answer: string, note?: string } }
+  example: { input: string, answer: string, note?: string, walk?: string[] }
+  part2?: { story: string[], example: { answer: string, note?: string, walk?: string[] } }
 }
 
 const props = defineProps<{
@@ -168,6 +168,7 @@ const segments = (line: string) => line.split('`').map((part, index) => ({ part,
         <div class="ws-example">
           <span class="ws-label">{{ t('problems.example') }}</span>
           <code class="ws-example-input">{{ text.example.input }}</code>
+          <ProblemsWalk v-if="text.example.walk" :steps="text.example.walk" />
           <p class="ws-example-answer">
             <b>{{ text.example.answer }}</b>
             <template v-if="text.example.note">
@@ -190,6 +191,7 @@ const segments = (line: string) => line.split('`').map((part, index) => ({ part,
           </p>
           <div class="ws-example">
             <span class="ws-label">{{ t('problems.example') }}</span>
+            <ProblemsWalk v-if="text.part2.example.walk" :steps="text.part2.example.walk" />
             <p class="ws-example-answer">
               <b>{{ text.part2.example.answer }}</b>
               <template v-if="text.part2.example.note">
