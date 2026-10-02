@@ -68,7 +68,10 @@ export default defineNuxtConfig({
         'lucide:smartphone',
         // The replay button on a phone, and its twin in the presenter view.
         'lucide:rotate-ccw',
-        'lucide:puzzle'
+        'lucide:puzzle',
+        // The toast `m` raises when it flips the sound.
+        'lucide:volume-2',
+        'lucide:volume-x'
       ]
     }
   },

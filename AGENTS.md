@@ -216,10 +216,12 @@ portfolio site uses: no audio files, four cues (a slide moving, something the
 room waited for arriving, a notification, a press), one dulled sine each with a
 few milliseconds of filtered noise on the attack.
 
-- Only the projector makes a sound. Thirty phones answering a slide change at
-  once is a rattle, and the room's speakers are on the machine driving the big
-  screen.
-- `m` mutes and unmutes it there; the choice is kept in `deck:<PREFIX>:sound`.
+- By default only the projector makes a sound. Thirty phones answering a slide
+  change at once is a rattle, and the room's speakers are on the machine driving
+  the big screen.
+- `m` flips the sound on any slide view and shows a toast saying which: it mutes
+  the projector, and turns sound on for a plain slide view, for example one being
+  screen recorded. The choice is kept per device in `deck:<PREFIX>:sound`.
 - `plugins/sound.client.ts` fires the slide and notification cues; an answer the
   room waited for plays its cue where it is handled, in `useWebSocket`.
 - Browsers refuse audio before a real gesture, so the first cue after a reload

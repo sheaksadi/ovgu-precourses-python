@@ -22,10 +22,13 @@
  *
  *   nothing reaches 80ms, and nothing repeats faster than `GAP_MS`
  *
- * Only the projector makes a sound. Thirty phones answering a slide change at
- * once is a rattle, not feedback, and the room has one set of speakers — the
- * ones on the machine driving the big screen. `m` mutes and unmutes it there,
- * and the choice is remembered per device.
+ * Only the projector makes a sound unless someone asks for it. Thirty phones
+ * answering a slide change at once is a rattle, not feedback, and the room has
+ * one set of speakers — the ones on the machine driving the big screen. `m`
+ * flips the sound on any slide view: muted on the projector, heard anywhere
+ * else, which is how a screen recording of a plain slide view gets its sound.
+ * The choice is remembered per device; with none made, the projector is the
+ * only screen that is heard.
  *
  * Browsers refuse to start an AudioContext before a real gesture, so the
  * context is created lazily and resumed on the first pointer or key event. The
@@ -172,10 +175,11 @@ function transient(centre: number, gain: number, dur: number, q: number, hp: num
 }
 
 export function useSound() {
-  const { isProjector } = useDeckRole()
-  const muted = useState<boolean>('deck-sound-muted', () => false)
+  const { isProjector, isViewer } = useDeckRole()
+  /** `null` until this device has chosen: then only the projector is heard. */
+  const muted = useState<boolean | null>('deck-sound-muted', () => null)
 
-  const audible = computed(() => isProjector.value && !muted.value)
+  const audible = computed(() => isViewer.value && (muted.value === null ? isProjector.value : !muted.value))
 
   const setMuted = (next: boolean) => {
     muted.value = next
@@ -186,7 +190,7 @@ export function useSound() {
     }
   }
 
-  /** Mix one cue. Silent off the projector, muted, or inside the repeat gap. */
+  /** Mix one cue. Silent when not audible, or inside the repeat gap. */
   function fire(cue: Cue, trim = 1) {
     if (import.meta.server || !audible.value) return
     const now = performance.now()
@@ -276,9 +280,10 @@ export function useSound() {
     if (wired || import.meta.server) return
     wired = true
     try {
-      muted.value = localStorage.getItem(storageKey('sound')) === 'off'
+      const stored = localStorage.getItem(storageKey('sound'))
+      muted.value = stored === 'off' ? true : stored === 'on' ? false : null
     } catch {
-      muted.value = false
+      muted.value = null
     }
     const unlock = () => resume()
     window.addEventListener('pointerdown', unlock, { once: true, passive: true })
@@ -286,10 +291,9 @@ export function useSound() {
   }
 
   return {
-    /** The screen that has the room's speakers, muted or not. */
-    onProjector: isProjector,
+    /** A slide view, the only kind of screen that can be heard. */
+    onViewer: isViewer,
     audible,
-    muted: computed(() => muted.value),
     setMuted,
     hydrate,
     move,

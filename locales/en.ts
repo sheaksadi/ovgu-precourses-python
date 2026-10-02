@@ -5,6 +5,11 @@
 import type { Messages } from './de'
 
 const en: Messages = {
+  sound: {
+    on: 'Sound on',
+    off: 'Sound off',
+  },
+
   common: {
     language: 'Language',
     switchLanguage: 'Switch language',

@@ -6,6 +6,11 @@
  * Only `if`, `else` and Python itself stay English in every language.
  */
 const de = {
+  sound: {
+    on: 'Ton an',
+    off: 'Ton aus',
+  },
+
   common: {
     language: 'Sprache',
     switchLanguage: 'Sprache wechseln',
