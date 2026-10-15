@@ -339,6 +339,26 @@ the screenshots too.
 `pages/print.vue` renders every slide in order with its notes, one per page, for "Print
 to PDF". Each slide is a peek frame, so the handout always matches what the room saw.
 
+## Showcase video
+
+`npm run render:video` renders the deck to an MP4 cut to music. The shot list is
+`video/shots.mjs`: which slide is on screen on which bar of the song, plus per-shot
+speed, the icebreaker spin and the live cat. Edit it and render again.
+
+- Render against a production build, not `npm run dev`: the dev server reloads pages
+  when it optimises a dependency, and adds the Nuxt DevTools button.
+  `npm run build && PORT=3100 node .output/server/index.mjs`, then
+  `DECK_URL=http://localhost:3100 npm run render:video`.
+- `--preview` renders 1280×720 at 30 fps in a few minutes; `--from 40 --to 60`
+  renders only that stretch, in seconds of the song.
+- `video/clock.js` takes over the page's clock (timers, `Date`, every CSS and Web
+  Animation), so each frame is exactly one frame later than the last however slow
+  the capture is. A page promise that waits on `setTimeout` from the renderer never
+  resolves; step the clock with `__clock.tick(ms)` instead.
+- `npm run render:gifs` renders the looping GIFs in `video/gifs.mjs` (no song, shots
+  in seconds) to `video/out/gifs/`; `npm run render:gifs -- cat` renders one.
+- The song (`video/music/`) and the output (`video/out/`) are not committed.
+
 ## Deck conventions worth knowing
 
 - Every slide gets the same soft entrance (`slide-rise` in `app.vue`, also set as

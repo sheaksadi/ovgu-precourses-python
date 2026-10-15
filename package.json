@@ -17,7 +17,9 @@
     "check:deck": "node scripts/drive-deck.mjs",
     "check:problems": "node scripts/check-problems.mjs",
     "check:phone": "node scripts/check-phone.mjs",
-    "shot:phone": "node scripts/shot-phone.mjs"
+    "shot:phone": "node scripts/shot-phone.mjs",
+    "render:video": "node scripts/render-video.mjs",
+    "render:gifs": "node scripts/render-gifs.mjs"
   },
   "devDependencies": {
     "@iconify-json/lucide": "^1.2.131",

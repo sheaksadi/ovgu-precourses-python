@@ -19,3 +19,8 @@ deck-shots
 
 # The room database: names of real people, one file per machine.
 .data
+
+# Rendered videos and the renderer's browser profile
+video/out
+video/.profile
+video/music
